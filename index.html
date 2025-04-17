@@ -8,22 +8,28 @@
     body {
       margin: 0;
       font-family: "Helvetica Neue", sans-serif;
-      background-color: #f0f4f8; /* やさしい水色グレー */
+      background-color: #f0f4f8;
       color: #1c1c1c;
     }
     header {
-      background-color: #0a2a43; /* 深い海のネイビー */
+      background-color: #0a2a43;
       color: #ffffff;
       padding: 40px 20px;
       text-align: center;
     }
-    header h1 {
+    .logo-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .logo-title img {
+      max-height: 60px;
+    }
+    .logo-title h1 {
       margin: 0;
       font-size: 32px;
-    }
-    header p {
-      font-size: 16px;
-      color: #cfd8dc;
     }
     main {
       max-width: 800px;
@@ -31,12 +37,22 @@
       padding: 0 20px;
     }
     section {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
       margin-bottom: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     h2 {
-      border-bottom: 2px solid #0a2a43;
-      padding-bottom: 5px;
+      border-left: 5px solid #0a2a43;
+      padding-left: 10px;
       font-size: 20px;
+      margin-bottom: 16px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 40px 0;
     }
     ul {
       list-style: none;
@@ -44,10 +60,15 @@
     }
     ul li::before {
       content: "\2022";
-      color: #0a2a43; /* ネイビーの黒ポチ */
+      color: #0a2a43;
       display: inline-block;
       width: 1em;
       margin-left: -1em;
+    }
+    img.hero {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 30px;
     }
     footer {
       text-align: center;
@@ -59,21 +80,27 @@
 </head>
 <body>
   <header>
-    <h1>株式会社Office TKG</h1>
-    <p>Maritime & Real Estate Consulting</p>
+    <div class="logo-title">
+      <img src="logo.png" alt="Office TKG ロゴ">
+      <h1>株式会社Office TKG</h1>
+    </div>
   </header>
 
   <main>
+    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" alt="海のイメージ" class="hero">
+
     <section>
-      <h2>ご挨拶</h2>
+      <h2>🌊 ご挨拶</h2>
       <p>
         株式会社Office TKGは、海運業界および不動産分野における豊富な経験を活かし、<br>
         お客様の多様なニーズに応えるコンサルティングサービスを提供しています。
       </p>
     </section>
 
+    <hr>
+
     <section>
-      <h2>事業内容</h2>
+      <h2>📌 事業内容</h2>
       <ul>
         <li>海運業界向け経営支援</li>
         <li>不動産投資・運用に関するコンサルティング</li>
@@ -81,8 +108,10 @@
       </ul>
     </section>
 
+    <hr>
+
     <section>
-      <h2>会社情報</h2>
+      <h2>🏢 会社情報</h2>
       <p><strong>会社名：</strong> 株式会社Office TKG</p>
       <p><strong>代表者：</strong> 川瀬 誠</p>
       <p><strong>所在地：</strong> 東京都世田谷区奥沢3-24-11</p>
@@ -91,8 +120,7 @@
   </main>
 
   <footer>
-    &copy; 2025 Office TKG. All rights reserved.
+    &copy; 2025 Maritime & Real Estate Consulting. All rights reserved.
   </footer>
 </body>
-
 </html>
