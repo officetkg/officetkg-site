@@ -1,0 +1,26 @@
+{
+ "phase": "PHASE 2 - photographic distortion correction",
+ "decision": "NO geometric transform applied (user instruction Q1 = option a)",
+ "source_file": "51014ede-image.png",
+ "sha256_before": "96f78452d532adeecede3aac36d669ca6e278f1ce89fbc0c1dc6590a71e209d3",
+ "sha256_after": "96f78452d532adeecede3aac36d669ca6e278f1ce89fbc0c1dc6590a71e209d3",
+ "identical": true,
+ "evidence": {
+  "method": "Canny + probabilistic Hough over the plan panel (source window x240-1140, y120-1100)",
+  "near_vertical_lines": {
+   "n": 33,
+   "min_deg": 90.0,
+   "max_deg": 90.0,
+   "mean_deg": 90.0
+  },
+  "near_horizontal_lines": {
+   "n": 43,
+   "min_deg": -0.39,
+   "max_deg": 0.796,
+   "mean_abs_deg": 0.042,
+   "note": "folded about 180 deg"
+  },
+  "conclusion": "walls are exactly 90.000 deg / 0.000 deg -> digital PDF render, no perspective, keystone or paper-curl distortion to correct."
+ },
+ "note": "BEFORE image == AFTER image, bit identical. All PHASE 3 coordinates are measured directly on this untransformed raster."
+}

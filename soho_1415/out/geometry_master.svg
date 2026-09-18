@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45 -40 420 850" width="840" height="1700">
+<style>
+ *{fill:none;stroke-width:1;vector-effect:non-scaling-stroke}
+ .outer{stroke:#c00;stroke-width:1.6} .column{stroke:#a000c8;stroke-width:1.6}
+ .ps{stroke:#888} .inner{stroke:#e08000} .pocket{stroke:#00a000;stroke-width:1.6}
+ .panel{stroke:#00c000;fill:#00c000;fill-opacity:.55} .rail{stroke:#00a000;stroke-dasharray:4 3}
+ .case{stroke:#b08000} .door{stroke:#0040c8;stroke-width:1.4} .doorthin{stroke:#0040c8;stroke-dasharray:3 2}
+ .win{stroke:#c800b4;stroke-width:1.6} .bal{stroke:#ff5a00;stroke-width:1.4}
+</style>
+<!-- OIMACHI TRACKS RESIDENCE (SOHO) 1415 - 2D GEOMETRY MASTER, unit = source px -->
+<polyline class="outer" points="0,0 323,0 323,43 365,43 365,623 325,623 325,672 0,672 0,0"/>
+<line class="outer" x1="10" y1="6" x2="37" y2="6"/>
+<line class="outer" x1="37" y1="3" x2="158" y2="3"/>
+<line class="outer" x1="158" y1="6" x2="187" y2="6"/>
+<line class="outer" x1="184" y1="8" x2="231" y2="8"/>
+<line class="outer" x1="304" y1="24" x2="323" y2="24"/>
+<line class="outer" x1="13" y1="80" x2="13" y2="195"/>
+<line class="outer" x1="15" y1="195" x2="15" y2="672"/>
+<line class="outer" x1="350" y1="43" x2="350" y2="255"/>
+<line class="outer" x1="355" y1="255" x2="355" y2="623"/>
+<rect class="outer" x="0" y="639" width="135" height="33"/>
+<rect class="column" x="323" y="-32" width="74" height="75"/>
+<rect class="column" x="325" y="623" width="69" height="76"/>
+<rect class="ps" x="10" y="6" width="174" height="61"/>
+<rect class="ps" x="10" y="0" width="185" height="6"/>
+<rect class="ps" x="184" y="6" width="11" height="72"/>
+<rect class="ps" x="0" y="67" width="195" height="11"/>
+<rect class="inner" x="227" y="77" width="91" height="3"/>
+<rect class="inner" x="224" y="24" width="5" height="220"/>
+<rect class="inner" x="10" y="67" width="214" height="13"/>
+<rect class="inner" x="81" y="187" width="143" height="5"/>
+<rect class="inner" x="73" y="77" width="3" height="56"/>
+<rect class="inner" x="73" y="133" width="8" height="39"/>
+<rect class="inner" x="15" y="80" width="58" height="3"/>
+<rect class="inner" x="15" y="168" width="58" height="4"/>
+<rect class="inner" x="10" y="170" width="75" height="22"/>
+<rect class="inner" x="106" y="192" width="3" height="45"/>
+<rect class="inner" x="108" y="192" width="6" height="66"/>
+<rect class="inner" x="109" y="253" width="120" height="5"/>
+<rect class="inner" x="229" y="252" width="126" height="5"/>
+<rect class="inner" x="152" y="256" width="17" height="24"/>
+<rect class="pocket" x="153" y="280" width="12" height="55"/>
+<rect class="panel" x="160" y="280" width="4" height="55"/>
+<rect class="panel" x="156" y="280" width="4" height="55"/>
+<rect class="panel" x="153" y="280" width="3" height="55"/>
+<line class="rail" x1="159" y1="280" x2="159" y2="489"/>
+<rect class="pocket" x="16" y="490" width="47" height="12"/>
+<rect class="panel" x="16" y="490" width="47" height="4"/>
+<rect class="panel" x="16" y="496" width="47" height="4"/>
+<line class="rail" x1="16" y1="495" x2="154" y2="495"/>
+<rect class="case" x="200" y="26" width="26" height="52"/>
+<rect class="case" x="15" y="83" width="58" height="85"/>
+<rect class="case" x="84" y="130" width="51" height="57"/>
+<rect class="case" x="137" y="143" width="85" height="44"/>
+<rect class="case" x="160" y="150" width="40" height="27"/>
+<rect class="case" x="296" y="200" width="53" height="48"/>
+<rect class="case" x="318" y="48" width="32" height="30"/>
+<rect class="case" x="15" y="501" width="22" height="139"/>
+<rect class="case" x="17" y="192" width="29" height="45"/>
+<rect class="case" x="47" y="192" width="59" height="45"/>
+<rect class="case" x="114" y="192" width="110" height="61"/>
+<rect class="case" x="134" y="205" width="35" height="33"/>
+<rect class="case" x="115" y="207" width="18" height="31"/>
+<rect class="case" x="114" y="192" width="21" height="63"/>
+<rect class="case" x="187" y="236" width="30" height="17"/>
+<rect class="case" x="229" y="80" width="121" height="171"/>
+<rect class="case" x="300" y="80" width="50" height="117"/>
+<rect class="case" x="305" y="94" width="37" height="23"/>
+<rect class="case" x="321" y="138" width="29" height="58"/>
+<rect class="case" x="326" y="143" width="21" height="37"/>
+<line class="case" x1="15" y1="530" x2="37" y2="530"/>
+<line class="case" x1="15" y1="557" x2="37" y2="557"/>
+<line class="case" x1="15" y1="584" x2="37" y2="584"/>
+<line class="case" x1="15" y1="611" x2="37" y2="611"/>
+<rect class="win" x="131" y="666" width="187" height="6"/>
+<line class="win" x1="199" y1="666" x2="199" y2="672"/>
+<line class="door" x1="301" y1="2" x2="301" y2="-66"/>
+<line class="doorthin" x1="301" y1="2" x2="234" y2="2"/>
+<line class="door" x1="75" y1="80" x2="23" y2="80"/>
+<line class="doorthin" x1="75" y1="80" x2="75" y2="133"/>
+<line class="door" x1="225" y1="80" x2="280" y2="80"/>
+<line class="doorthin" x1="225" y1="80" x2="225" y2="135"/>
+<line class="door" x1="228" y1="242" x2="277" y2="242"/>
+<line class="doorthin" x1="228" y1="242" x2="228" y2="193"/>
+<line class="door" x1="291" y1="253" x2="297" y2="315"/>
+<line class="doorthin" x1="291" y1="253" x2="229" y2="253"/>
+<line class="door" x1="226" y1="28" x2="226" y2="77"/>
+<line class="door" x1="17" y1="237" x2="46" y2="237"/>
+<line class="door" x1="47" y1="237" x2="106" y2="237"/>
+<line class="bal" x1="0" y1="672" x2="325" y2="672"/>
+<line class="bal" x1="17" y1="672" x2="17" y2="697"/>
+<line class="bal" x1="16.30000000000001" y1="697" x2="-18.600000000000023" y2="796"/>
+<line class="bal" x1="370.9" y1="699" x2="336.4" y2="796"/>
+<rect class="bal" x="-35" y="758" width="397" height="22"/>
+</svg>

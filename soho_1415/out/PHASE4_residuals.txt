@@ -1,0 +1,77 @@
+element                                      mean    p95    max
+------------------------------------------------------------------
+TOILET.bowl  [bbox of a curved symbol]       3.16   9.20  10.60
+TOILET.hand_basin  [bbox of a curved symbol]   1.68   5.00   5.39
+KITCHEN.sink_bowl  [bbox of a curved symbol]   2.83   5.00   5.20
+OUTER.west.inner                             0.59   3.00   3.00
+PS.interior                                  0.74   3.00   3.00
+PS.wall_north                                0.98   3.00   3.00
+PS.wall_east                                 0.41   3.00   5.00
+INNER.W_powder_kitchen                       1.36   3.00   3.00
+INNER.W_closet_side                          1.41   3.00   3.00
+INNER.W_hall_south                           0.91   3.00   3.00
+INNER.W_pocket_stub                          0.65   3.00   3.00
+DOOR.D_POWDER.arc                            1.11   3.00   3.00
+DOOR.D_ENTRANCE.arc                          1.35   2.80   3.00
+DOOR.D_LD.arc                                1.23   2.20   2.20
+INNER.W_shower_east_thick                    0.24   2.03   4.00
+OUTER.north.inner                            0.30   2.00   2.00
+OUTER.west.inner                             0.24   2.00   5.00
+INNER.W_powder_north                         0.85   2.00   5.00
+INNER.W_shower_north                         0.53   2.00   2.00
+INNER.W_shower_south                         1.43   2.00   2.00
+INNER.W_toilet_west                          1.51   2.00   4.00
+INNER.W_toilet_south                         0.71   2.00   5.00
+STORAGE.SOUTH.panel1_closed                  0.91   2.00   2.00
+SHOWER                                       0.72   2.00   2.00
+WD                                           0.60   2.00   2.20
+REFRIGERATOR                                 0.35   2.00   2.00
+TOILET.upper_cabinet_dashed                  0.80   2.00   2.00
+DOOR.D_TOILET.arc                            1.19   2.00   2.00
+DOOR.D_LD.leaf                               0.79   2.00   2.00
+INNER.W_band_shower_clo                      0.21   1.49   4.00
+STORAGE.EAST.pocket                          0.92   1.40   2.20
+STORAGE.SOUTH.pocket                         0.54   1.40   2.20
+DOOR.D_SHOWER.arc                            0.44   1.40   2.20
+OUTER.south.solid_band                       0.11   1.00   4.00
+PS.wall_south                                0.16   1.00   5.00
+INNER.W_entrance_south                       0.86   1.00   1.00
+INNER.W_powder_south                         0.13   1.00   4.00
+STORAGE.EAST.panel1_closed                   0.46   1.00   1.00
+STORAGE.EAST.panel2_closed                   0.42   1.00   1.00
+STORAGE.SOUTH.panel2_closed                  0.42   1.00   1.00
+VANITY_BOWL  [bbox of a curved symbol]       0.31   1.00   2.00
+TOILET.room                                  0.25   1.00   2.00
+TOILET.tank                                  0.17   1.00   1.00
+KITCHEN.counter                              0.17   1.00   2.20
+KITCHEN.sink_unit                            0.26   1.00   1.40
+DOOR.D_POWDER.leaf                           0.91   1.00   1.00
+BALCONY.side_west.stub                       0.81   1.00   1.00
+BALCONY.side_west.raked                      0.50   1.00   1.40
+BALCONY.side_east.raked                      0.69   1.00   1.40
+BALCONY.railing                              0.56   1.00   3.20
+OUTER.east.inner                             0.07   0.40   2.20
+OUTER_WALLS.envelope_outline                 0.02   0.00   5.00
+OUTER.north.inner                            0.00   0.00   0.00
+OUTER.north.inner                            0.00   0.00   0.00
+OUTER.north.inner                            0.00   0.00   0.00
+OUTER.north.inner                            0.00   0.00   0.00
+OUTER.east.inner                             0.00   0.00   0.00
+COLUMN.C_NE                                  0.00   0.00   0.00
+COLUMN.C_SE                                  0.00   0.00   0.00
+INNER.W_shower_east_thin                     0.02   0.00   1.00
+STORAGE.EAST.panel3_closed                   0.00   0.00   0.00
+SC                                           0.06   0.00   3.00
+VANITY                                       0.00   0.00   0.00
+ENTRANCE_NICHE                               0.00   0.00   0.00
+BOOK_SHELF                                   0.01   0.00   1.00
+CLO.CLO_1                                    0.00   0.00   0.00
+CLO.CLO_2                                    0.00   0.00   0.00
+KITCHEN.hob                                  0.00   0.00   0.00
+WINDOW.balcony_opening                       0.00   0.00   0.00
+DOOR.D_ENTRANCE.leaf                         0.00   0.00   0.00
+DOOR.D_SHOWER.leaf                           0.00   0.00   0.00
+DOOR.D_TOILET.leaf                           0.06   0.00   2.00
+BALCONY.north_edge                           0.00   0.00   0.00
+------------------------------------------------------------------
+elements: 73   mean-of-means 0.54px   worst p95 9.20px

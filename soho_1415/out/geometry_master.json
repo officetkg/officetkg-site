@@ -1,0 +1,943 @@
+{
+ "OUTER_WALLS": {
+  "envelope_outline": [
+   [
+    0,
+    0
+   ],
+   [
+    323,
+    0
+   ],
+   [
+    323,
+    43
+   ],
+   [
+    365,
+    43
+   ],
+   [
+    365,
+    623
+   ],
+   [
+    325,
+    623
+   ],
+   [
+    325,
+    672
+   ],
+   [
+    0,
+    672
+   ],
+   [
+    0,
+    0
+   ]
+  ],
+  "north": {
+   "outer_y": 0,
+   "segments": [
+    {
+     "x0": 10,
+     "x1": 37,
+     "inner_y": 6
+    },
+    {
+     "x0": 37,
+     "x1": 158,
+     "inner_y": 3,
+     "note": "PS access panel leaf sits in the wall here"
+    },
+    {
+     "x0": 158,
+     "x1": 187,
+     "inner_y": 6
+    },
+    {
+     "x0": 184,
+     "x1": 231,
+     "inner_y": 8
+    },
+    {
+     "x0": 304,
+     "x1": 323,
+     "inner_y": 24
+    }
+   ],
+   "opening_entrance_door": {
+    "x0": 234,
+    "x1": 301
+   }
+  },
+  "west": {
+   "outer_x": 0,
+   "layer_line_x": 9,
+   "segments": [
+    {
+     "y0": 80,
+     "y1": 195,
+     "inner_x": 13
+    },
+    {
+     "y0": 195,
+     "y1": 672,
+     "inner_x": 15
+    }
+   ]
+  },
+  "east": {
+   "outer_x": 365,
+   "segments": [
+    {
+     "y0": 43,
+     "y1": 255,
+     "inner_x": 350
+    },
+    {
+     "y0": 255,
+     "y1": 623,
+     "inner_x": 355
+    }
+   ]
+  },
+  "south": {
+   "outer_y": 672,
+   "layer_line_y": 665,
+   "solid_segment": {
+    "x0": 0,
+    "y0": 639,
+    "x1": 135,
+    "y1": 672
+   },
+   "sash_segment": {
+    "x0": 131,
+    "x1": 318
+   }
+  }
+ },
+ "COLUMNS": {
+  "C_NE": {
+   "x0": 323,
+   "y0": -32,
+   "x1": 397,
+   "y1": 43
+  },
+  "C_SE": {
+   "x0": 325,
+   "y0": 623,
+   "x1": 394,
+   "y1": 699
+  }
+ },
+ "PS": {
+  "interior": {
+   "x0": 10,
+   "y0": 6,
+   "x1": 184,
+   "y1": 67
+  },
+  "wall_north": {
+   "x0": 10,
+   "y0": 0,
+   "x1": 195,
+   "y1": 6
+  },
+  "wall_east": {
+   "x0": 184,
+   "y0": 6,
+   "x1": 195,
+   "y1": 78
+  },
+  "wall_south": {
+   "x0": 0,
+   "y0": 67,
+   "x1": 195,
+   "y1": 78
+  },
+  "access_panel_north": {
+   "x0": 37,
+   "x1": 158,
+   "y": 3,
+   "note": "leaf line in the north wall"
+  }
+ },
+ "INNER_WALLS": {
+  "W_entrance_south": {
+   "x0": 227,
+   "y0": 77,
+   "x1": 318,
+   "y1": 80
+  },
+  "W_powder_kitchen": {
+   "x0": 224,
+   "y0": 24,
+   "x1": 229,
+   "y1": 244
+  },
+  "W_powder_north": {
+   "x0": 10,
+   "y0": 67,
+   "x1": 224,
+   "y1": 80
+  },
+  "W_powder_south": {
+   "x0": 81,
+   "y0": 187,
+   "x1": 224,
+   "y1": 192
+  },
+  "W_shower_east_thin": {
+   "x0": 73,
+   "y0": 77,
+   "x1": 76,
+   "y1": 133
+  },
+  "W_shower_east_thick": {
+   "x0": 73,
+   "y0": 133,
+   "x1": 81,
+   "y1": 172
+  },
+  "W_shower_north": {
+   "x0": 15,
+   "y0": 80,
+   "x1": 73,
+   "y1": 83
+  },
+  "W_shower_south": {
+   "x0": 15,
+   "y0": 168,
+   "x1": 73,
+   "y1": 172
+  },
+  "W_band_shower_clo": {
+   "x0": 10,
+   "y0": 170,
+   "x1": 85,
+   "y1": 192
+  },
+  "W_closet_side": {
+   "x0": 106,
+   "y0": 192,
+   "x1": 109,
+   "y1": 237
+  },
+  "W_toilet_west": {
+   "x0": 108,
+   "y0": 192,
+   "x1": 114,
+   "y1": 258
+  },
+  "W_toilet_south": {
+   "x0": 109,
+   "y0": 253,
+   "x1": 229,
+   "y1": 258
+  },
+  "W_hall_south": {
+   "x0": 229,
+   "y0": 252,
+   "x1": 355,
+   "y1": 257
+  },
+  "W_pocket_stub": {
+   "x0": 152,
+   "y0": 256,
+   "x1": 169,
+   "y1": 280
+  }
+ },
+ "STORAGE_WALL": {
+  "run_EAST": {
+   "axis": "vertical",
+   "pocket": {
+    "x0": 153,
+    "y0": 280,
+    "x1": 165,
+    "y1": 335
+   },
+   "panel_count": 3,
+   "panels_closed": [
+    {
+     "x0": 160,
+     "y0": 335,
+     "x1": 164,
+     "y1": 388
+    },
+    {
+     "x0": 156,
+     "y0": 384,
+     "x1": 160,
+     "y1": 439
+    },
+    {
+     "x0": 153,
+     "y0": 434,
+     "x1": 156,
+     "y1": 489
+    }
+   ],
+   "panels_parked": [
+    {
+     "x0": 160,
+     "y0": 280,
+     "x1": 164,
+     "y1": 335
+    },
+    {
+     "x0": 156,
+     "y0": 280,
+     "x1": 160,
+     "y1": 335
+    },
+    {
+     "x0": 153,
+     "y0": 280,
+     "x1": 156,
+     "y1": 335
+    }
+   ],
+   "clear_opening_when_open": {
+    "x": 159,
+    "y0": 335,
+    "y1": 489
+   },
+   "rail_line": {
+    "x": 159,
+    "y0": 280,
+    "y1": 489
+   },
+   "joint_ticks_y": [
+    386,
+    436
+   ]
+  },
+  "run_SOUTH": {
+   "axis": "horizontal",
+   "pocket": {
+    "x0": 16,
+    "y0": 490,
+    "x1": 63,
+    "y1": 502
+   },
+   "panel_count": 2,
+   "panels_closed": [
+    {
+     "x0": 63,
+     "y0": 493,
+     "x1": 107,
+     "y1": 498
+    },
+    {
+     "x0": 107,
+     "y0": 489,
+     "x1": 154,
+     "y1": 493
+    }
+   ],
+   "panels_parked": [
+    {
+     "x0": 16,
+     "y0": 490,
+     "x1": 63,
+     "y1": 494
+    },
+    {
+     "x0": 16,
+     "y0": 496,
+     "x1": 63,
+     "y1": 500
+    }
+   ],
+   "clear_opening_when_open": {
+    "y": 495,
+    "x0": 63,
+    "x1": 154
+   },
+   "rail_line": {
+    "y": 495,
+    "x0": 16,
+    "x1": 154
+   },
+   "joint_ticks_x": [
+    107
+   ]
+  },
+  "corner": {
+   "x0": 150,
+   "y0": 482,
+   "x1": 165,
+   "y1": 502
+  },
+  "state": "OPEN / PARKED  (panels stored, opening permanently clear)"
+ },
+ "SC": {
+  "x0": 200,
+  "y0": 26,
+  "x1": 226,
+  "y1": 78
+ },
+ "SHOWER": {
+  "x0": 15,
+  "y0": 83,
+  "x1": 73,
+  "y1": 168
+ },
+ "WD": {
+  "x0": 84,
+  "y0": 130,
+  "x1": 135,
+  "y1": 187
+ },
+ "VANITY": {
+  "x0": 137,
+  "y0": 143,
+  "x1": 222,
+  "y1": 187
+ },
+ "VANITY_BOWL": {
+  "x0": 160,
+  "y0": 150,
+  "x1": 200,
+  "y1": 177
+ },
+ "CLOSETS": {
+  "CLO_1": {
+   "x0": 17,
+   "y0": 192,
+   "x1": 46,
+   "y1": 237
+  },
+  "CLO_2": {
+   "x0": 47,
+   "y0": 192,
+   "x1": 106,
+   "y1": 237
+  }
+ },
+ "TOILET": {
+  "room": {
+   "x0": 114,
+   "y0": 192,
+   "x1": 224,
+   "y1": 253
+  },
+  "bowl_shape": "oval / U-shaped pan, tank to the WEST",
+  "bowl": {
+   "x0": 134,
+   "y0": 205,
+   "x1": 169,
+   "y1": 238
+  },
+  "tank": {
+   "x0": 115,
+   "y0": 207,
+   "x1": 133,
+   "y1": 238
+  },
+  "upper_cabinet_dashed": {
+   "x0": 114,
+   "y0": 192,
+   "x1": 135,
+   "y1": 255
+  },
+  "hand_basin_shape": "quarter-round corner basin",
+  "hand_basin": {
+   "x0": 187,
+   "y0": 236,
+   "x1": 217,
+   "y1": 253
+  }
+ },
+ "KITCHEN": {
+  "room_ref": {
+   "x0": 229,
+   "y0": 80,
+   "x1": 350,
+   "y1": 251
+  },
+  "counter": {
+   "x0": 300,
+   "y0": 80,
+   "x1": 350,
+   "y1": 197
+  },
+  "hob": {
+   "x0": 305,
+   "y0": 94,
+   "x1": 342,
+   "y1": 117
+  },
+  "sink_unit": {
+   "x0": 321,
+   "y0": 138,
+   "x1": 350,
+   "y1": 196
+  },
+  "sink_bowl_shape": "rounded rectangle",
+  "sink_bowl": {
+   "x0": 326,
+   "y0": 143,
+   "x1": 347,
+   "y1": 180
+  }
+ },
+ "REFRIGERATOR": {
+  "x0": 296,
+  "y0": 200,
+  "x1": 349,
+  "y1": 248
+ },
+ "BOOK_SHELF": {
+  "body": {
+   "x0": 15,
+   "y0": 501,
+   "x1": 37,
+   "y1": 640
+  },
+  "shelf_lines_y": [
+   530,
+   557,
+   584,
+   611
+  ],
+  "open_face": "east (towards Living Dining)"
+ },
+ "ENTRANCE_NICHE_UNIDENTIFIED": {
+  "x0": 318,
+  "y0": 48,
+  "x1": 350,
+  "y1": 78
+ },
+ "WINDOWS": {
+  "W_BALCONY": {
+   "opening": {
+    "x0": 131,
+    "y0": 666,
+    "x1": 318,
+    "y1": 672
+   },
+   "mullion_x": 199,
+   "leaf_west": {
+    "x0": 136,
+    "x1": 199
+   },
+   "leaf_east": {
+    "x0": 199,
+    "x1": 315
+   },
+   "dotted_leaf_line": {
+    "y": 669,
+    "x0": 198,
+    "x1": 261
+   },
+   "note": "the ONLY glazed opening in the dwelling"
+  }
+ },
+ "MARK_TRIANGLE": {
+  "apex": [
+   167,
+   664
+  ],
+  "top_y": 656,
+  "x0": 160,
+  "x1": 175,
+  "note": "black triangle on the sash - meaning UNRESOLVED"
+ },
+ "DOORS": {
+  "D_ENTRANCE": {
+   "wall": "north exterior",
+   "opening": {
+    "x0": 234,
+    "x1": 301,
+    "y": 2
+   },
+   "hinge": [
+    301,
+    2
+   ],
+   "leaf": 68,
+   "type": "single hinged",
+   "swing": "OUTWARD (north, into the common corridor); leaf sweeps west",
+   "open_leaf_to": [
+    301,
+    -66
+   ],
+   "closed_leaf_to": [
+    234,
+    2
+   ]
+  },
+  "D_SHOWER": {
+   "wall": "shower booth east",
+   "opening": {
+    "x": 75,
+    "y0": 80,
+    "y1": 133
+   },
+   "hinge": [
+    75,
+    80
+   ],
+   "leaf": 52,
+   "type": "single hinged",
+   "swing": "INTO the shower booth (west)",
+   "open_leaf_to": [
+    23,
+    80
+   ],
+   "closed_leaf_to": [
+    75,
+    133
+   ]
+  },
+  "D_POWDER": {
+   "wall": "powder room east",
+   "opening": {
+    "x": 226,
+    "y0": 80,
+    "y1": 135
+   },
+   "hinge": [
+    225,
+    80
+   ],
+   "leaf": 55,
+   "type": "single hinged",
+   "swing": "EAST, into the kitchen",
+   "open_leaf_to": [
+    280,
+    80
+   ],
+   "closed_leaf_to": [
+    225,
+    135
+   ]
+  },
+  "D_TOILET": {
+   "wall": "toilet east",
+   "opening": {
+    "x": 227,
+    "y0": 193,
+    "y1": 242
+   },
+   "hinge": [
+    228,
+    242
+   ],
+   "leaf": 49,
+   "type": "single hinged",
+   "swing": "EAST, into the kitchen",
+   "open_leaf_to": [
+    277,
+    242
+   ],
+   "closed_leaf_to": [
+    228,
+    193
+   ]
+  },
+  "D_LD": {
+   "wall": "kitchen / Living Dining",
+   "opening": {
+    "y": 253,
+    "x0": 229,
+    "x1": 291
+   },
+   "hinge": [
+    291,
+    253
+   ],
+   "leaf": 62,
+   "type": "single hinged",
+   "swing": "SOUTH, into the Living Dining; leaf sweeps west",
+   "open_leaf_to": [
+    297,
+    315
+   ],
+   "closed_leaf_to": [
+    229,
+    253
+   ]
+  },
+  "D_SC": {
+   "wall": "shoe closet east face",
+   "opening": {
+    "x": 226,
+    "y0": 28,
+    "y1": 77
+   },
+   "type": "bi-fold, 2 chevrons",
+   "swing": "EAST into the entrance hall"
+  },
+  "D_CLO_1": {
+   "opening": {
+    "y": 237,
+    "x0": 17,
+    "x1": 46
+   },
+   "type": "bi-fold (1 V)",
+   "swing": "SOUTH into the Master Bedroom"
+  },
+  "D_CLO_2": {
+   "opening": {
+    "y": 237,
+    "x0": 47,
+    "x1": 106
+   },
+   "type": "bi-fold (2 V)",
+   "swing": "SOUTH into the Master Bedroom"
+  }
+ },
+ "BALCONY": {
+  "north_edge_y": 672,
+  "north_edge_x": [
+   0,
+   325
+  ],
+  "side_west": {
+   "vertical_stub": [
+    [
+     17,
+     672
+    ],
+    [
+     17,
+     697
+    ]
+   ],
+   "raked": [
+    [
+     16.30000000000001,
+     697
+    ],
+    [
+     -18.600000000000023,
+     796
+    ]
+   ],
+   "fit": "x = -0.3527*y + 718.03  (work coords)",
+   "angle_from_vertical_deg": 19.43,
+   "pivot_circle_at": [
+    17,
+    698
+   ]
+  },
+  "side_east": {
+   "from_column_corner": [
+    370.9,
+    699
+   ],
+   "raked": [
+    [
+     370.9,
+     699
+    ],
+    [
+     336.4,
+     796
+    ]
+   ],
+   "fit": "x = -0.3561*y + 1076.20  (work coords)",
+   "angle_from_vertical_deg": 19.6
+  },
+  "sides_are_parallel": true,
+  "shape": "PARALLELOGRAM (both side partitions raked the same way). NOT a trapezoid, NOT symmetric, NOT rectangular, NOT curved.",
+  "railing": {
+   "x0": -35,
+   "y0": 758,
+   "x1": 362,
+   "y1": 780
+  },
+  "railing_inner_lines_y": [
+   764,
+   772
+  ],
+  "break_symbols_end_y": 796,
+  "note": "railing runs past the unit on both sides; break symbols mark continuation to the neighbouring balconies."
+ },
+ "ROOMS": {
+  "ENTRANCE_HALL": [
+   [
+    229,
+    8
+   ],
+   [
+    318,
+    8
+   ],
+   [
+    318,
+    48
+   ],
+   [
+    350,
+    48
+   ],
+   [
+    350,
+    80
+   ],
+   [
+    229,
+    80
+   ]
+  ],
+  "POWDER_ROOM": [
+   [
+    15,
+    80
+   ],
+   [
+    224,
+    80
+   ],
+   [
+    224,
+    187
+   ],
+   [
+    81,
+    187
+   ],
+   [
+    81,
+    172
+   ],
+   [
+    73,
+    172
+   ],
+   [
+    73,
+    80
+   ]
+  ],
+  "SHOWER": [
+   [
+    15,
+    83
+   ],
+   [
+    73,
+    83
+   ],
+   [
+    73,
+    168
+   ],
+   [
+    15,
+    168
+   ]
+  ],
+  "TOILET": [
+   [
+    114,
+    192
+   ],
+   [
+    224,
+    192
+   ],
+   [
+    224,
+    253
+   ],
+   [
+    114,
+    253
+   ]
+  ],
+  "KITCHEN": [
+   [
+    229,
+    80
+   ],
+   [
+    350,
+    80
+   ],
+   [
+    350,
+    251
+   ],
+   [
+    229,
+    251
+   ]
+  ],
+  "MASTER_BEDROOM": [
+   [
+    15,
+    237
+   ],
+   [
+    108,
+    237
+   ],
+   [
+    108,
+    258
+   ],
+   [
+    153,
+    258
+   ],
+   [
+    153,
+    489
+   ],
+   [
+    154,
+    495
+   ],
+   [
+    15,
+    495
+   ]
+  ],
+  "LIVING_DINING": [
+   [
+    159,
+    258
+   ],
+   [
+    355,
+    258
+   ],
+   [
+    355,
+    623
+   ],
+   [
+    325,
+    623
+   ],
+   [
+    325,
+    666
+   ],
+   [
+    15,
+    666
+   ],
+   [
+    15,
+    495
+   ],
+   [
+    154,
+    495
+   ],
+   [
+    159,
+    489
+   ]
+  ]
+ }
+}
