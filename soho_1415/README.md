@@ -10,8 +10,10 @@ Coordinate-model based workflow. **No image generation is used for architectural
 | 2 | Photographic distortion correction | done — **no correction needed / none applied** |
 | 3 | 2D coordinate trace | done |
 | 4 | Overlay verification | done — **awaiting `2D GEOMETRY APPROVED`** |
-| 5 | Furniture layout | blocked |
-| 6–10 | 3D, cameras, materials, render | blocked |
+| 5 | Furniture layout | done — `FURNITURE APPROVED` |
+| 6 | 3D geometry from the 2D master | done |
+| 7 | Orthographic top-view validation | done — **awaiting `3D GEOMETRY APPROVED`** |
+| 8–10 | Cameras, materials, render | blocked |
 
 ## Files
 
@@ -21,6 +23,15 @@ render_2d.py           renders A / B / C
 verify_overlay.py      numeric residual check (traced line -> nearest printed ink)
 export_svg.py          SVG export
 make_review_sheet.py   PHASE 4 review sheet
+calibrate_scale.py     px -> mm calibration record (13.2 mm/px, provisional)
+furniture.py           PHASE 5 furniture, XY only additive
+check_layout.py        clash + circulation check
+heights.py             PHASE 6 Z variables, ALL PROVISIONAL
+build_3d.py            PHASE 6 3D build, XY read from the 2D master only
+topview_ortho.py       PHASE 7 orthographic top view (perspective 0, -Z)
+verify_3d.py           PHASE 7 3D bounds vs 2D master bounds
+verify_topview.py      PHASE 7 line check + mechanical residual classification
+make_phase7_sheet.py   PHASE 7 review sheet
 phase2/
   00_BEFORE_source.png
   01_AFTER_rectified.png     (bit identical to BEFORE — identity transform)
@@ -52,5 +63,7 @@ out/
 * Master Bedroom / Living Dining storage wall is **L-shaped** (east run: 3 panels,
   north pocket; south run: 2 panels, west pocket) and is always modelled
   **OPEN / PARKED** — rails and pockets kept, openings permanently clear.
+* Heights exist only as provisional variables in `heights.py`; no section was
+  ever supplied. Changing a Z can never change an X or a Y.
 * Balcony side partitions are **parallel** (19.43° / 19.60° from vertical): the
   balcony is a raked parallelogram. Never squared off, symmetrised or curved.

@@ -1,0 +1,26 @@
+3D object                         dx0    dy0    dx1    dy1   max|d| px / mm
+------------------------------------------------------------------------------
+Exterior_Walls                    0.0    0.0    0.0    0.0    0.00 /   0.0
+Columns                           0.0    0.0    0.0    0.0    0.00 /   0.0
+PS                                0.0    0.0    0.0    0.0    0.00 /   0.0
+Closets                           0.0    0.0    0.0    0.0    0.00 /   0.0
+Book_Shelf                        0.0    0.0    0.0    0.0    0.00 /   0.0
+Shower                            0.0    0.0    0.0    0.0    0.00 /   0.0
+WD                                0.0    0.0    0.0    0.0    0.00 /   0.0
+Powder_Room_Fixtures              0.0    0.0    0.0    0.0    0.00 /   0.0
+Toilet                            0.0    0.0    0.0    0.0    0.00 /   0.0
+Kitchen                           0.0    0.0    0.0    0.0    0.00 /   0.0
+Refrigerator                      0.0    0.0    0.0    0.0    0.00 /   0.0
+Storage_Wall_Pocket               0.0    0.0    0.0    0.0    0.00 /   0.0
+Storage_Wall_Parked_Panels        0.0    0.0    0.0    0.0    0.00 /   0.0
+Balcony_Railing                   0.0    0.0    0.0    0.0    0.00 /   0.0
+Work_Desks                        0.0    0.0    0.0    0.0    0.00 /   0.0
+Work_Chairs                       1.0    1.0   -1.0   -1.0    1.00 /  13.2
+Printer_Unit                      0.0    0.0    0.0    0.0    0.00 /   0.0
+Meeting_Table                     0.0    0.0    0.0    0.0    0.00 /   0.0
+Meeting_Chairs                    1.0    1.0   -1.0   -1.0    1.00 /  13.2
+Monitor_55                        0.0    0.0    0.0    0.0    0.00 /   0.0
+Interior_Walls                    0.0    0.0    0.0    0.0    0.00 /   0.0
+------------------------------------------------------------------------------
+objects compared: 21   worst XY deviation: 1.00 px = 13.2 mm
+RESULT: PASS  (3D XY == 2D MASTER XY)

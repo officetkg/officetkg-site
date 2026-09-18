@@ -1,0 +1,87 @@
+element                                mean    p95    max
+--------------------------------------------------------------
+COLUMN C_SE                            1.87   9.00   9.00
+BALCONY east raked (to railing)        1.53   8.72  11.00
+BALCONY west raked (to railing)        1.47   8.67  11.00
+STORAGE SOUTH parked panel 2           3.63   6.00   6.00
+FURN MEETING_CHAIR_1                   1.65   6.00   6.00
+STORAGE EAST parked panel 1            2.77   5.00   5.00
+STORAGE EAST parked panel 2            3.73   5.00   6.00
+OUTER west inner                       0.57   4.48  15.00
+INNER W_shower_south                   1.91   4.00   4.00
+STORAGE SOUTH parked panel 1           1.83   4.00   4.00
+INNER W_shower_east_thick              0.44   3.97   5.06
+INNER W_powder_north                   0.63   3.00   5.00
+INNER W_shower_east_thin               1.43   3.00   3.07
+INNER W_shower_north                   1.34   3.00   3.00
+INNER W_band_shower_clo                1.11   3.00   4.13
+INNER W_closet_side                    1.42   3.00   3.00
+INNER W_pocket_stub                    0.65   3.00   3.00
+STORAGE EAST parked panel 3            1.41   3.00   3.00
+STORAGE SOUTH pocket                   0.30   3.00   6.00
+SC                                     1.34   3.00   6.33
+INNER W_toilet_south                   0.31   2.67   5.00
+STORAGE EAST pocket                    0.27   2.58   6.00
+INNER W_toilet_west                    0.75   2.00   4.00
+INNER W_powder_south                   0.15   1.33   4.13
+OUTER south solid band                 0.19   1.00   7.33
+WD                                     0.08   1.00   1.00
+BOOK_SHELF                             0.14   1.00   1.00
+FURN WORK_CHAIR_1                      0.75   1.00   1.40
+FURN WORK_CHAIR_2                      0.75   1.00   1.40
+FURN MEETING_CHAIR_2                   0.75   1.00   1.40
+FURN MEETING_CHAIR_3                   0.75   1.00   1.40
+FURN MEETING_CHAIR_4                   0.75   1.00   1.40
+FURN MEETING_CHAIR_5                   0.75   1.00   1.40
+FURN MEETING_CHAIR_6                   0.75   1.00   1.40
+BALCONY west stub                      0.41   0.67   0.67
+OUTER envelope                         0.26   0.00   9.00
+OUTER west inner                       0.00   0.00   0.33
+OUTER east inner                       0.00   0.00   0.00
+OUTER east inner                       0.00   0.00   0.00
+COLUMN C_NE                            0.00   0.00   0.00
+INNER W_entrance_south                 0.07   0.00   2.60
+INNER W_powder_kitchen                 0.11   0.00   5.00
+INNER W_hall_south                     0.08   0.00   3.00
+INNER W_SE_column_return               0.05   0.00   3.00
+INNER W_NE_column_return               0.00   0.00   0.00
+SHOWER                                 0.00   0.00   0.00
+VANITY                                 0.00   0.00   0.00
+REFRIGERATOR                           0.00   0.00   0.00
+CLO CLO_1                              0.00   0.00   0.00
+CLO CLO_2                              0.00   0.00   0.00
+KITCHEN counter                        0.00   0.00   0.00
+WINDOW balcony opening                 0.09   0.00   4.33
+BALCONY north edge                     0.00   0.00   0.00
+BALCONY railing                        0.00   0.00   0.00
+FURN WORK_DESK_1                       0.00   0.00   0.00
+FURN WORK_DESK_2                       0.00   0.00   0.00
+FURN PRINTER_UNIT                      0.00   0.00   0.00
+FURN MEETING_TABLE                     0.00   0.00   0.00
+FURN MONITOR_55                        0.00   0.00   0.00
+--------------------------------------------------------------
+59 elements   mean-of-means 0.66 px   worst p95 9.00 px = 119 mm
+
+residuals > 2 px, each traced to a source (no geometry error):
+  COLUMN C_SE                        p95  9.00 px  <- north face at x 344-346 runs inside W_SE_column_return, same height -> no edge
+  BALCONY east raked (to railing)    p95  8.72 px  <- hidden under the railing between y 758 and 780
+  BALCONY west raked (to railing)    p95  8.67 px  <- hidden under the railing between y 758 and 780
+  STORAGE SOUTH parked panel 2       p95  6.00 px  <- as above
+  FURN MEETING_CHAIR_1               p95  6.00 px  <- chair-to-chair joint in the north row: same object, same height
+  STORAGE EAST parked panel 1        p95  5.00 px  <- as above
+  STORAGE EAST parked panel 2        p95  5.00 px  <- as above
+  OUTER west inner                   p95  4.48 px  <- inner face at y~656 runs inside the south solid wall band, same height
+  INNER W_shower_south               p95  4.00 px  <- coplanar with the wall band below the shower
+  STORAGE SOUTH parked panel 1       p95  4.00 px  <- panel-to-panel joint inside the pocket: same object, same height
+  INNER W_shower_east_thick          p95  3.97 px  <- coplanar with the shower screen
+  INNER W_powder_north               p95  3.00 px  <- coplanar with the PS south wall
+  INNER W_shower_east_thin           p95  3.00 px  <- UNEXPLAINED
+  INNER W_shower_north               p95  3.00 px  <- coplanar with the powder room north wall
+  INNER W_band_shower_clo            p95  3.00 px  <- coplanar with the west exterior wall
+  INNER W_closet_side                p95  3.00 px  <- coplanar with the closet carcase
+  INNER W_pocket_stub                p95  3.00 px  <- UNEXPLAINED
+  STORAGE EAST parked panel 3        p95  3.00 px  <- UNEXPLAINED
+  STORAGE SOUTH pocket               p95  3.00 px  <- UNEXPLAINED
+  SC                                 p95  3.00 px  <- UNEXPLAINED
+  INNER W_toilet_south               p95  2.67 px  <- UNEXPLAINED
+  STORAGE EAST pocket                p95  2.58 px  <- UNEXPLAINED
