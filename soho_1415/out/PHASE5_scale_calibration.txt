@@ -1,0 +1,19 @@
+basis                              px     mm   mm/px
+Refrigerator alcove width          53    700  13.208   standard 700 mm fridge bay
+Refrigerator alcove depth          48    650  13.542   standard 650 mm
+Kitchen counter depth              50    650  13.000   system kitchen 650 mm
+LD door clear opening              62    820  13.226   interior door frame 820 mm
+Toilet door clear opening          49    650  13.265   WC door frame 650 mm
+Powder door clear opening          55    730  13.273   door frame 730 mm
+Entrance door clear opening        67    880  13.134   front door frame 880 mm
+W/D appliance bay width            51    680  13.333   washer bay 640-700 mm
+West party wall thickness          15    200  13.333   RC party wall 200 mm
+NE column width                    74    975  13.176   column ~1000 mm
+Partition panel thickness           4     53  13.250   movable panel 45-55 mm
+
+fixture median 13.250  IQR 13.19-13.30
+wall-centre polygon, PS excluded   13.224 mm/px
+wall-centre polygon, PS included   13.167 mm/px
+
+ADOPTED 13.2 mm/px  (1 m = 75.76 px).  Provisional, +/-5%.
+No certain linear dimension is printed on the sheet; replace this with a site measurement before anything is fabricated.

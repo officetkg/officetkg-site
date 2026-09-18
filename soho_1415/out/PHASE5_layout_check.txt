@@ -1,0 +1,23 @@
+=== 1. furniture vs architecture ===
+  none
+=== 2. furniture vs furniture ===
+  none
+=== 3. inside the dwelling ===
+  all inside
+=== 4. circulation widths (narrowest free dimension of each route) ===
+  OK entrance -> LD, door swing         clear   1663 mm   (need 800 mm)
+  OK LD north open area                 clear   2455 mm   (need 1200 mm)
+  OK east aisle, LD -> south zone       clear   3472 mm   (need 750 mm)
+  OK MB <-> LD, east partition gap      clear   1584 mm   (need 600 mm)
+  OK MB <-> south zone, south gap       clear   1201 mm   (need 900 mm)
+  OK work chair 1 pull-out              clear   2218 mm   (need 900 mm)
+  OK work chair 2 pull-out              clear   2376 mm   (need 900 mm)
+  OK meeting chair pull-out, north      clear   1795 mm   (need 550 mm)
+  OK meeting chair pull-out, south      clear   1795 mm   (need 550 mm)
+  OK Clo. bi-fold door swing            clear   1175 mm   (need 200 mm)
+  OK Book Shelf access                  clear   1808 mm   (need 650 mm)
+  OK balcony sash access                clear   2402 mm   (need 700 mm)
+  OK south zone, west of meeting        clear   1808 mm   (need 900 mm)
+  OK kitchen / toilet / powder          clear    884 mm   (need 750 mm)
+
+RESULT: PASS  (architecture clashes 0, furniture clashes 0, outside 0)

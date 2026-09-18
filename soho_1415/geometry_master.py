@@ -124,6 +124,11 @@ INNER_WALLS = {
     "W_toilet_south":     rect(512, 403, 632, 408),
     "W_hall_south":       rect(632, 402, 758, 407),   # kitchen / LD line (holds LD door)
     "W_pocket_stub":      rect(555, 406, 572, 430),   # stub carrying the partition pocket
+    # --- PHASE 5 addendum: two column returns that were present on the sheet but
+    #     not yet carried in the PHASE 4 model.  They ADD faces, they do not move
+    #     any approved coordinate.  Flagged to the client for acknowledgement.
+    "W_SE_column_return": rect(720, 764, 758, 822),   # SE column casing, projects into LD
+    "W_NE_column_return": rect(721, 174, 726, 198),   # NE column casing, entrance side
 }
 
 # ----------------------------------------------------------------------
