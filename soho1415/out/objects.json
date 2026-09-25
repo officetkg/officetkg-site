@@ -1,0 +1,640 @@
+{
+  "unit": "mm",
+  "coordinate_system": "X=east(plan right), Y=north(plan up), Z=up, FL=0",
+  "areas": {
+    "gross_m2": 40.7725,
+    "balcony_m2": 6.5095
+  },
+  "objects": [
+    {
+      "object": "WALL_EXT_WEST",
+      "group": "外周壁",
+      "bbox_min": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bbox_max": [
+        195.0,
+        8675.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "WALL_EXT_EAST",
+      "group": "外周壁",
+      "bbox_min": [
+        4495.0,
+        630.0,
+        0.0
+      ],
+      "bbox_max": [
+        4700.0,
+        8199.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "WALL_EXT_NORTH",
+      "group": "外周壁",
+      "bbox_min": [
+        195.0,
+        8495.0,
+        0.0
+      ],
+      "bbox_max": [
+        4145.0,
+        8675.0,
+        2200.0
+      ],
+      "triangles": 36
+    },
+    {
+      "object": "WALL_EXT_SOUTH",
+      "group": "外周壁",
+      "bbox_min": [
+        195.0,
+        0.0,
+        0.0
+      ],
+      "bbox_max": [
+        4145.0,
+        195.0,
+        2450.0
+      ],
+      "triangles": 36
+    },
+    {
+      "object": "COLUMN_SE",
+      "group": "柱",
+      "bbox_min": [
+        4145.0,
+        -360.0,
+        0.0
+      ],
+      "bbox_max": [
+        4700.0,
+        630.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "COLUMN_NE",
+      "group": "柱",
+      "bbox_min": [
+        4145.0,
+        8199.0,
+        0.0
+      ],
+      "bbox_max": [
+        4700.0,
+        9037.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "WALL_INT",
+      "group": "内壁",
+      "bbox_min": [
+        195.0,
+        5035.0,
+        0.0
+      ],
+      "bbox_max": [
+        4495.0,
+        7710.0,
+        2450.0
+      ],
+      "triangles": 180
+    },
+    {
+      "object": "PS",
+      "group": "PS",
+      "bbox_min": [
+        195.0,
+        7710.0,
+        0.0
+      ],
+      "bbox_max": [
+        2495.0,
+        8495.0,
+        2200.0
+      ],
+      "triangles": 24
+    },
+    {
+      "object": "ENTRANCE",
+      "group": "玄関",
+      "bbox_min": [
+        2950.0,
+        7655.0,
+        -120.0
+      ],
+      "bbox_max": [
+        4170.0,
+        8495.0,
+        0.0
+      ],
+      "triangles": 24
+    },
+    {
+      "object": "SC",
+      "group": "SC",
+      "bbox_min": [
+        2575.0,
+        7780.0,
+        0.0
+      ],
+      "bbox_max": [
+        2945.0,
+        8345.0,
+        2100.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "POWDER_ROOM",
+      "group": "Powder Room",
+      "bbox_min": [
+        1765.0,
+        6270.0,
+        0.0
+      ],
+      "bbox_max": [
+        2835.0,
+        6860.0,
+        2000.0
+      ],
+      "triangles": 132
+    },
+    {
+      "object": "SHOWER",
+      "group": "Shower",
+      "bbox_min": [
+        195.0,
+        6465.0,
+        0.0
+      ],
+      "bbox_max": [
+        966.0,
+        7620.0,
+        2050.0
+      ],
+      "triangles": 48
+    },
+    {
+      "object": "WD",
+      "group": "W/D",
+      "bbox_min": [
+        1085.0,
+        6270.0,
+        0.0
+      ],
+      "bbox_max": [
+        1725.0,
+        7010.0,
+        1050.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "TOILET",
+      "group": "Toilet",
+      "bbox_min": [
+        1530.0,
+        5400.0,
+        0.0
+      ],
+      "bbox_max": [
+        2795.0,
+        5985.0,
+        830.0
+      ],
+      "triangles": 48
+    },
+    {
+      "object": "KITCHEN",
+      "group": "Kitchen",
+      "bbox_min": [
+        3875.0,
+        6130.0,
+        0.0
+      ],
+      "bbox_max": [
+        4495.0,
+        8010.0,
+        2100.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "REFRIGERATOR",
+      "group": "Refrigerator",
+      "bbox_min": [
+        3800.0,
+        5525.0,
+        0.0
+      ],
+      "bbox_max": [
+        4495.0,
+        6090.0,
+        1800.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "CLOSET_1",
+      "group": "Closet",
+      "bbox_min": [
+        195.0,
+        5600.0,
+        0.0
+      ],
+      "bbox_max": [
+        780.0,
+        6180.0,
+        2300.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "CLOSET_2",
+      "group": "Closet",
+      "bbox_min": [
+        780.0,
+        5600.0,
+        0.0
+      ],
+      "bbox_max": [
+        1365.0,
+        6180.0,
+        2300.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BOOK_SHELF_EXISTING",
+      "group": "既存Book Shelf",
+      "bbox_min": [
+        205.0,
+        425.0,
+        0.0
+      ],
+      "bbox_max": [
+        490.0,
+        2190.0,
+        2100.0
+      ],
+      "triangles": 168
+    },
+    {
+      "object": "MOVABLE_WALL",
+      "group": "可動収納壁／レール",
+      "bbox_min": [
+        195.0,
+        2292.0,
+        0.0
+      ],
+      "bbox_max": [
+        2095.0,
+        5035.0,
+        2450.0
+      ],
+      "triangles": 84
+    },
+    {
+      "object": "WINDOW_SASH",
+      "group": "窓／サッシ",
+      "bbox_min": [
+        1740.0,
+        40.0,
+        0.0
+      ],
+      "bbox_max": [
+        4080.0,
+        155.0,
+        2100.0
+      ],
+      "triangles": 60
+    },
+    {
+      "object": "WINDOW_GLASS",
+      "group": "窓／サッシ",
+      "bbox_min": [
+        1800.0,
+        95.0,
+        70.0
+      ],
+      "bbox_max": [
+        4020.0,
+        165.0,
+        2030.0
+      ],
+      "triangles": 24
+    },
+    {
+      "object": "BALCONY_SLAB",
+      "group": "バルコニー床",
+      "bbox_min": [
+        0.0,
+        -1385.0,
+        -350.0
+      ],
+      "bbox_max": [
+        4700.0,
+        0.0,
+        -150.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_RAILING",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        0.0,
+        -1405.0,
+        -150.0
+      ],
+      "bbox_max": [
+        4700.0,
+        -1305.0,
+        1050.0
+      ],
+      "triangles": 84
+    },
+    {
+      "object": "BALCONY_GLASS",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        0.0,
+        -1361.0,
+        -70.0
+      ],
+      "bbox_max": [
+        4700.0,
+        -1349.0,
+        970.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_PARTITION_W",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        0.0,
+        -1385.0,
+        -150.0
+      ],
+      "bbox_max": [
+        80.0,
+        0.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_PARTITION_E",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        4620.0,
+        -1385.0,
+        -150.0
+      ],
+      "bbox_max": [
+        4700.0,
+        -360.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_DOWNPIPE",
+      "group": "バルコニー床",
+      "bbox_min": [
+        3975.0,
+        -365.0,
+        -150.0
+      ],
+      "bbox_max": [
+        4105.0,
+        -235.0,
+        2450.0
+      ],
+      "triangles": 96
+    },
+    {
+      "object": "BALCONY_SOFFIT",
+      "group": "バルコニー床",
+      "bbox_min": [
+        0.0,
+        -1385.0,
+        2450.0
+      ],
+      "bbox_max": [
+        4700.0,
+        0.0,
+        2650.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "FLOOR_SLAB",
+      "group": "床・天井",
+      "bbox_min": [
+        0.0,
+        0.0,
+        -200.0
+      ],
+      "bbox_max": [
+        4700.0,
+        8675.0,
+        0.0
+      ],
+      "triangles": 60
+    },
+    {
+      "object": "CEILING",
+      "group": "床・天井",
+      "bbox_min": [
+        195.0,
+        195.0,
+        2450.0
+      ],
+      "bbox_max": [
+        4495.0,
+        8495.0,
+        2650.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "DESK_2P",
+      "group": "2人用ワークデスク",
+      "bbox_min": [
+        195.0,
+        2825.0,
+        0.0
+      ],
+      "bbox_max": [
+        825.0,
+        4995.0,
+        1310.0
+      ],
+      "triangles": 132
+    },
+    {
+      "object": "TASK_CHAIR_1",
+      "group": "執務チェア2脚",
+      "bbox_min": [
+        640.0,
+        4053.0,
+        0.0
+      ],
+      "bbox_max": [
+        1280.0,
+        4693.0,
+        1060.0
+      ],
+      "triangles": 240
+    },
+    {
+      "object": "TASK_CHAIR_2",
+      "group": "執務チェア2脚",
+      "bbox_min": [
+        640.0,
+        3133.0,
+        0.0
+      ],
+      "bbox_max": [
+        1280.0,
+        3773.0,
+        1060.0
+      ],
+      "triangles": 240
+    },
+    {
+      "object": "MEETING_TABLE",
+      "group": "6人用ミーティングテーブル",
+      "bbox_min": [
+        2780.0,
+        1260.0,
+        0.0
+      ],
+      "bbox_max": [
+        3680.0,
+        3035.0,
+        740.0
+      ],
+      "triangles": 60
+    },
+    {
+      "object": "MTG_CHAIR_W1",
+      "group": "会議チェア6脚",
+      "bbox_min": [
+        2236.0,
+        2393.0,
+        0.0
+      ],
+      "bbox_max": [
+        2721.0,
+        2853.0,
+        900.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "MTG_CHAIR_W2",
+      "group": "会議チェア6脚",
+      "bbox_min": [
+        2236.0,
+        1429.0,
+        0.0
+      ],
+      "bbox_max": [
+        2721.0,
+        1889.0,
+        900.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "MTG_CHAIR_E1",
+      "group": "会議チェア6脚",
+      "bbox_min": [
+        3739.0,
+        2393.0,
+        0.0
+      ],
+      "bbox_max": [
+        4224.0,
+        2853.0,
+        900.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "MTG_CHAIR_E2",
+      "group": "会議チェア6脚",
+      "bbox_min": [
+        3739.0,
+        1429.0,
+        0.0
+      ],
+      "bbox_max": [
+        4224.0,
+        1889.0,
+        900.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "MTG_CHAIR_N",
+      "group": "会議チェア6脚",
+      "bbox_min": [
+        2998.0,
+        3121.0,
+        0.0
+      ],
+      "bbox_max": [
+        3458.0,
+        3606.0,
+        900.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "MTG_CHAIR_S",
+      "group": "会議チェア6脚",
+      "bbox_min": [
+        2998.0,
+        688.0,
+        0.0
+      ],
+      "bbox_max": [
+        3458.0,
+        1173.0,
+        900.0
+      ],
+      "triangles": 72
+    },
+    {
+      "object": "MONITOR_55",
+      "group": "55インチモニター",
+      "bbox_min": [
+        4420.0,
+        1790.0,
+        750.0
+      ],
+      "bbox_max": [
+        4495.0,
+        3010.0,
+        1435.0
+      ],
+      "triangles": 36
+    }
+  ]
+}
