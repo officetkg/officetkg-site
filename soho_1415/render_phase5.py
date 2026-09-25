@@ -61,7 +61,7 @@ sc=1100.0/H_; P=cv2.resize(base,(int(W_*sc),1100),interpolation=cv2.INTER_AREA)
 pw=P.shape[1]; HDR=52; LEG=420
 sh=np.full((1100+HDR,pw+LEG+20,3),255,np.uint8); sh[HDR:HDR+1100,0:pw]=P
 cv2.rectangle(sh,(0,HDR),(pw-1,HDR+1099),(180,180,180),1)
-cv2.putText(sh,'PHASE 5  FURNITURE LAYOUT  (architecture XY LOCKED, storage wall OPEN)',
+cv2.putText(sh,'PHASE 5  FURNITURE LAYOUT  (XY LOCKED, storage wall OPEN, balcony faces NORTH)',
             (4,34),cv2.FONT_HERSHEY_SIMPLEX,0.55,(0,0,0),1,cv2.LINE_AA)
 x=pw+14; y=HDR+28
 def txt(t,b=False,col=(40,40,40)):
@@ -72,18 +72,18 @@ for t in ['1 WORK_DESK_1 / _2   2 PLAN CHAIRS','3 PRINTER_UNIT       4 MEETING_T
           '5 MEETING_CHAIR_1-6  6 MONITOR_55','7 existing BOOK SHELF (reused as is)']: txt(t)
 y+=8
 txt('WORKSTATIONS  -  bedroom zone',True,(20,110,190))
-for t in ['WORK_DESK_1 / _2   700 x 1400 mm each','  in line on the west wall, 2.8 m run',
+for t in ['WORK_DESK_1 / _2   700 x 1400 mm each','  in line on the EAST wall, 2.8 m run',
           'WORK_CHAIR_1 / _2  650 x 650 mm','  clear behind: 2218 / 2376 mm',
           'PRINTER_UNIT       500 x 450 mm']: txt(t)
 y+=8; txt('MEETING  -  living dining zone',True,(15,85,160))
 for t in ['MEETING_TABLE      1800 x 900 mm','  long axis E-W, in the widest part of',
-          '  the opened-up volume, balcony daylight','MEETING_CHAIR_1-6  3 north + 3 south',
-          '  600 mm seat pitch','MONITOR_55  1230 mm on the EAST wall',
+          '  the opened-up volume, balcony daylight','MEETING_CHAIR_1-6  3 south + 3 north',
+          '  600 mm seat pitch','MONITOR_55  1230 mm on the WEST wall',
           '  aligned on the table axis','  viewing 1.4 - 2.6 m']: txt(t)
 y+=8; txt('CIRCULATION  (all PASS)',True)
 for t in ['entrance -> LD          1663 mm','LD north open area      2455 mm',
-          'east aisle -> balcony    792 mm','MB <-> LD east gap      1584 mm',
-          'MB <-> south gap        1201 mm','balcony sash access     2402 mm',
+          'west aisle -> balcony    792 mm','MB <-> LD west gap      1584 mm',
+          'MB <-> north gap        1201 mm','balcony sash access     2402 mm',
           'Book Shelf access       1808 mm','Clo. bi-fold swing      clear']: txt(t)
 y+=8; txt('CHECKS',True)
 for t in ['architecture clashes  0','furniture clashes     0','all items inside the envelope',

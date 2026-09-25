@@ -82,7 +82,7 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
 <header class="head">
   <div style="flex:1 1 320px;min-width:0">
     <h1>OIMACHI TRACKS RESIDENCE 1415</h1>
-    <p class="sub">PHASE 6 で構築した 3D ジオメトリ。元図面の 2D MASTER 座標をそのまま押し出したもので、画像生成は使っていません。</p>
+    <p class="sub">PHASE 6 で構築した 3D ジオメトリ。元図面の 2D MASTER 座標をそのまま押し出したもので、画像生成は使っていません。バルコニーは<b>北向き</b>です。</p>
   </div>
   <span class="tag">Phase 7 · 3D geometry review</span>
 </header>
@@ -104,15 +104,18 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
     <div class="card">
       <h2>view</h2>
       <div class="views">
-        <button class="v" data-az="0"   data-el="89.5">TOP</button>
-        <button class="v" data-az="212" data-el="30">SE</button>
-        <button class="v" data-az="148" data-el="30">SW</button>
-        <button class="v" data-az="328" data-el="30">NE</button>
-        <button class="v" data-az="32"  data-el="30">NW</button>
-        <button class="v" data-az="180" data-el="4">S</button>
+        <button class="v" data-b="315" data-el="28">NW</button>
+        <button class="v" data-b="0"   data-el="28">N</button>
+        <button class="v" data-b="45"  data-el="28">NE</button>
+        <button class="v" data-b="270" data-el="28">W</button>
+        <button class="v" data-b="180" data-el="89.5">TOP</button>
+        <button class="v" data-b="90"  data-el="28">E</button>
+        <button class="v" data-b="225" data-el="28">SW</button>
+        <button class="v" data-b="180" data-el="28">S</button>
+        <button class="v" data-b="135" data-el="28">SE</button>
       </div>
       <p class="mono" style="margin:9px 0 0;font-size:10.5px;color:var(--muted)">
-        orthographic only — perspective = 0</p>
+        カメラのいる方位 · TOP は北が上<br>orthographic only — perspective = 0</p>
     </div>
 
     <div class="card">
@@ -134,14 +137,16 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
 
 <div class="notes">
   <div class="note">
-    <h3>座標系</h3>
+    <h3>方位</h3>
     <dl class="kv">
-      <dt>原点</dt><dd>外壁外面 NW 角</dd>
-      <dt>X / Y</dt><dd>東 / 南</dd>
+      <dt>バルコニー</dt><dd>北向き</dd>
+      <dt>玄関・廊下</dt><dd>南</dd>
+      <dt>Book Shelf 側</dt><dd>東壁</dd>
+      <dt>モニター側</dt><dd>西壁</dd>
       <dt>単位</dt><dd>1 px = 13.2 mm</dd>
-      <dt>外形</dt><dd>365 × 672 px</dd>
-      <dt></dt><dd>4818 × 8870 mm</dd>
+      <dt>外形</dt><dd>4818 × 8870 mm</dd>
     </dl>
+    <p style="margin:8px 0 0;font-size:11.5px">方位記号の N は針の<b>下端</b>に付いており、図面上は北が下です。</p>
   </div>
   <div class="note">
     <h3>XY 一致検証</h3>
@@ -155,7 +160,7 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
   </div>
   <div class="note">
     <h3>収納壁</h3>
-    <p>OPEN / PARKED 固定。東ラン 3 枚は北戸袋、南ラン 2 枚は西戸袋に格納。レールは全長保持、開口は常時クリア。</p>
+    <p>OPEN / PARKED 固定。南北ラン 3 枚は南端の戸袋、東西ラン 2 枚は東端の戸袋に格納。レールは全長保持、開口は常時クリア。</p>
     <p class="mono" style="font-size:11px">緑 = 格納パネル / 戸袋 / レール</p>
   </div>
   <div class="note flag">
@@ -218,7 +223,12 @@ const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.localClippingEnabled=true;
 const scene=new THREE.Scene();
-const root=new THREE.Group(); root.rotation.x=-Math.PI/2; scene.add(root);
+const root=new THREE.Group(); root.scale.x=-1; scene.add(root);
+const inner=new THREE.Group(); inner.rotation.x=-Math.PI/2; root.add(inner);
+// MASTER (x right, y down, z up) -> world (EAST, UP, SOUTH), right-handed.
+// north = MASTER +y (plan down), east = -MASTER x.  The MASTER tuple is
+// left-handed, so the conversion is a reflection: scale.x = -1 after the
+// -90 deg X rotation gives world = (-x, z, -y).  See orientation.py.
 const camera=new THREE.OrthographicCamera(-1,1,1,-1,-6000,6000);
 const controls=new THREE.OrbitControls(camera,cv);
 controls.enableDamping=!REDUCED; controls.dampingFactor=.09; controls.enablePan=true;
@@ -253,10 +263,10 @@ new THREE.GLTFLoader().parse(bytes.buffer,"",gltf=>{
     objs.push(o); box.expandByObject(o);
   }});
   gltf.scene.updateMatrixWorld(true);
-  root.add(gltf.scene);
   box.getCenter(CENTER); RADIUS=box.getSize(new THREE.Vector3()).length()/2;
-  root.position.set(-CENTER.x,-CENTER.z,CENTER.y);     // centre after the X rotation
-  buildLayers(); setView(212,30); onCut();
+  gltf.scene.position.set(-CENTER.x,-CENTER.y,-CENTER.z);   // centre in MASTER space
+  inner.add(gltf.scene);
+  buildLayers(); setView(45,28); onCut();
   document.getElementById('load').remove();
 });
 
@@ -274,13 +284,13 @@ function buildLayers(){
   });
 }
 
-function setView(az,el){
-  const a=az*Math.PI/180, e=el*Math.PI/180, d=RADIUS*2.4;
-  camera.position.set(d*Math.cos(e)*Math.sin(a), d*Math.sin(e), d*Math.cos(e)*Math.cos(a));
+function setView(bearing,el){            // bearing = compass position of the CAMERA
+  const b=bearing*Math.PI/180, e=el*Math.PI/180, d=RADIUS*2.4;
+  camera.position.set(d*Math.cos(e)*Math.sin(b), d*Math.sin(e), -d*Math.cos(e)*Math.cos(b));
   controls.target.set(0,0,0); camera.up.set(0,1,0); controls.update(); resize();
 }
 document.querySelectorAll('button.v').forEach(b=>
-  b.addEventListener('click',()=>setView(+b.dataset.az,+b.dataset.el)));
+  b.addEventListener('click',()=>setView(+b.dataset.b,+b.dataset.el)));
 
 const cutEl=document.getElementById('cut'), cutV=document.getElementById('cutv');
 function onCut(){
@@ -321,7 +331,7 @@ new MutationObserver(paint).observe(document.documentElement,{attributes:true,at
 paint(); resize();
 (function loop(){
   requestAnimationFrame(loop); controls.update();
-  const nv=new THREE.Vector3(0,0,1).applyQuaternion(camera.quaternion.clone().invert());
+  const nv=new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion.clone().invert());
   needle.setAttribute('transform','rotate('+(Math.atan2(nv.x,nv.y)*180/Math.PI).toFixed(1)+' 24 24)');
   renderer.render(scene,camera);
 })();

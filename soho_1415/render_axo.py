@@ -8,7 +8,7 @@ drawing, no geometry invented.  This is a geometry-checking aid only; the
 PHASE 8 cameras are a separate step.
 """
 import cv2, numpy as np
-import build_3d as B, heights as H
+import build_3d as B, heights as H, orientation as O
 
 COL = {
  "Exterior_Walls":(236,236,238),"Interior_Walls":(226,226,230),"Columns":(206,200,212),
@@ -22,12 +22,9 @@ COL = {
  "Monitor_55":(32,32,38),"Floor_Slab":(224,221,217),
 }
 
-def basis(az_deg, el_deg):
-    az, el = np.radians(az_deg), np.radians(el_deg)
-    f = np.array([np.cos(el)*np.sin(az), -np.cos(el)*np.cos(az), -np.sin(el)])
-    r = np.cross(f, [0.,0.,1.]); r /= np.linalg.norm(r)
-    u = np.cross(r, f);          u /= np.linalg.norm(u)
-    return r, u, f
+def basis(bearing_deg, el_deg):
+    """Right-handed camera basis in ENU. bearing = compass bearing of the CAMERA."""
+    return O.camera_basis(bearing_deg, el_deg)
 
 def collect(z_cut=None, skip=()):
     """triangles + per-triangle colour and object id, boxes clipped at z_cut."""
@@ -48,18 +45,21 @@ def collect(z_cut=None, skip=()):
     return np.array(T), np.array(C), np.array(OID), \
            np.array([np.cross(p[1]-p[0], p[2]-p[0]) for p in np.array(T)])
 
-def render(az=215, el=30, W=1500, Hh=1050, z_cut=None, skip=(), pad=.06,
-           light=(.40,-.72,.57), outline=True):
-    r, u, f = basis(az, el)
+def render(bearing=225, el=30, W=1500, Hh=1050, z_cut=None, skip=(), pad=.06,
+           light=(.35,-.45,.82), outline=True):
+    r, u, zc = basis(bearing, el)
     T, C, OID, NRM = collect(z_cut, skip)
     nl = np.linalg.norm(NRM, axis=1); nl[nl == 0] = 1
     N = NRM / nl[:, None]
     L = np.array(light, float); L /= np.linalg.norm(L)
-    shade = 0.42 + 0.58 * np.clip(np.abs(N @ L), 0, 1)
-    C = np.clip(C * shade[:, None], 0, 255)
 
-    P = np.stack([T @ r, T @ u], -1)
-    D = T @ (-f)
+    T_enu = O.to_enu(T)                      # MASTER -> right-handed east/north/up
+    N = O.to_enu(N)                          # normals ride the same reflection
+    N = N / np.maximum(np.linalg.norm(N, axis=1), 1e-9)[:, None]
+    shade = 0.42 + 0.58 * np.clip(np.abs(N @ L), 0, 1)
+    C = np.clip(np.array(C) * shade[:, None], 0, 255)
+    P = np.stack([T_enu @ r, T_enu @ u], -1)
+    D = T_enu @ zc                           # depth toward the eye
     x0, y0, x1, y1 = P[...,0].min(), P[...,1].min(), P[...,0].max(), P[...,1].max()
     s = min(W*(1-2*pad)/(x1-x0), Hh*(1-2*pad)/(y1-y0))
     ox = (W-(x1-x0)*s)/2 - x0*s; oy = (Hh-(y1-y0)*s)/2 + y1*s
@@ -104,14 +104,16 @@ def render(az=215, el=30, W=1500, Hh=1050, z_cut=None, skip=(), pad=.06,
 
 if __name__ == "__main__":
     CUT = H.P(1250)
-    jobs = [("AXO_1_SE_full", dict(az=212, el=28), "south-east, full height"),
-            ("AXO_2_SW_full", dict(az=148, el=28), "south-west, full height"),
-            ("AXO_3_SE_cut",  dict(az=212, el=40, z_cut=CUT), "south-east, cut at 1250 mm"),
-            ("AXO_4_NE_cut",  dict(az=328, el=40, z_cut=CUT), "north-east, cut at 1250 mm"),
-            ("AXO_5_NW_cut",  dict(az= 32, el=40, z_cut=CUT), "north-west, cut at 1250 mm"),
-            ("AXO_6_SE_close",dict(az=200, el=22, z_cut=H.P(1600)), "south-east, cut at 1600 mm")]
+    jobs = [("AXO_0_TOP_northup", dict(bearing=180, el=89.5), "TOP, north up"),
+            ("AXO_1_NE_full",  dict(bearing= 45, el=28), "camera NORTH-EAST, full height"),
+            ("AXO_2_NW_full",  dict(bearing=315, el=28), "camera NORTH-WEST, full height"),
+            ("AXO_3_NE_cut",   dict(bearing= 45, el=40, z_cut=CUT), "camera NORTH-EAST, cut 1250"),
+            ("AXO_4_SE_cut",   dict(bearing=135, el=40, z_cut=CUT), "camera SOUTH-EAST, cut 1250"),
+            ("AXO_5_SW_cut",   dict(bearing=225, el=40, z_cut=CUT), "camera SOUTH-WEST, cut 1250"),
+            ("AXO_6_NW_cut",   dict(bearing=315, el=40, z_cut=CUT), "camera NORTH-WEST, cut 1250"),
+            ("AXO_7_N_low",    dict(bearing=  0, el=20, z_cut=H.P(1600)), "camera due NORTH, cut 1600")]
     for nm, kw, note in jobs:
         im = render(**kw)
-        cv2.putText(im, f"{nm}   {note}   ORTHOGRAPHIC (no perspective) - geometry check only",
+        cv2.putText(im, f"{nm}   {note}   ORTHOGRAPHIC - balcony faces NORTH",
                     (14,26), cv2.FONT_HERSHEY_SIMPLEX, .50, (110,110,110), 1, cv2.LINE_AA)
         cv2.imwrite(f"out/{nm}.png", im); print("rendered", nm)

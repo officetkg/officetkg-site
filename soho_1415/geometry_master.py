@@ -16,9 +16,21 @@ COORDINATE SYSTEM  ("MASTER px")
   work  = source_pixel - (240, 120)          # analysis window
   MX    = work_x - 403                       # 403 = west exterior wall, OUTER face
   MY    = work_y - 150                       # 150 = north exterior wall, OUTER face
-  origin: NW corner of the building outline (exterior faces)
-  X     : right   (= plan east)
-  Y     : down    (= plan south, balcony side)
+  origin: top-left corner of the building outline on the sheet (exterior faces)
+  X     : right on the sheet
+  Y     : down on the sheet
+
+  !! ORIENTATION -- corrected after the compass rose was re-read !!
+  The compass "N" sits at the LOWER tip of the needle, so NORTH POINTS DOWN
+  THE PAGE (see orientation.py for the pixel evidence).  Therefore:
+      MASTER +Y (plan down)  = NORTH   <- the balcony side
+      MASTER -Y (plan up)    = SOUTH   <- the entrance / common corridor
+      MASTER +X (plan right) = WEST    <- kitchen, 55 inch monitor
+      MASTER -X (plan left)  = EAST    <- Book Shelf, work desks
+  Every identifier below ("north", "W_shower_east_thick", "run_EAST", ...) is a
+  PLAN-RELATIVE name fixed at PHASE 3 and kept so the approved model is not
+  churned.  Read them as sheet directions, never as compass directions, and
+  take compass directions from orientation.py only.
   unit  : 1 px of the source raster.  NOT converted to mm.
 
 Everything below is in MASTER px.

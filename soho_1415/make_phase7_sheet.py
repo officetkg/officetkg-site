@@ -17,8 +17,8 @@ def rs(x): return cv2.resize(x, (int(R.W_*sc), 1000), interpolation=cv2.INTER_AR
 A, Bv, C = rs(A), rs(Bv), rs(C)
 pw = A.shape[1]; HDR, LEG = 54, 330
 sh = np.full((1000+HDR, pw*3+LEG+40, 3), 255, np.uint8)
-for i, (im, t) in enumerate(((A, 'A  2D MASTER  (approved, storage wall OPEN)'),
-                             (Bv, 'B  3D MODEL - ORTHOGRAPHIC TOP VIEW'),
+for i, (im, t) in enumerate(((A, 'A  2D MASTER  (as drawn: NORTH IS DOWN)'),
+                             (Bv, 'B  3D MODEL - ORTHO TOP, PLAN ORIENTATION'),
                              (C, 'C  OVERLAY  A + B'))):
     x = i*(pw+10); sh[HDR:HDR+1000, x:x+pw] = im
     cv2.putText(sh, t, (x+4, 34), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0,0,0), 1, cv2.LINE_AA)
@@ -26,7 +26,12 @@ for i, (im, t) in enumerate(((A, 'A  2D MASTER  (approved, storage wall OPEN)'),
 x = 3*(pw+10)+6; y = HDR+26
 def txt(t, b=False, c=(40,40,40)):
     global y; cv2.putText(sh, t, (x, y), cv2.FONT_HERSHEY_SIMPLEX, .46 if b else .42, c, 1, cv2.LINE_AA); y += 23
-txt('CAMERA FOR VIEW B', True)
+txt('ORIENTATION', True, (0,90,190))
+for t in ['compass N sits at the LOWER needle tip',
+          'so NORTH IS PLAN-DOWN:',
+          '  balcony -> NORTH   entrance -> SOUTH',
+          '  plan-right -> WEST  plan-left -> EAST']: txt(t)
+y += 10; txt('CAMERA FOR VIEW B', True)
 for t in ['perspective            = 0', 'camera axis            = -Z (straight down)',
           'origin, scale, aspect  = identical to A',
           'projection is literally (MASTER x, y)',

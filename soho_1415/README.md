@@ -48,6 +48,27 @@ out/
   geometry_master.svg
 ```
 
+## Orientation — corrected
+
+The compass rose on the sheet carries its "N" at the **lower** tip of the needle
+and nothing at all above the upper tip, so **north points down the page**:
+
+| MASTER axis | sheet | compass |
+|---|---|---|
+| +Y | down | **NORTH** — the balcony side |
+| −Y | up | SOUTH — entrance / common corridor |
+| +X | right | **WEST** — kitchen, 55" monitor |
+| −X | left | EAST — Book Shelf, work desks |
+
+`orientation.py` holds the pixel evidence and the conversion helpers. Every
+identifier in `geometry_master.py` ("north", "run_EAST", `W_shower_east_thick`…)
+is a **plan-relative** name frozen at PHASE 3; read them as sheet directions, not
+compass directions.
+
+The MASTER tuple (right, down, up) is left-handed, so any right-handed renderer
+must reflect it. `orientation.to_enu` and the viewer's `scale.x = -1` do exactly
+that; without it a 3D view comes out mirrored.
+
 ## Coordinate system
 
 * `work  = source_pixel - (240, 120)`
@@ -56,6 +77,8 @@ out/
 * X right (plan east), Y down (plan south, balcony side)
 * **Unit = 1 source-image pixel. No mm conversion.** mm calibration is deferred until
   after `2D GEOMETRY APPROVED`, and must use a real dimension, not the floor area.
+* The balcony faces **north**: no direct sun reaches the living zone. PHASE 9
+  lighting must be built on even north daylight, not on a south-facing model.
 
 ## Rules carried through every phase
 
