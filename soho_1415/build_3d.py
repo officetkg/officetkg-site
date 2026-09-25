@@ -131,10 +131,20 @@ add("Kitchen", R(G.KITCHEN["counter"], 0, H.KITCHEN_COUNTER_HEIGHT),
 add("Refrigerator", R(G.REFRIGERATOR, 0, H.REFRIGERATOR_HEIGHT))
 for k, r in G.CLOSETS.items():
     add("Closets", R(r, 0, H.CLOSET_HEIGHT))
-bs = G.BOOK_SHELF["body"]
-add("Book_Shelf", R(bs, 0, H.BOOKSHELF_HEIGHT))
-for y in G.BOOK_SHELF["shelf_lines_y"]:
-    add("Book_Shelf", _box(bs["x0"], y-0.5, bs["x1"], y+0.5, 0, H.BOOKSHELF_HEIGHT))
+# open grid carcase, as the photos show: back, top, bottom, ends, 4 shelves,
+# and uprights on the drawn shelf lines.  Footprint identical to the 2D master.
+bs = G.BOOK_SHELF["body"]; BT = 1.4
+add("Book_Shelf",
+    _box(bs["x0"], bs["y0"], bs["x0"]+BT, bs["y1"], 0, H.BOOKSHELF_HEIGHT),   # back
+    _box(bs["x0"], bs["y0"], bs["x1"], bs["y0"]+BT, 0, H.BOOKSHELF_HEIGHT),   # end
+    _box(bs["x0"], bs["y1"]-BT, bs["x1"], bs["y1"], 0, H.BOOKSHELF_HEIGHT),   # end
+    _box(bs["x0"], bs["y0"], bs["x1"], bs["y1"], 0, BT),                      # base
+    _box(bs["x0"], bs["y0"], bs["x1"], bs["y1"], H.BOOKSHELF_HEIGHT-BT, H.BOOKSHELF_HEIGHT))
+for i in range(1, 6):                                                          # shelves
+    z = H.BOOKSHELF_HEIGHT*i/6.0
+    add("Book_Shelf", _box(bs["x0"], bs["y0"], bs["x1"], bs["y1"], z-BT/2, z+BT/2))
+for y in G.BOOK_SHELF["shelf_lines_y"]:                                        # uprights
+    add("Book_Shelf", _box(bs["x0"], y-BT/2, bs["x1"], y+BT/2, 0, H.BOOKSHELF_HEIGHT))
 
 # ======================================================================
 # 14-15. STORAGE WALL  --  OPEN / PARKED
@@ -295,6 +305,14 @@ add("Monitor_55", _box(mo["x0"], mo["y0"], mo["x1"], mo["y1"],
 # ======================================================================
 add("Floor_Slab", _box(M(403,0)[0], M(0,150)[1], M(768,0)[0], M(0,822)[1],
                        -H.SLAB_THICKNESS, 0))
+# ceiling slab: same footprint as the floor, at WALL_HEIGHT.  Needed for any
+# interior view; adds no new XY.
+add("Ceiling_Slab", _box(M(403,0)[0], M(0,150)[1], M(768,0)[0], M(0,822)[1],
+                         WH, WH + H.SLAB_THICKNESS))
+# balcony soffit
+add("Ceiling_Slab", _box(M(403,0)[0], M(0,822)[1], M(768,0)[0], M(0,930)[1],
+                         -H.BALCONY_SLAB_DROP + H.BALCONY_SOFFIT,
+                         -H.BALCONY_SLAB_DROP + H.BALCONY_SOFFIT + H.SLAB_THICKNESS))
 
 if __name__ == "__main__":
     scene = trimesh.Scene()

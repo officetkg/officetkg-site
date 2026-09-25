@@ -11,7 +11,7 @@ Toilet                           3     36     115.0   205.0    0.0    217.0   25
 Kitchen                          3     36     300.0    80.0    0.0    350.0   197.0   64.5
 Refrigerator                     1     12     296.0   200.0    0.0    349.0   248.0  136.4
 Closets                          2     24      17.0   192.0    0.0    106.0   237.0  174.2
-Book_Shelf                       5     60      15.0   501.0    0.0     37.0   640.0  181.8
+Book_Shelf                      14    168      15.0   501.0    0.0     37.0   640.0  181.8
 Storage_Wall_Pocket              6     72      16.0   280.0    0.0    165.0   502.0  166.7
 Storage_Wall_Parked_Panels       5     60      16.0   280.0    0.0    164.0   500.0  166.7
 Storage_Wall_Rail                2     24      16.0   280.0  181.1    165.0   502.0  185.6
@@ -29,5 +29,6 @@ Meeting_Table                    5     60     159.0   500.0    0.0    295.0   56
 Meeting_Chairs                  18    216     160.0   456.0    0.0    294.0   612.0   62.9
 Monitor_55                       1     12     351.0   487.0   68.5    355.0   580.0  120.9
 Floor_Slab                       1     12       0.0     0.0  -15.2    365.0   672.0    0.0
+Ceiling_Slab                     2     24       0.0     0.0  170.5    365.0   780.0  200.8
 
-30 objects exported -> out/model_3d.glb
+31 objects exported -> out/model_3d.glb

@@ -27,12 +27,13 @@ def basis(bearing_deg, el_deg):
     """Right-handed camera basis in ENU. bearing = compass bearing of the CAMERA."""
     return O.camera_basis(bearing_deg, el_deg)
 
-def collect(z_cut=None, skip=()):
+def collect(z_cut=None, skip=(), palette=None):
     """triangles + per-triangle colour and object id, boxes clipped at z_cut."""
     T, C, OID = [], [], []
     for oi, (name, meshes) in enumerate(B.OBJECTS.items()):
         if name in skip: continue
-        base = np.array(COL.get(name, (150,150,150)), float)
+        src = palette if palette is not None else COL
+        base = np.array(src.get(name, (150,150,150)), float)
         for m in meshes:
             if z_cut is not None:
                 lo, hi = m.bounds
