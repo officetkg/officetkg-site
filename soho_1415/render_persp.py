@@ -25,7 +25,8 @@ def basis_from(eye, target, level=True):
     return xc, yc, zc
 
 def render(eye_master, target_master, focal_mm=32.0, W=1600, Hh=1067,
-           shift=0.0, z_cut=None, skip=(), level=True, palette=None):
+           shift=0.0, z_cut=None, skip=(), level=True, palette=None,
+           mirror_y=False):
     """eye/target in MASTER px.  shift = lens rise (+) / fall (-), in image heights."""
     eye = O.to_enu(np.asarray(eye_master, float))
     tgt = O.to_enu(np.asarray(target_master, float))
@@ -59,9 +60,11 @@ def render(eye_master, target_master, focal_mm=32.0, W=1600, Hh=1067,
                 out.append(a + (b - a) * t)
         return out
 
+    my = -1.0 if mirror_y else 1.0
     def project(p):
         d = -p[:, 2]
-        return np.stack([W/2 + fpx*(p[:, 0]/d), Hh/2 - fpx*(p[:, 1]/d) + sh], -1), d
+        return np.stack([W/2 + fpx*(p[:, 0]/d),
+                         Hh/2 - my*fpx*(p[:, 1]/d) + sh], -1), d
 
     for i in range(len(V)):
         poly = V[i]

@@ -69,6 +69,21 @@ The MASTER tuple (right, down, up) is left-handed, so any right-handed renderer
 must reflect it. `orientation.to_enu` and the viewer's `scale.x = -1` do exactly
 that; without it a 3D view comes out mirrored.
 
+## Photoreal pass
+
+`photoreal.py` raises the render quality without touching a coordinate. Same
+triangles, better image synthesis:
+
+* 2x supersampled rasterising
+* a shadow map cast from the north window, so the sash frame, the mullion, the
+  furniture and the balustrade actually block light
+* world-space procedural texture — oak planks and grain, plaster tooth, concrete
+* planar reflection in the timber floor, with a Fresnel weight
+* gloss highlights and a small bloom on the window and the downlights
+
+No AI image generation is used anywhere in this project. `PR_A..E.png` are the
+photoreal outputs; `CAM_A..E.png` are the plain shaded views they came from.
+
 ## Architectural lighting
 
 `lighting.py` carries the coffered ceiling and the downlights, read from the

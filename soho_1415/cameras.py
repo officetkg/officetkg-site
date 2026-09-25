@@ -23,7 +23,7 @@ CAMERAS = {
            note="stands on the balcony, looks SOUTH in through the sash and down "
                 "the full depth to the entrance wall"),
  "B": dict(name="CAMERA B  entrance side -> balcony",
-           eye=(258, 268, EYE_Z), target=(258, 670, EYE_Z),
+           eye=(296, 272, EYE_Z), target=(238, 672, EYE_Z),
            focal=32, shift=-0.085, level=True,
            note="just inside the living-dining door, looks NORTH to the window"),
  "C": dict(name="CAMERA C  meeting table -> workstations",
