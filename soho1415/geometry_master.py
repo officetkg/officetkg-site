@@ -120,6 +120,22 @@ FURNITURE_XY_LOCK = {
     "MONITOR_55":     dict(cx=3400.0, cy=4300.0, facing="S"),
 }
 
+# ---------------------------------------------------------------------
+# 可動収納壁 (ベッドルーム間仕切) の状態
+#   平面図実測: レール Y 2410-5060 / 戸袋 Y 4350-5060 / 建具走行 Y 2410-4350
+#               作図上のパネル継ぎ目は Y 3065 付近・Y 3660 付近 (3 枚引込み)
+#   MOVABLE_WALL_STATE = "OPEN"   -> 常時開放。3 枚とも戸袋に納まる。
+#                        "CLOSED" -> 参考用。走行範囲を塞いだ状態。
+#   どちらでもレール・戸袋・袖壁の XY は変わらない。
+# ---------------------------------------------------------------------
+MOVABLE_WALL_STATE = "OPEN"          # ベッドルーム間仕切壁は常時開放
+MOVW_RAIL_Y   = (2410.0, 5060.0)     # レール全長
+MOVW_OPENING  = (2410.0, 4350.0)     # 建具走行範囲 (開放時はここが素通し)
+MOVW_POCKET_Y = (4350.0, 5060.0)     # 戸袋
+MOVW_PANELS   = 3
+MOVW_PANEL_X  = [(1983.0, 2015.0), (2023.0, 2055.0), (2063.0, 2095.0)]  # 3 レーン
+MOVW_PANEL_H  = 2400.0
+
 # 既存 Book Shelf : 承認済み平面図の実測値 -- 変更禁止
 BOOK_SHELF = dict(x0=205.0, x1=490.0, y0=425.0, y1=2190.0, z1=2100.0,
                   dividers_y=[785.0, 1146.0, 1481.0, 1828.0])
@@ -330,12 +346,21 @@ def parts():
     # 可動収納壁 / レール
     # -----------------------------------------------------------------
     mx0, mx1 = X_WALL_MBR_E
-    px0, px1 = mx0 + 15, mx1 - 15
-    add("MOVABLE_WALL", "可動収納壁／レール",
-        [_b(px0, px1, 2410, 3290, FL, 2400),
-         _b(px0, px1, 3290, 4170, FL, 2400),
-         _b(px0, px1, 4170, 5050, FL, 2400),
-         _b(mx0 + 30, mx1 - 30, 2410, 5060, 2400, CH_MAIN)])   # レール
+    plen = (MOVW_OPENING[1] - MOVW_OPENING[0]) / MOVW_PANELS
+    mw = []
+    if MOVABLE_WALL_STATE == "OPEN":
+        # 常時開放 : 3 枚とも戸袋 (Y 4350-5060) に納まり、走行範囲は素通し
+        pc = (MOVW_POCKET_Y[0] + MOVW_POCKET_Y[1]) / 2.0
+        for x0, x1 in MOVW_PANEL_X:
+            mw.append(_b(x0, x1, pc - plen / 2, pc + plen / 2, FL, MOVW_PANEL_H))
+    else:
+        # 参考 : 閉。3 枚が 1 本のライン上に並ぶ
+        for i in range(MOVW_PANELS):
+            y0 = MOVW_OPENING[0] + i * plen
+            mw.append(_b(mx0 + 15, mx1 - 15, y0, y0 + plen, FL, MOVW_PANEL_H))
+    mw.append(_b(mx0 + 30, mx1 - 30, MOVW_RAIL_Y[0], MOVW_RAIL_Y[1],
+                 MOVW_PANEL_H, CH_MAIN))                       # レール
+    add("MOVABLE_WALL", "可動収納壁／レール", mw)
 
     # -----------------------------------------------------------------
     # 窓 / サッシ  (掃き出し窓 : 2 枚引違い)

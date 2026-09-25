@@ -189,6 +189,14 @@ def main():
                                 abs(s["bbox_min"][1] - bs["y0"]) < 1 and
                                 abs(s["bbox_max"][1] - bs["y1"]) < 1) else "!! CHANGED")
 
+    print("\n--- movable wall (bedroom partition) ---")
+    mw = [m for m in build()[1] if m["object"] == "MOVABLE_WALL"][0]
+    print("state: %s  | 開口 Y %.0f-%.0f (%.0f mm) は素通し | 戸袋 Y %.0f-%.0f"
+          % (GM.MOVABLE_WALL_STATE, GM.MOVW_OPENING[0], GM.MOVW_OPENING[1],
+             GM.MOVW_OPENING[1] - GM.MOVW_OPENING[0],
+             GM.MOVW_POCKET_Y[0], GM.MOVW_POCKET_Y[1]))
+    print("object bbox (panels + rail):", mw["bbox_min"], mw["bbox_max"])
+
     a = GM.areas()
     print("\n--- area check ---")
     print("gross   %.2f m2 (spec 40.76)  diff %+.2f%%"
