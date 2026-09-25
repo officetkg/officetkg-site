@@ -286,9 +286,9 @@ def parts():
     """
     P = []
 
-    def add(obj, group, boxes, cylinders=None):
+    def add(obj, group, boxes, cylinders=None, color=None):
         P.append(dict(object=obj, group=group, boxes=list(boxes),
-                      cylinders=list(cylinders or [])))
+                      cylinders=list(cylinders or []), color=color))
 
     # -----------------------------------------------------------------
     # 外周壁  EXTERIOR WALLS
@@ -428,7 +428,7 @@ def parts():
           _b(bs["x0"], bs["x1"], bs["y0"], bs["y1"], bs["z1"] - 25, bs["z1"])]  # 天板
     for yd in bs["dividers_y"]:                                            # 方立
         bx.append(_b(bs["x0"], bs["x1"], yd - 12, yd + 12, FL, bs["z1"]))
-    n_shelf = 6
+    n_shelf = 5          # 竣工写真より 6 段 (棚板 5 枚)
     for i in range(1, n_shelf + 1):                                        # 棚板
         z = bs["z1"] * i / (n_shelf + 1)
         bx.append(_b(bs["x0"], bs["x1"], bs["y0"], bs["y1"], z - 10, z + 10))
@@ -470,14 +470,18 @@ def parts():
     # -----------------------------------------------------------------
     w0, w1 = OPEN_WINDOW
     wm = (w0 + w1) / 2.0
+    # 竣工写真より: ダークチャコールのアルミサッシ / 2 枚引違いの掃き出し窓
     add("WINDOW_SASH", "窓／サッシ",
-        [_b(w0, w1, Y_OUT_S + 40, Y_IN_S - 40, FL, FL + 70),        # 下枠
+        [_b(w0, w1, Y_OUT_S + 40, Y_IN_S - 40, FL, FL + 70),              # 下枠
          _b(w0, w1, Y_OUT_S + 40, Y_IN_S - 40, WIN_HEAD - 70, WIN_HEAD),  # 上枠
-         _b(w0, w0 + 60, Y_OUT_S + 40, Y_IN_S - 40, FL, WIN_HEAD),  # 縦枠 西
-         _b(w1 - 60, w1, Y_OUT_S + 40, Y_IN_S - 40, FL, WIN_HEAD),  # 縦枠 東
-         _b(wm - 40, wm + 40, Y_OUT_S + 40, Y_IN_S - 40, FL, WIN_HEAD),   # 召し合せ
-         _b(w0 + 60, wm + 40, 95, 125, FL + 70, WIN_HEAD - 70),     # ガラス 西
-         _b(wm - 40, w1 - 60, 135, 165, FL + 70, WIN_HEAD - 70)])   # ガラス 東
+         _b(w0, w0 + 60, Y_OUT_S + 40, Y_IN_S - 40, FL, WIN_HEAD),        # 縦枠 西
+         _b(w1 - 60, w1, Y_OUT_S + 40, Y_IN_S - 40, FL, WIN_HEAD),        # 縦枠 東
+         _b(wm - 40, wm + 40, Y_OUT_S + 40, Y_IN_S - 40, FL, WIN_HEAD)],  # 召し合せ
+        color=(44, 46, 50))
+    add("WINDOW_GLASS", "窓／サッシ",
+        [_b(w0 + 60, wm + 40, 95, 125, FL + 70, WIN_HEAD - 70),           # ガラス 西
+         _b(wm - 40, w1 - 60, 135, 165, FL + 70, WIN_HEAD - 70)],         # ガラス 東
+        color=(176, 198, 206))
 
     # -----------------------------------------------------------------
     # バルコニー床
@@ -486,13 +490,37 @@ def parts():
         [_b(X_OUT_W, X_OUT_E, BAL_Y_OUT, Y_OUT_S, BAL_FL - 200, BAL_FL)])
 
     # -----------------------------------------------------------------
-    # バルコニー手摺  (ガラス手摺 + 笠木 + 隔て板)
+    # バルコニー手摺  (竣工写真: クリアガラス + ダークチャコール枠 + 方立)
     # -----------------------------------------------------------------
-    add("BALCONY_RAILING", "バルコニー手摺",
-        [_b(X_OUT_W, X_OUT_E, BAL_Y_OUT, BAL_Y_OUT + 60, BAL_FL, BAL_RAIL_TOP - 60),   # ガラス
-         _b(X_OUT_W, X_OUT_E, BAL_Y_OUT - 20, BAL_Y_OUT + 80, BAL_RAIL_TOP - 60, BAL_RAIL_TOP),  # 笠木
-         _b(X_OUT_W, X_OUT_W + 60, BAL_Y_OUT, Y_OUT_S, BAL_FL, BAL_RAIL_TOP),          # 隔て板 西
-         _b(X_OUT_E - 60, X_OUT_E, BAL_Y_OUT + 60, -360, BAL_FL, BAL_RAIL_TOP)])            # 隔て板 東
+    ry = BAL_Y_OUT
+    rail = [_b(X_OUT_W, X_OUT_E, ry, ry + 60, BAL_FL, BAL_FL + 80),          # 下枠
+            _b(X_OUT_W, X_OUT_E, ry - 20, ry + 80, BAL_RAIL_TOP - 80,
+               BAL_RAIL_TOP)]                                                # 笠木
+    for i in range(5):                                                       # 方立
+        px = X_OUT_W + 60 + i * (X_OUT_E - X_OUT_W - 180) / 4.0
+        rail.append(_b(px, px + 60, ry, ry + 60, BAL_FL, BAL_RAIL_TOP - 80))
+    add("BALCONY_RAILING", "バルコニー手摺", rail, color=(52, 54, 58))
+    add("BALCONY_GLASS", "バルコニー手摺",
+        [_b(X_OUT_W, X_OUT_E, ry + 24, ry + 36, BAL_FL + 80, BAL_RAIL_TOP - 80)],
+        color=(186, 206, 214))
+
+    # 隔て板 : 竣工写真では濃いマルーンの全高パネル
+    add("BALCONY_PARTITION_W", "バルコニー手摺",
+        [_b(X_OUT_W, X_OUT_W + 80, ry, Y_OUT_S, BAL_FL, CH_MAIN)],
+        color=(96, 34, 46))
+    add("BALCONY_PARTITION_E", "バルコニー手摺",
+        [_b(X_OUT_E - 80, X_OUT_E, ry, -360, BAL_FL, CH_MAIN)],
+        color=(96, 34, 46))
+
+    # 竪樋 : 竣工写真で窓東側に見えるクリーム色の丸樋
+    add("BALCONY_DOWNPIPE", "バルコニー床", [],
+        [dict(r=65, z0=BAL_FL, z1=CH_MAIN, cx=4040, cy=-300)],
+        color=(214, 206, 188))
+
+    # バルコニー軒天 (上階スラブ下面) -- 検証レンダ A/B では非表示
+    add("BALCONY_SOFFIT", "バルコニー床",
+        [_b(X_OUT_W, X_OUT_E, ry, Y_OUT_S, CH_MAIN, SLAB_TOP)],
+        color=(232, 230, 226))
 
     # -----------------------------------------------------------------
     # 床 / 天井  (Z のみの補助オブジェクト)
@@ -520,9 +548,9 @@ def parts():
     for k in ("DESK_MON_N", "DESK_MON_S"):
         m = F[k]
         cy, w = m["cy"], m["w"]
-        desk.append(_b(d["x0"] + 145, d["x1"] - 330, cy - 178, cy + 178, 740, 780))   # スタンド台
-        desk.append(_b(d["x0"] + 190, d["x1"] - 555, cy - 30, cy + 30, 780, 1010))    # 支柱
-        desk.append(_b(d["x0"] + 31, d["x0"] + 68, cy - w / 2, cy + w / 2, 1010, 1310))  # 画面
+        desk.append(_b(d["x0"] + 45, d["x0"] + 205, cy - 90, cy + 90, 740, 765))     # スタンド台
+        desk.append(_b(d["x0"] + 105, d["x0"] + 145, cy - 30, cy + 30, 765, 1000))   # 支柱
+        desk.append(_b(d["x0"] + 31, d["x0"] + 68, cy - w / 2, cy + w / 2, 1000, 1310))  # 画面
     add("DESK_2P", "2人用ワークデスク", desk)
 
     for k in ("TASK_CHAIR_1", "TASK_CHAIR_2"):

@@ -74,7 +74,7 @@ def build():
         if not pieces:
             continue
         mesh = trimesh.util.concatenate(pieces)
-        rgb = GROUP_COLOR.get(p["group"], (200, 200, 200))
+        rgb = p.get("color") or GROUP_COLOR.get(p["group"], (200, 200, 200))
         mesh.visual.face_colors = np.tile(np.array(rgb + (255,), np.uint8),
                                           (len(mesh.faces), 1))
         mesh.metadata["group"] = p["group"]

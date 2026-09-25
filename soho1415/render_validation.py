@@ -57,7 +57,7 @@ def collect(exclude=()):
 
 
 def view_a():
-    tris, rgb, oid, _ = collect(exclude=("CEILING",))
+    tris, rgb, oid, _ = collect(exclude=("CEILING", "BALCONY_SOFFIT"))
     img, _ = softrender.render(
         tris, rgb, oid,
         eye_dir=(0.40, -0.42, 0.815),     # 平面図と同じ向き(北が上)を保った俯瞰アクソメ
@@ -69,7 +69,7 @@ def view_a():
 
 
 def view_b(px_per_mm=0.31):
-    tris, rgb, oid, _ = collect(exclude=("CEILING",))
+    tris, rgb, oid, _ = collect(exclude=("CEILING", "BALCONY_SOFFIT"))
     cx = (GM.X_OUT_W + GM.X_OUT_E) / 2.0
     cy = (GM.BAL_Y_OUT + GM.Y_OUT_N) / 2.0
     w = int(round((GM.X_OUT_E - GM.X_OUT_W + 900) * px_per_mm))
@@ -86,7 +86,7 @@ def view_b(px_per_mm=0.31):
 
 def view_b_walls(px_per_mm):
     """重ね合わせ用: 床スラブを除いた立ち上がり部材のみの真上投影."""
-    tris, rgb, oid, _ = collect(exclude=("CEILING", "FLOOR_SLAB", "BALCONY_SLAB"))
+    tris, rgb, oid, _ = collect(exclude=("CEILING", "BALCONY_SOFFIT", "FLOOR_SLAB", "BALCONY_SLAB"))
     cx = (GM.X_OUT_W + GM.X_OUT_E) / 2.0
     cy = (GM.BAL_Y_OUT + GM.Y_OUT_N) / 2.0
     w = int(round((GM.X_OUT_E - GM.X_OUT_W + 900) * px_per_mm))

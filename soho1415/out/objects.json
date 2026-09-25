@@ -289,7 +289,7 @@
         2190.0,
         2100.0
       ],
-      "triangles": 180
+      "triangles": 168
     },
     {
       "object": "MOVABLE_WALL",
@@ -316,10 +316,25 @@
       ],
       "bbox_max": [
         4080.0,
-        165.0,
+        155.0,
         2100.0
       ],
-      "triangles": 84
+      "triangles": 60
+    },
+    {
+      "object": "WINDOW_GLASS",
+      "group": "窓／サッシ",
+      "bbox_min": [
+        1800.0,
+        95.0,
+        70.0
+      ],
+      "bbox_max": [
+        4020.0,
+        165.0,
+        2030.0
+      ],
+      "triangles": 24
     },
     {
       "object": "BALCONY_SLAB",
@@ -346,10 +361,85 @@
       ],
       "bbox_max": [
         4700.0,
-        0.0,
+        -1305.0,
         1050.0
       ],
-      "triangles": 48
+      "triangles": 84
+    },
+    {
+      "object": "BALCONY_GLASS",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        0.0,
+        -1361.0,
+        -70.0
+      ],
+      "bbox_max": [
+        4700.0,
+        -1349.0,
+        970.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_PARTITION_W",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        0.0,
+        -1385.0,
+        -150.0
+      ],
+      "bbox_max": [
+        80.0,
+        0.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_PARTITION_E",
+      "group": "バルコニー手摺",
+      "bbox_min": [
+        4620.0,
+        -1385.0,
+        -150.0
+      ],
+      "bbox_max": [
+        4700.0,
+        -360.0,
+        2450.0
+      ],
+      "triangles": 12
+    },
+    {
+      "object": "BALCONY_DOWNPIPE",
+      "group": "バルコニー床",
+      "bbox_min": [
+        3975.0,
+        -365.0,
+        -150.0
+      ],
+      "bbox_max": [
+        4105.0,
+        -235.0,
+        2450.0
+      ],
+      "triangles": 96
+    },
+    {
+      "object": "BALCONY_SOFFIT",
+      "group": "バルコニー床",
+      "bbox_min": [
+        0.0,
+        -1385.0,
+        2450.0
+      ],
+      "bbox_max": [
+        4700.0,
+        0.0,
+        2650.0
+      ],
+      "triangles": 12
     },
     {
       "object": "FLOOR_SLAB",
