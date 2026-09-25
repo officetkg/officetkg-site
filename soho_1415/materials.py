@@ -45,10 +45,14 @@ PALETTE = {
  "Downpipe":                   (222, 216, 202),
  # --- furniture ---------------------------------------------------------
  "Work_Desks":                 (196, 168, 130),   # natural oak
- "Work_Chairs":                ( 54,  54,  58),   # charcoal
+ "Work_Chairs":                ( 48,  48,  52),   # Aeron, graphite Pellicle
+ "Work_Chair_Bases":           (176, 178, 181),   # polished aluminium
  "Printer_Unit":               (226, 226, 226),
- "Meeting_Table":              (170, 136,  98),   # medium oak
- "Meeting_Chairs":             ( 62,  60,  62),   # dark greige / charcoal
+ "Meeting_Table":              (106,  76,  56),   # E-CAD walnut top
+ "Table_Frame":                (188, 190, 193),   # polished steel pipe
+ "Table_Wirebox":              ( 58,  58,  60),   # wiring box lid + tray
+ "Meeting_Chairs":             ( 58,  57,  60),   # Setu, graphite shell
+ "Meeting_Chair_Bases":        (176, 178, 181),   # polished aluminium
  "Monitor_55":                 ( 26,  26,  28),
  # --- decoration (brief's permitted list only) ---------------------------
  "Laptops":                    (168, 170, 173),   # aluminium

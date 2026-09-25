@@ -178,7 +178,11 @@ GLOSS = {"Floor_Slab": (0.055, 90.0), "Meeting_Table": (0.035, 70.0),
          "Kitchen": (0.05, 70.0), "Toilet": (0.05, 80.0),
          "Powder_Room_Fixtures": (0.06, 90.0), "Shower": (0.07, 100.0),
          "Balcony_Glass": (0.12, 170.0), "Window_Glass": (0.12, 170.0),
-         "Refrigerator": (0.04, 60.0)}
+         "Refrigerator": (0.04, 60.0),
+         # the specified products: polished steel / aluminium, walnut, shells
+         "Table_Frame": (0.22, 180.0), "Table_Wirebox": (0.06, 90.0),
+         "Work_Chair_Bases": (0.20, 170.0), "Meeting_Chair_Bases": (0.20, 170.0),
+         "Work_Chairs": (0.030, 55.0), "Meeting_Chairs": (0.045, 70.0)}
 
 def specular(g, n, light_dirs):
     pos, obj, names = g["pos"], g["obj"], g["names"]

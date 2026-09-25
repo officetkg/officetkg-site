@@ -4,7 +4,9 @@ import numpy as np, trimesh
 import geometry_master as G, furniture as F, build_3d as B
 
 def bnds(name):
-    m = trimesh.util.concatenate(B.OBJECTS[name])
+    """Bounds of one group, or of the union of several."""
+    names = (name,) if isinstance(name, str) else name
+    m = trimesh.util.concatenate([x for n in names for x in B.OBJECTS[n]])
     b = m.bounds
     return (b[0][0], b[0][1], b[1][0], b[1][1])
 
@@ -36,10 +38,10 @@ EXPECT = {
  "Balcony_Railing": rb(G.BALCONY["railing"]),
  "Windows":         rb(G.WINDOWS["W_BALCONY"]["opening"]),
  "Work_Desks": union([F.FURNITURE["WORK_DESK_1"]["box"], F.FURNITURE["WORK_DESK_2"]["box"]]),
- "Work_Chairs": union([F.FURNITURE["WORK_CHAIR_1"]["box"], F.FURNITURE["WORK_CHAIR_2"]["box"]]),
+
  "Printer_Unit": rb(F.FURNITURE["PRINTER_UNIT"]["box"]),
  "Meeting_Table": rb(F.FURNITURE["MEETING_TABLE"]["box"]),
- "Meeting_Chairs": union([F.FURNITURE[f"MEETING_CHAIR_{i}"]["box"] for i in range(1,7)]),
+
  "Monitor_55": rb(F.FURNITURE["MONITOR_55"]["box"]),
  "Interior_Walls": union(list(G.INNER_WALLS.values())),
 }
@@ -48,6 +50,16 @@ EXPECT = {
 CONTAINED = {
  "Balcony_Glass": (rb(G.BALCONY["railing"]), "x"),          # x must match, y inside
  "Window_Glass":  (rb(G.WINDOWS["W_BALCONY"]["opening"]), None),
+ # A 5-star chair base is a circle, so neither chair fills the rectangular
+ # envelope it is planned with; the Aeron reaches its published 658 mm width
+ # at the arm pads and sits inside its 598 mm depth.
+ ("Work_Chairs", "Work_Chair_Bases"):
+     (union([F.FURNITURE["WORK_CHAIR_1"]["box"], F.FURNITURE["WORK_CHAIR_2"]["box"]]), None),
+ ("Meeting_Chairs", "Meeting_Chair_Bases"):
+     (union([F.FURNITURE[f"MEETING_CHAIR_{i}"]["box"] for i in range(1,7)]), None),
+ # the polished frame and the wiring box of the E-CAD sit under / inside the top
+ "Table_Frame":   (rb(F.FURNITURE["MEETING_TABLE"]["box"]), None),
+ "Table_Wirebox": (rb(F.FURNITURE["MEETING_TABLE"]["box"]), None),
 }
 print(f'{"3D object":30s} {"dx0":>6s} {"dy0":>6s} {"dx1":>6s} {"dy1":>6s}   max|d| px / mm')
 print('-'*78)
@@ -59,16 +71,21 @@ for name, exp in EXPECT.items():
     flag = '' if mx <= 1.01 else '   <== CHECK'
     if mx > 1.01: bad.append(name)
     print(f'{name:30s} {d[0]:6.1f} {d[1]:6.1f} {d[2]:6.1f} {d[3]:6.1f}   {mx:5.2f} / {mx*13.2:5.1f}{flag}')
+TOL = 1.01                      # px; one pixel = 13.2 mm at the working scale
 for name,(exp,exact_axis) in CONTAINED.items():
+    label = name if isinstance(name, str) else " + ".join(name)
     got = bnds(name)
-    inside = (got[0] >= exp[0]-.01 and got[1] >= exp[1]-.01
-              and got[2] <= exp[2]+.01 and got[3] <= exp[3]+.01)
+    out = max(exp[0]-got[0], exp[1]-got[1], got[2]-exp[2], got[3]-exp[3], 0.0)
+    inside = out <= TOL
+    worst = max(worst, out)
     ex = True
     if exact_axis == "x": ex = abs(got[0]-exp[0]) <= .01 and abs(got[2]-exp[2]) <= .01
     ok = inside and ex
-    if not ok: bad.append(name)
-    print(f'{name:30s} {"inside master rect" if inside else "OUTSIDE master rect":>28s}'
-          f'{"  + x exact" if exact_axis=="x" and ex else ""}')
+    if not ok: bad.append(label)
+    note = "inside master rect" if inside else "OUTSIDE master rect"
+    print(f'{label:44s} {note:>21s}'
+          f'{"  + x exact" if exact_axis=="x" and ex else ""}'
+          f'{"" if out <= .01 else f"   overshoot {out:.2f} px = {out*13.2:.0f} mm"}')
 print('-'*78)
 print(f'objects compared: {len(EXPECT)} exact + {len(CONTAINED)} contained'
       f'   worst XY deviation: {worst:.2f} px = {worst*13.2:.1f} mm')

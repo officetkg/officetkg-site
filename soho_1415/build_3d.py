@@ -270,31 +270,19 @@ for k in ("WORK_DESK_1", "WORK_DESK_2"):
     r = f(k)                                             # two end gables
     for x in (r["x0"], r["x1"]-2):
         add("Work_Desks", _box(x, r["y0"]+1, x+2, r["y1"]-1, 0, H.DESK_HEIGHT-H.DESK_TOP_THICKNESS))
-for k in ("WORK_CHAIR_1", "WORK_CHAIR_2"):
-    r = f(k)
-    add("Work_Chairs", _box(r["x0"]+1, r["y0"]+1, r["x1"]-1, r["y1"]-1,
-                            H.WORK_CHAIR_SEAT-3, H.WORK_CHAIR_SEAT))
-    add("Work_Chairs", _box(r["x1"]-4, r["y0"]+1, r["x1"]-1, r["y1"]-1,
-                            H.WORK_CHAIR_SEAT, H.WORK_CHAIR_BACK_TOP))
-    add("Work_Chairs", _box((r["x0"]+r["x1"])/2-2, (r["y0"]+r["y1"])/2-2,
-                            (r["x0"]+r["x1"])/2+2, (r["y0"]+r["y1"])/2+2, 0, H.WORK_CHAIR_SEAT-3))
+# The three named products are built by products.py from their published
+# dimensions; XY still comes only from the approved layout rects.
+import products as PR
+for k, face in (("WORK_CHAIR_1", (-1, 0)), ("WORK_CHAIR_2", (-1, 0))):
+    shell, base = PR.aeron(f(k), face)
+    add("Work_Chairs", *shell); add("Work_Chair_Bases", *base)
 add("Printer_Unit", R(f("PRINTER_UNIT"), 0, H.PRINTER_UNIT_HEIGHT))
-mt = f("MEETING_TABLE")
-add("Meeting_Table", R(mt, H.TABLE_HEIGHT-H.TABLE_TOP_THICKNESS, H.TABLE_HEIGHT))
-for cx in (mt["x0"]+3, mt["x1"]-6):
-    for cy in (mt["y0"]+3, mt["y1"]-6):
-        add("Meeting_Table", _box(cx, cy, cx+3, cy+3, 0, H.TABLE_HEIGHT-H.TABLE_TOP_THICKNESS))
+_top, _frame, _wire = PR.meeting_table(f("MEETING_TABLE"))
+add("Meeting_Table", *_top); add("Table_Frame", *_frame); add("Table_Wirebox", *_wire)
 for i in range(1, 7):
-    r = f(f"MEETING_CHAIR_{i}")
-    north = i <= 3
-    add("Meeting_Chairs", _box(r["x0"]+1, r["y0"]+1, r["x1"]-1, r["y1"]-1,
-                               H.MEETING_CHAIR_SEAT-3, H.MEETING_CHAIR_SEAT))
-    by0, by1 = (r["y0"]+1, r["y0"]+4) if north else (r["y1"]-4, r["y1"]-1)
-    add("Meeting_Chairs", _box(r["x0"]+1, by0, r["x1"]-1, by1,
-                               H.MEETING_CHAIR_SEAT, H.MEETING_CHAIR_BACK_TOP))
-    add("Meeting_Chairs", _box((r["x0"]+r["x1"])/2-2, (r["y0"]+r["y1"])/2-2,
-                               (r["x0"]+r["x1"])/2+2, (r["y0"]+r["y1"])/2+2,
-                               0, H.MEETING_CHAIR_SEAT-3))
+    face = (0, 1) if i <= 3 else (0, -1)          # 1-3 sit plan-up, 4-6 plan-down
+    shell, base = PR.setu(f(f"MEETING_CHAIR_{i}"), face)
+    add("Meeting_Chairs", *shell); add("Meeting_Chair_Bases", *base)
 mo = f("MONITOR_55")
 add("Monitor_55", _box(mo["x0"], mo["y0"], mo["x1"], mo["y1"],
                        H.MONITOR_CENTRE_Z - H.MONITOR_SCREEN_H/2,

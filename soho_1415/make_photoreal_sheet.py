@@ -31,7 +31,7 @@ H = HDR + len(rows)*(h + 30 + G)
 sheet = np.full((H, 3*W + 4*G, 3), 250, np.uint8)
 label(sheet, 'OIMACHI TRACKS RESIDENCE 1415  /  SOHO OFFICE  -  PHASE 10 PHOTOREAL',
       G, 36, .62, (25, 25, 25))
-label(sheet, 'geometry unchanged from the approved 2D MASTER; decoration = permitted items only',
+label(sheet, 'geometry unchanged from the approved 2D MASTER  ·  E-CAD-2190KW walnut table, Aeron x2, Setu x6  ·  decoration = permitted items only',
       G, 62, .44, (110, 110, 110))
 y = HDR
 for r in rows:
@@ -45,23 +45,34 @@ cv2.imwrite('out/PHOTOREAL_CONTACT_SHEET.png', sheet)
 print('out/PHOTOREAL_CONTACT_SHEET.png', sheet.shape)
 
 # ------------------------------------------------------------- before / after
-PAIR = [k for k in KEYS if os.path.exists(f'out/_predeco/PR_{k}.png')]
-W2, HDR2 = 820, 84
-bef = [load(f'out/_predeco/PR_{k}.png', W2) for k in PAIR]
-aft = [load(f'out/PR_{k}.png', W2) for k in PAIR]
-h2 = bef[0].shape[0]
-H2 = HDR2 + len(PAIR)*(h2 + 26 + G)
-ba = np.full((H2, 2*W2 + 3*G, 3), 250, np.uint8)
-label(ba, 'DECORATION  -  BEFORE / AFTER', G, 36, .62, (25, 25, 25))
-label(ba, '48 items, every one on an approved support; no architecture and no furniture moved',
-      G, 62, .44, (110, 110, 110))
-y = HDR2
-for i, k in enumerate(PAIR):
-    for j, (im, t) in enumerate(((bef[i], f'BEFORE  {CAP[k]}'), (aft[i], f'AFTER   {CAP[k]}'))):
-        x = G + j*(W2 + G)
-        ba[y:y+h2, x:x+W2] = im
-        cv2.rectangle(ba, (x, y), (x+W2-1, y+h2-1), (205, 205, 205), 1)
-        label(ba, t, x+2, y+h2+18, .44, (50, 50, 50) if j else (140, 140, 140))
-    y += h2 + 26 + G
-cv2.imwrite('out/PHOTOREAL_BEFORE_AFTER.png', ba)
-print('out/PHOTOREAL_BEFORE_AFTER.png', ba.shape)
+def before_after(src, out_path, title, subtitle):
+    pair = [k for k in KEYS if os.path.exists(f'{src}/PR_{k}.png')]
+    if not pair:
+        print('skipped', out_path); return
+    W2, HDR2 = 820, 84
+    bef = [load(f'{src}/PR_{k}.png', W2) for k in pair]
+    aft = [load(f'out/PR_{k}.png', W2) for k in pair]
+    h2 = bef[0].shape[0]
+    ba = np.full((HDR2 + len(pair)*(h2 + 26 + G), 2*W2 + 3*G, 3), 250, np.uint8)
+    label(ba, title, G, 36, .62, (25, 25, 25))
+    label(ba, subtitle, G, 62, .44, (110, 110, 110))
+    y = HDR2
+    for i, k in enumerate(pair):
+        for j, (im, t) in enumerate(((bef[i], f'BEFORE  {CAP[k]}'),
+                                     (aft[i], f'AFTER   {CAP[k]}'))):
+            x = G + j*(W2 + G)
+            ba[y:y+h2, x:x+W2] = im
+            cv2.rectangle(ba, (x, y), (x+W2-1, y+h2-1), (205, 205, 205), 1)
+            label(ba, t, x+2, y+h2+18, .44, (50, 50, 50) if j else (140, 140, 140))
+        y += h2 + 26 + G
+    cv2.imwrite(out_path, ba)
+    print(out_path, ba.shape)
+
+before_after('out/_preproducts', 'out/PHOTOREAL_BEFORE_AFTER.png',
+             'SPECIFIED PRODUCTS  -  BEFORE / AFTER',
+             'E-CAD-2190KW walnut table (1800 -> 2100), Aeron x2, Setu x6; '
+             'architecture untouched, all circulation still PASS')
+before_after('out/_predeco', 'out/PHOTOREAL_BEFORE_AFTER_decoration.png',
+             'DECORATION  -  BEFORE / AFTER',
+             '48 items, every one on an approved support '
+             '(the AFTER column also carries the specified products)')

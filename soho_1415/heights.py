@@ -13,6 +13,39 @@ change an X or Y coordinate.
 MM_PER_PX = 13.2
 def P(mm): return mm / MM_PER_PX          # mm -> MASTER px
 
+# ----------------------------------------------------------------------
+# SPECIFIED -- published manufacturer dimensions for the three products the
+# client named.  These are NOT provisional in the way the rest of this file
+# is: they come from the makers' own specifications, not from reading the
+# plan.  They still cannot move an X or a Y of the architecture.
+#   meeting table  NISHIKI E-CAD-2190KW   2100 x 900 x 720
+#   work chairs    Herman Miller Aeron, size B
+#   meeting chairs Herman Miller Setu, 5-star base, armless
+# Seat heights are gas-lift adjustable; the value used is a SET POSITION
+# inside the published range, noted per key.
+# ----------------------------------------------------------------------
+SPECIFIED = {                              # mm
+    "TABLE_HEIGHT":              720,      # E-CAD-2190KW overall height
+    "TABLE_TOP_THICKNESS":        30,      # melamine top, ABS edge
+    "TABLE_LEG_W":                60,      # steel pipe 60 x 30, polished
+    "TABLE_LEG_D":                30,
+    "TABLE_WIRE_BOX_W":          400,      # flip-up wiring box lid -- size assumed
+    "TABLE_WIRE_BOX_D":          160,
+    "TABLE_WIRE_TRAY_DROP":      110,      # cable tray under the top -- assumed
+
+    "WORK_CHAIR_SEAT":           450,      # Aeron B: adjustable 406-521, set 450
+    "WORK_CHAIR_BACK_TOP":      1090,      # Aeron B overall height
+    "WORK_CHAIR_ARM_TOP":        680,      # arm pad, set position
+    "WORK_CHAIR_BASE_DIA":       658,      # 5-star base, = overall width
+    "WORK_CHAIR_CASTOR_DIA":      50,
+
+    "MEETING_CHAIR_SEAT":        460,      # Setu: adjustable 399-551, set 460
+    "MEETING_CHAIR_BACK_TOP":    965,      # Setu overall height (950-980 range)
+    "MEETING_CHAIR_BASE_DIA":    658,      # 5-star base, = overall width
+    "MEETING_CHAIR_CASTOR_DIA":   50,
+    "MEETING_CHAIR_SHELL_T":      26,      # one-piece kinematic spine, thin
+}
+
 PROVISIONAL = {                            # mm  -- all unverified
     "WALL_HEIGHT":              2450,      # slab-to-slab clear, assumed
     "DOOR_HEIGHT":              2000,
@@ -21,12 +54,6 @@ PROVISIONAL = {                            # mm  -- all unverified
     "WINDOW_SILL":                 0,      # full-height (hakidashi) sash
     "DESK_HEIGHT":               720,
     "DESK_TOP_THICKNESS":         25,
-    "WORK_CHAIR_SEAT":           450,
-    "WORK_CHAIR_BACK_TOP":      1050,
-    "TABLE_HEIGHT":              720,
-    "TABLE_TOP_THICKNESS":        30,
-    "MEETING_CHAIR_SEAT":        440,
-    "MEETING_CHAIR_BACK_TOP":    830,
     "BOOKSHELF_HEIGHT":         2400,      # photos show it floor-to-ceiling - see README
     "KITCHEN_COUNTER_HEIGHT":    850,
     "KITCHEN_UPPER_BOTTOM":     1500,
@@ -62,9 +89,14 @@ PROVISIONAL = {                            # mm  -- all unverified
     "COLUMN_HEIGHT":            2450,
     "SLAB_THICKNESS":            200,
 }
-globals().update({k: P(v) for k, v in PROVISIONAL.items()})   # px versions
+ALL = {**SPECIFIED, **PROVISIONAL}
+globals().update({k: P(v) for k, v in ALL.items()})      # px versions
 
 if __name__ == "__main__":
-    print(f"scale 1 px = {MM_PER_PX} mm     ALL VALUES PROVISIONAL\n")
+    print(f"scale 1 px = {MM_PER_PX} mm\n")
+    print("SPECIFIED (manufacturer dimensions)")
+    for k, v in SPECIFIED.items():
+        print(f"  {k:28s} {v:6d} mm = {P(v):8.2f} px")
+    print("\nPROVISIONAL (nothing below is measured)")
     for k, v in PROVISIONAL.items():
-        print(f"  {k:26s} {v:6d} mm = {P(v):8.2f} px")
+        print(f"  {k:28s} {v:6d} mm = {P(v):8.2f} px")

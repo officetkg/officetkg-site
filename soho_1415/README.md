@@ -103,6 +103,46 @@ triangles, better image synthesis:
 No AI image generation is used anywhere in this project. `PR_A..E.png` are the
 photoreal outputs; `CAM_A..E.png` are the plain shaded views they came from.
 
+## Specified products
+
+The client specified three products; `products.py` builds them from their
+published dimensions and `heights.py` keeps those dimensions in a **SPECIFIED**
+dict, separate from the provisional heights.
+
+| | product | published |
+|---|---|---|
+| meeting table | NISHIKI **E-CAD-2190KW** | 2100 × 900 × H720, walnut, 30 mm melamine top with ABS edge, 60 × 30 polished steel pipe legs, wiring box, adjusters |
+| work chairs ×2 | Herman Miller **Aeron**, size B | 658 W × 598 D × 1090 H, seat 406–521 (set 450) |
+| meeting chairs ×6 | Herman Miller **Setu**, 5-star base, armless | 658 W × 658 D × 950–980 H, seat 399–551 (set 460) |
+
+What is **not** published — the leg inset from the table ends, the wiring-box
+lid size, the under-top cable tray, the exact arc of the Aeron back and the
+Setu spine — is approximated, is marked as an approximation in `products.py`,
+and never leaves the published envelope.
+
+A 5-star base is a circle, so neither chair fills its rectangular planning
+envelope: with one arm pointing straight back a 658 mm base measures
+595 × 626 mm on the floor. The Aeron reaches its published 658 mm width at the
+arm pads. Both are therefore verified by **containment**, not by outline match.
+
+### What the longer table forced
+
+The table grew 1800 → 2100 mm. The LD bay is only 2587 mm wide between the
+partition line and the west wall, so the extra 300 mm had to go somewhere:
+
+* the **west** end stays put, which keeps the 55″ viewing distance and the
+  west aisle (3472 mm) unchanged;
+* the extra 300 mm is taken on the **east** end, leaving 1300 mm of the Book
+  Shelf route;
+* three 658 mm Setu chairs then fill the 2100 mm side end to end (719 mm
+  pitch), which pushed the east chair to within 304 mm of the Aeron at
+  DESK_2 — below the 900 mm pull-out rule;
+* so **both workstations moved 170 mm plan-up**. The Aeron at DESK_2 and the
+  Setu at the table's east end no longer overlap in Y at all, and the pull-out
+  behind DESK_2 is back to 2429 mm.
+
+`check_layout.py` passes every route after the move; see the table it prints.
+
 ## Decoration
 
 `decoration.py` adds only what the brief permits — laptops, keyboards, mice,

@@ -49,7 +49,12 @@ def clip(r):
 seg("BALCONY west raked (to railing)", *clip(wr))
 seg("BALCONY east raked (to railing)", *clip(er))
 box("BALCONY railing", b["railing"])
-for k,v in F.FURNITURE.items(): box("FURN "+k, v["box"])
+# The chair rects are PLANNING ENVELOPES, not outlines: a 5-star base is a
+# circle, so the real footprint cannot follow the rectangle's corners.  They
+# are checked by containment further down instead of by line residual.
+ENVELOPE_ONLY = {"WORK_CHAIR_1", "WORK_CHAIR_2"} | {f"MEETING_CHAIR_{i}" for i in range(1, 7)}
+for k,v in F.FURNITURE.items():
+    if k not in ENVELOPE_ONLY: box("FURN "+k, v["box"])
 
 rows=[r for r in rows if r]; rows.sort(key=lambda r:-r[2])
 print(f'{"element":36s} {"mean":>6s} {"p95":>6s} {"max":>6s}')
@@ -102,7 +107,8 @@ b_ = G.BALCONY; yl = b_["railing"]["y1"]
 for nm_, r_ in (("BALCONY west raked", b_["side_west"]["raked"]), ("BALCONY east raked", b_["side_east"]["raked"])):
     t_ = (yl-r_[0][1])/(r_[1][1]-r_[0][1])
     SRC[nm_] = [r_[0], (r_[0][0]+(r_[1][0]-r_[0][0])*t_, yl)]
-for k, v in F.FURNITURE.items(): SRC["FURN "+k] = outline(v["box"])
+for k, v in F.FURNITURE.items():
+    if k not in ENVELOPE_ONLY: SRC["FURN "+k] = outline(v["box"])
 
 if __name__ == "__main__":
     print("\nmechanical classification of residual points (> 1.5 px)")
@@ -114,6 +120,19 @@ if __name__ == "__main__":
         tot_l += lo_
         top = max(bu_.items(), key=lambda kv: kv[1])[0] if bu_ else "-"
         print(f'{nm_:34s} {t_:4d} {sum(bu_.values()):7d} {lo_:6d}   {top}')
+    print("\nchairs: real footprint inside its planning envelope")
+    import build_3d as B3, trimesh as _tm
+    for grp, keys in (("Work_Chairs", ("WORK_CHAIR_1", "WORK_CHAIR_2")),
+                      ("Meeting_Chairs", tuple(f"MEETING_CHAIR_{i}" for i in range(1, 7)))):
+        parts = B3.OBJECTS[grp] + B3.OBJECTS[grp.replace("Chairs", "Chair_Bases")]
+        gb = _tm.util.concatenate(parts).bounds
+        xs = [F.FURNITURE[k]["box"] for k in keys]
+        env = (min(r["x0"] for r in xs), min(r["y0"] for r in xs),
+               max(r["x1"] for r in xs), max(r["y1"] for r in xs))
+        out_ = max(env[0]-gb[0][0], env[1]-gb[0][1], gb[1][0]-env[2], gb[1][1]-env[3], 0.0)
+        print(f'  {grp:16s} overshoot {out_:5.2f} px = {out_*13.2:4.0f} mm   '
+              f'{"OK" if out_ <= 1.01 else "CHECK"}')
+
     print(f'\nresidual points not covered by any solid: {tot_l}')
     print("0 means every residual is a line that is genuinely inside or under "
           "another object, i.e. invisible in a top view - not a geometry error.")

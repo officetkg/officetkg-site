@@ -27,6 +27,8 @@ COLORS = {
  "Balcony_Railing":(255,110,0),"Work_Desks":(20,110,190),"Work_Chairs":(70,70,70),
  "Printer_Unit":(120,100,60),"Meeting_Table":(15,85,160),"Meeting_Chairs":(80,80,80),
  "Monitor_55":(0,0,220),"Floor_Slab":(248,248,248),
+ "Table_Frame":(90,120,170),"Table_Wirebox":(40,40,60),
+ "Work_Chair_Bases":(120,120,130),"Meeting_Chair_Bases":(120,120,130),
 }
 
 # A plan view is cut BELOW the ceiling, so the ceiling, its coffer and the

@@ -20,6 +20,13 @@ PROGRAM
 
   Master Bedroom zone  -> 2 permanent workstations
   Living Dining zone   -> 6-seat meeting table + 55" monitor
+
+SPECIFIED PRODUCTS (client's choice, published maker dimensions)
+  MEETING_TABLE   NISHIKI E-CAD-2190KW   2100 x 900 x H720
+                  angular top, walnut, polished 4-leg frame, wiring box
+  WORK_CHAIR_1/2  Herman Miller Aeron, size B      658 W x 598 D x 1090 H
+  MEETING_CHAIR_1..6
+                  Herman Miller Setu, 5-star base  658 W x 658 D x  965 H
   existing Book Shelf  -> reused as-is
   storage wall         -> OPEN / PARKED throughout
 """
@@ -30,32 +37,53 @@ def mm(v): return round(v * MM_PER_PX)
 
 FURNITURE = {
     # ------------------------------------------------ Master Bedroom zone
-    "WORK_DESK_1":  {"box": rect(418, 420, 471, 526), "size_mm": (700, 1400),
+    "WORK_DESK_1":  {"box": rect(418, 408, 471, 514), "size_mm": (700, 1400),
                      "note": "worktop against the plan-left (EAST) wall, user faces east"},
-    "WORK_DESK_2":  {"box": rect(418, 530, 471, 636), "size_mm": (700, 1400),
-                     "note": "in line with DESK_1, continuous 2.8 m run on the same EAST wall"},
-    "WORK_CHAIR_1": {"box": rect(471, 448, 520, 497), "size_mm": (650, 650),
-                     "note": "task chair"},
-    "WORK_CHAIR_2": {"box": rect(471, 558, 520, 607), "size_mm": (650, 650),
-                     "note": "task chair"},
+    "WORK_DESK_2":  {"box": rect(418, 517, 471, 623), "size_mm": (700, 1400),
+                     "note": "in line with DESK_1, continuous 2.8 m run on the same "
+                             "EAST wall.  The pair moved 170 mm plan-up when the "
+                             "meeting table grew to 2100: that keeps the Aeron at "
+                             "DESK_2 clear in Y of the Setu at the table's EAST end, "
+                             "so the 900 mm pull-out behind it survives."},
+    "WORK_CHAIR_1": {"box": rect(471, 446, 516, 496), "size_mm": (594, 660),
+                     "product": "Herman Miller Aeron, size B",
+                     "product_mm": (658, 598, 1090),
+                     "note": "depth 598 runs EAST-WEST (the user faces east), "
+                             "width 658 runs NORTH-SOUTH; centred on DESK_1"},
+    "WORK_CHAIR_2": {"box": rect(471, 545, 516, 595), "size_mm": (594, 660),
+                     "product": "Herman Miller Aeron, size B",
+                     "product_mm": (658, 598, 1090),
+                     "note": "as CHAIR_1, centred on DESK_2"},
     "PRINTER_UNIT": {"box": rect(517, 410, 555, 444), "size_mm": (500, 450),
                      "note": "small printer on a low unit, in the plan top-right "
                              "(SOUTH-WEST) nook of the bedroom zone, against the "
                              "storage-wall pocket stub"},
 
     # ------------------------------------------------ Living Dining zone
-    "MEETING_TABLE":   {"box": rect(562, 650, 698, 718), "size_mm": (1800, 900),
+    "MEETING_TABLE":   {"box": rect(539, 645, 698, 713), "size_mm": (2100, 900),
+                        "product": "NISHIKI E-CAD-2190KW",
+                        "product_mm": (2100, 900, 720),
                         "note": "long axis runs EAST-WEST; its plan-right (WEST) end "
-                                "faces the monitor wall; "
-                                "sits in the widest part of the opened-up volume, "
-                                "straddling the south storage-wall line, in the "
-                                "daylight from the balcony"},
-    "MEETING_CHAIR_1": {"box": rect(562, 605, 607, 650), "size_mm": (594, 594)},
-    "MEETING_CHAIR_2": {"box": rect(607, 605, 652, 650), "size_mm": (594, 594)},
-    "MEETING_CHAIR_3": {"box": rect(653, 605, 698, 650), "size_mm": (594, 594)},
-    "MEETING_CHAIR_4": {"box": rect(562, 718, 607, 763), "size_mm": (594, 594)},
-    "MEETING_CHAIR_5": {"box": rect(607, 718, 652, 763), "size_mm": (594, 594)},
-    "MEETING_CHAIR_6": {"box": rect(653, 718, 698, 763), "size_mm": (594, 594)},
+                                "faces the monitor wall; sits in the widest part of "
+                                "the opened-up volume, straddling the south "
+                                "storage-wall line, in the daylight from the balcony. "
+                                "Grew 1800 -> 2100 with the specified product: the "
+                                "WEST end stays put so the viewing distance to the "
+                                "55 inch screen and the west aisle are unchanged, and "
+                                "the extra 300 mm is taken on the EAST end, where "
+                                "1300 mm of the Book Shelf route still remains."},
+    "MEETING_CHAIR_1": {"box": rect(540, 595, 590, 645), "size_mm": (660, 660),
+                        "product": "Herman Miller Setu, 5-star base"},
+    "MEETING_CHAIR_2": {"box": rect(593, 595, 643, 645), "size_mm": (660, 660),
+                        "product": "Herman Miller Setu, 5-star base"},
+    "MEETING_CHAIR_3": {"box": rect(646, 595, 696, 645), "size_mm": (660, 660),
+                        "product": "Herman Miller Setu, 5-star base"},
+    "MEETING_CHAIR_4": {"box": rect(540, 713, 590, 763), "size_mm": (660, 660),
+                        "product": "Herman Miller Setu, 5-star base"},
+    "MEETING_CHAIR_5": {"box": rect(593, 713, 643, 763), "size_mm": (660, 660),
+                        "product": "Herman Miller Setu, 5-star base"},
+    "MEETING_CHAIR_6": {"box": rect(646, 713, 696, 763), "size_mm": (660, 660),
+                        "product": "Herman Miller Setu, 5-star base"},
 
     "MONITOR_55":   {"box": rect(754, 637, 758, 730), "size_mm": (1230, 55),
                      "note": "55 inch 16:9, wall mounted on the plan-right (WEST) wall, "
@@ -71,18 +99,18 @@ SEAT_ROWS = {"south": ["MEETING_CHAIR_1","MEETING_CHAIR_2","MEETING_CHAIR_3"],
 # ----------------------------------------------------------------------
 CLEARANCES = {
     "entrance (SOUTH) -> LD":          {"zone": rect(632, 408, 758, 500), "min_mm": 800},
-    "LD south open area (plan top)":   {"zone": rect(562, 408, 758, 605), "min_mm": 1200},
+    "LD south open area (plan top)":   {"zone": rect(539, 408, 758, 595), "min_mm": 1200},
     "west aisle, LD -> north zone":    {"zone": rect(698, 408, 758, 764), "min_mm": 750},
     "MB <-> LD, west partition gap":   {"zone": rect(556, 485, 572, 605), "min_mm": 600},
     "MB <-> north zone, north gap":    {"zone": rect(466, 636, 557, 660), "min_mm": 900},
-    "work chair 1 pull-out":           {"zone": rect(471, 448, 700, 497), "min_mm": 900},
-    "work chair 2 pull-out":           {"zone": rect(471, 558, 700, 605), "min_mm": 900},
-    "meeting chair pull-out, south":   {"zone": rect(562, 560, 698, 605), "min_mm": 550},
-    "meeting chair pull-out, north":   {"zone": rect(562, 763, 698, 816), "min_mm": 550},
+    "work chair 1 pull-out":           {"zone": rect(471, 446, 700, 496), "min_mm": 900},
+    "work chair 2 pull-out":           {"zone": rect(471, 545, 700, 595), "min_mm": 900},
+    "meeting chair pull-out, south":   {"zone": rect(539, 545, 698, 595), "min_mm": 550},
+    "meeting chair pull-out, north":   {"zone": rect(539, 763, 698, 816), "min_mm": 550},
     "Clo. bi-fold door swing":         {"zone": rect(420, 387, 509, 405), "min_mm": 200},
     "Book Shelf access":               {"zone": rect(440, 651, 500, 790), "min_mm": 650},
     "balcony sash access":             {"zone": rect(534, 763, 721, 816), "min_mm": 700},
-    "north zone, east of meeting":     {"zone": rect(440, 652, 562, 816), "min_mm": 900},
+    "north zone, east of meeting":     {"zone": rect(440, 652, 539, 816), "min_mm": 900},
     "kitchen / toilet / powder":       {"zone": rect(632, 230, 753, 401), "min_mm": 750},
 }
 
@@ -91,4 +119,5 @@ if __name__ == "__main__":
     for k, v in FURNITURE.items():
         b = v["box"]
         print(f'{k:18s} MASTER x {b["x0"]:4d}..{b["x1"]:4d}  y {b["y0"]:4d}..{b["y1"]:4d}'
-              f'   = {mm(b["x1"]-b["x0"]):5d} x {mm(b["y1"]-b["y0"]):5d} mm')
+              f'   = {mm(b["x1"]-b["x0"]):5d} x {mm(b["y1"]-b["y0"]):5d} mm'
+              f'   {v.get("product","")}')
