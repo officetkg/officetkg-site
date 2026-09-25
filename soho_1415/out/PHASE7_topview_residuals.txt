@@ -1,6 +1,5 @@
 element                                mean    p95    max
 --------------------------------------------------------------
-COLUMN C_SE                            1.87   9.00   9.00
 BALCONY east raked (to railing)        1.53   8.72  11.00
 BALCONY west raked (to railing)        1.47   8.67  11.00
 STORAGE SOUTH parked panel 2           3.63   6.00   6.00
@@ -12,7 +11,6 @@ INNER W_shower_south                   1.91   4.00   4.00
 STORAGE SOUTH parked panel 1           1.83   4.00   4.00
 INNER W_shower_east_thick              0.44   3.97   5.06
 INNER W_powder_north                   0.63   3.00   5.00
-INNER W_shower_east_thin               1.43   3.00   3.07
 INNER W_shower_north                   1.34   3.00   3.00
 INNER W_band_shower_clo                1.11   3.00   4.13
 INNER W_closet_side                    1.42   3.00   3.00
@@ -23,7 +21,11 @@ SC                                     1.34   3.00   6.33
 INNER W_toilet_south                   0.31   2.67   5.00
 STORAGE EAST pocket                    0.27   2.58   6.00
 INNER W_toilet_west                    0.75   2.00   4.00
+INNER W_SEcol_return_fin               0.22   2.00   4.00
+INNER W_shower_east_thin               0.19   1.77   3.07
+INNER W_SEcol_return_head              0.18   1.67   4.00
 INNER W_powder_south                   0.15   1.33   4.13
+INNER W_NEcol_return                   0.12   1.12   2.33
 OUTER south solid band                 0.19   1.00   7.33
 WD                                     0.08   1.00   1.00
 BOOK_SHELF                             0.14   1.00   1.00
@@ -34,17 +36,17 @@ FURN MEETING_CHAIR_3                   0.75   1.00   1.40
 FURN MEETING_CHAIR_4                   0.75   1.00   1.40
 FURN MEETING_CHAIR_5                   0.75   1.00   1.40
 FURN MEETING_CHAIR_6                   0.75   1.00   1.40
+INNER W_niche_head                     0.08   0.67   2.33
 BALCONY west stub                      0.41   0.67   0.67
-OUTER envelope                         0.26   0.00   9.00
+OUTER envelope                         0.00   0.00   0.00
 OUTER west inner                       0.00   0.00   0.33
 OUTER east inner                       0.00   0.00   0.00
 OUTER east inner                       0.00   0.00   0.00
 COLUMN C_NE                            0.00   0.00   0.00
+COLUMN C_SE                            0.00   0.00   0.00
 INNER W_entrance_south                 0.07   0.00   2.60
 INNER W_powder_kitchen                 0.11   0.00   5.00
 INNER W_hall_south                     0.08   0.00   3.00
-INNER W_SE_column_return               0.05   0.00   3.00
-INNER W_NE_column_return               0.00   0.00   0.00
 SHOWER                                 0.00   0.00   0.00
 VANITY                                 0.00   0.00   0.00
 REFRIGERATOR                           0.00   0.00   0.00
@@ -60,28 +62,40 @@ FURN PRINTER_UNIT                      0.00   0.00   0.00
 FURN MEETING_TABLE                     0.00   0.00   0.00
 FURN MONITOR_55                        0.00   0.00   0.00
 --------------------------------------------------------------
-59 elements   mean-of-means 0.66 px   worst p95 9.00 px = 119 mm
+61 elements   mean-of-means 0.60 px   worst p95 8.72 px = 115 mm
 
-residuals > 2 px, each traced to a source (no geometry error):
-  COLUMN C_SE                        p95  9.00 px  <- north face at x 344-346 runs inside W_SE_column_return, same height -> no edge
-  BALCONY east raked (to railing)    p95  8.72 px  <- hidden under the railing between y 758 and 780
-  BALCONY west raked (to railing)    p95  8.67 px  <- hidden under the railing between y 758 and 780
-  STORAGE SOUTH parked panel 2       p95  6.00 px  <- as above
-  FURN MEETING_CHAIR_1               p95  6.00 px  <- chair-to-chair joint in the north row: same object, same height
-  STORAGE EAST parked panel 1        p95  5.00 px  <- as above
-  STORAGE EAST parked panel 2        p95  5.00 px  <- as above
-  OUTER west inner                   p95  4.48 px  <- inner face at y~656 runs inside the south solid wall band, same height
-  INNER W_shower_south               p95  4.00 px  <- coplanar with the wall band below the shower
-  STORAGE SOUTH parked panel 1       p95  4.00 px  <- panel-to-panel joint inside the pocket: same object, same height
-  INNER W_shower_east_thick          p95  3.97 px  <- coplanar with the shower screen
-  INNER W_powder_north               p95  3.00 px  <- coplanar with the PS south wall
-  INNER W_shower_east_thin           p95  3.00 px  <- UNEXPLAINED
-  INNER W_shower_north               p95  3.00 px  <- coplanar with the powder room north wall
-  INNER W_band_shower_clo            p95  3.00 px  <- coplanar with the west exterior wall
-  INNER W_closet_side                p95  3.00 px  <- coplanar with the closet carcase
-  INNER W_pocket_stub                p95  3.00 px  <- UNEXPLAINED
-  STORAGE EAST parked panel 3        p95  3.00 px  <- UNEXPLAINED
-  STORAGE SOUTH pocket               p95  3.00 px  <- UNEXPLAINED
-  SC                                 p95  3.00 px  <- UNEXPLAINED
-  INNER W_toilet_south               p95  2.67 px  <- UNEXPLAINED
-  STORAGE EAST pocket                p95  2.58 px  <- UNEXPLAINED
+mechanical classification of residual points (> 1.5 px)
+element                             pts  buried  loose   occupying solid
+INNER W_entrance_south               14      14      0   Interior_Walls
+INNER W_powder_kitchen               36      36      0   Interior_Walls
+INNER W_powder_north                251     251      0   Interior_Walls
+INNER W_powder_south                 40      40      0   Interior_Walls
+INNER W_shower_east_thin             20      20      0   Interior_Walls
+INNER W_shower_east_thick            35      35      0   Interior_Walls
+INNER W_shower_north                165     165      0   Interior_Walls
+INNER W_shower_south                185     185      0   Interior_Walls
+INNER W_band_shower_clo             272     272      0   Interior_Walls
+INNER W_closet_side                 137     137      0   Interior_Walls
+INNER W_toilet_west                 151     151      0   Interior_Walls
+INNER W_toilet_south                 54      54      0   Interior_Walls
+INNER W_hall_south                   19      19      0   Exterior_Walls
+INNER W_pocket_stub                  56      56      0   Interior_Walls
+INNER W_SEcol_return_head            15      15      0   Interior_Walls
+INNER W_SEcol_return_fin             24      24      0   Interior_Walls
+INNER W_NEcol_return                  6       6      0   Interior_Walls
+INNER W_niche_head                    6       6      0   Interior_Walls
+STORAGE EAST pocket                  27      27      0   Storage_Wall_Rail
+STORAGE EAST parked panel 1         172     172      0   Storage_Wall_Rail
+STORAGE EAST parked panel 2         335     335      0   Storage_Wall_Rail
+STORAGE EAST parked panel 3         166     166      0   Storage_Wall_Rail
+STORAGE SOUTH pocket                 27      27      0   Storage_Wall_Rail
+STORAGE SOUTH parked panel 1        145     145      0   Storage_Wall_Rail
+STORAGE SOUTH parked panel 2        287     287      0   Storage_Wall_Rail
+SC                                  267     267      0   Interior_Walls
+OUTER west inner y195                90      90      0   Exterior_Walls
+BALCONY west raked                   61      61      0   Balcony_Railing
+BALCONY east raked                   61      61      0   Balcony_Railing
+FURN MEETING_CHAIR_1                112     112      0   Storage_Wall_Rail
+
+residual points not covered by any solid: 0
+0 means every residual is a line that is genuinely inside or under another object, i.e. invisible in a top view - not a geometry error.

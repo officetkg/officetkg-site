@@ -1,6 +1,6 @@
 object                       parts   tris   bounds  x0 y0 z0  x1 y1 z1  (MASTER px)
 Exterior_Walls                  12    144       0.0     0.0    0.0    365.0   672.0  185.6
-Interior_Walls                  20    240      10.0    24.0    0.0    355.0   672.0  185.6
+Interior_Walls                  22    264      10.0    24.0    0.0    355.0   672.0  185.6
 Columns                          2     24     323.0   -32.0    0.0    397.0   699.0  185.6
 PS                               3     36       0.0     0.0    0.0    195.0    78.0  185.6
 Entrance                         2     24     200.0     0.0    0.0    301.0    78.0  174.2

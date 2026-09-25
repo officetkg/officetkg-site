@@ -20,7 +20,10 @@ EXPECT = {
  "PS": union([v for k,v in G.PS.items() if isinstance(v,dict) and "y0" in v and k!="interior"]),
  "Closets": union(list(G.CLOSETS.values())),
  "Book_Shelf": rb(G.BOOK_SHELF["body"]),
- "Shower": rb(G.SHOWER),
+ # tray (G.SHOWER) + glazed screen: screen X plane taken from the 2D door-leaf
+ # element W_shower_east_thin, screen Y span = the booth's own depth.
+ "Shower": (G.SHOWER["x0"], G.SHOWER["y0"],
+            G.INNER_WALLS["W_shower_east_thin"]["x1"], G.SHOWER["y1"]),
  "WD": rb(G.WD),
  "Powder_Room_Fixtures": rb(G.VANITY),
  "Toilet": union([G.TOILET["bowl"],G.TOILET["tank"],G.TOILET["hand_basin"]]),

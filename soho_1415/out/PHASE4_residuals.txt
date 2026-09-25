@@ -22,6 +22,7 @@ INNER.W_shower_north                         0.53   2.00   2.00
 INNER.W_shower_south                         1.43   2.00   2.00
 INNER.W_toilet_west                          1.51   2.00   4.00
 INNER.W_toilet_south                         0.71   2.00   5.00
+INNER.W_NEcol_return                         0.22   2.00   2.00
 STORAGE.SOUTH.panel1_closed                  0.91   2.00   2.00
 SHOWER                                       0.72   2.00   2.00
 WD                                           0.60   2.00   2.20
@@ -33,10 +34,13 @@ INNER.W_band_shower_clo                      0.21   1.49   4.00
 STORAGE.EAST.pocket                          0.92   1.40   2.20
 STORAGE.SOUTH.pocket                         0.54   1.40   2.20
 DOOR.D_SHOWER.arc                            0.44   1.40   2.20
+INNER.W_SEcol_return_head                    0.45   1.25   4.00
 OUTER.south.solid_band                       0.11   1.00   4.00
 PS.wall_south                                0.16   1.00   5.00
 INNER.W_entrance_south                       0.86   1.00   1.00
 INNER.W_powder_south                         0.13   1.00   4.00
+INNER.W_SEcol_return_fin                     0.17   1.00   4.00
+INNER.W_niche_head                           0.13   1.00   2.00
 STORAGE.EAST.panel1_closed                   0.46   1.00   1.00
 STORAGE.EAST.panel2_closed                   0.42   1.00   1.00
 STORAGE.SOUTH.panel2_closed                  0.42   1.00   1.00
@@ -74,4 +78,4 @@ DOOR.D_SHOWER.leaf                           0.00   0.00   0.00
 DOOR.D_TOILET.leaf                           0.06   0.00   2.00
 BALCONY.north_edge                           0.00   0.00   0.00
 ------------------------------------------------------------------
-elements: 73   mean-of-means 0.54px   worst p95 9.20px
+elements: 77   mean-of-means 0.52px   worst p95 9.20px

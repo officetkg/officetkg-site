@@ -39,6 +39,10 @@
 <rect class="inner" x="109" y="253" width="120" height="5"/>
 <rect class="inner" x="229" y="252" width="126" height="5"/>
 <rect class="inner" x="152" y="256" width="17" height="24"/>
+<rect class="inner" x="317" y="614" width="38" height="8"/>
+<rect class="inner" x="317" y="622" width="8" height="50"/>
+<rect class="inner" x="318" y="24" width="5" height="20"/>
+<rect class="inner" x="318" y="44" width="32" height="4"/>
 <rect class="pocket" x="153" y="280" width="12" height="55"/>
 <rect class="panel" x="160" y="280" width="4" height="55"/>
 <rect class="panel" x="156" y="280" width="4" height="55"/>

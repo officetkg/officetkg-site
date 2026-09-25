@@ -139,8 +139,11 @@ INNER_WALLS = {
     # --- PHASE 5 addendum: two column returns that were present on the sheet but
     #     not yet carried in the PHASE 4 model.  They ADD faces, they do not move
     #     any approved coordinate.  Flagged to the client for acknowledgement.
-    "W_SE_column_return": rect(720, 764, 758, 822),   # SE column casing, projects into LD
-    "W_NE_column_return": rect(721, 174, 726, 198),   # NE column casing, entrance side
+    # plan-bottom-right column casing: full depth for 8 px, then a 8 px fin
+    "W_SEcol_return_head": rect(720, 764, 758, 772),
+    "W_SEcol_return_fin":  rect(720, 772, 728, 822),
+    "W_NEcol_return":      rect(721, 174, 726, 194),  # plan-top-right column casing
+    "W_niche_head":        rect(721, 194, 753, 198),  # wall over the unlabelled niche
 }
 
 # ----------------------------------------------------------------------
