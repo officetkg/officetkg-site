@@ -23,6 +23,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
 
 # 承認済み平面図 (KEN 物件資料 p.3) と、その中の座標原点
+# 指定家具配置図 (FURNITURE CONTACT & CLEARANCE REVIEW)
+FURNITURE_PLAN = os.environ.get(
+    "FURNITURE_PLAN",
+    "/root/.claude/uploads/9b86f205-44ec-5e28-b7cf-48262834b0fc/82ab60a7-image.png")
+FURN_X0, FURN_X1 = 321, 1089      # 外壁外面 西 / 東 (px)
+FURN_Y0, FURN_Y1 = 1735, 318      # 外壁外面 南 / 北 (px)
+
 APPROVED_PLAN = os.environ.get(
     "APPROVED_PLAN",
     "/root/.claude/uploads/9b86f205-44ec-5e28-b7cf-48262834b0fc/3241b6ab-image.png")
@@ -133,6 +140,52 @@ def overlay(bdata):
     return p
 
 
+def overlay_furniture():
+    """指定家具配置図に、モデルの家具だけを重ねて位置一致を確認する."""
+    if not os.path.exists(FURNITURE_PLAN):
+        print("!! furniture plan not found, skipping")
+        return None
+    src = Image.open(FURNITURE_PLAN).convert("L")
+    w, h = src.size
+    k = (FURN_X1 - FURN_X0) / (GM.X_OUT_E - GM.X_OUT_W)      # px per mm
+
+    furn = ("DESK_2P", "TASK_CHAIR_1", "TASK_CHAIR_2", "MEETING_TABLE",
+            "MTG_CHAIR_W1", "MTG_CHAIR_W2", "MTG_CHAIR_E1", "MTG_CHAIR_E2",
+            "MTG_CHAIR_N", "MTG_CHAIR_S", "MONITOR_55", "STORAGE_04")
+    scene, _ = build()
+    keep = [n for n in scene.geometry if n in furn]
+    tris, rgb, oid = [], [], []
+    for i, n in enumerate(keep):
+        g = scene.geometry[n]
+        f = np.asarray(g.faces, int)
+        tris.append(np.asarray(g.vertices, float)[f])
+        rgb.append(np.asarray(g.visual.face_colors)[:, :3])
+        oid.append(np.full(len(f), i))
+    tris = np.concatenate(tris)
+
+    cx = (GM.X_OUT_W + GM.X_OUT_E) / 2.0
+    cy = (GM.Y_OUT_S + GM.Y_OUT_N) / 2.0
+    img, _ = softrender.render(
+        tris, np.concatenate(rgb).astype(np.uint8), np.concatenate(oid),
+        eye_dir=(0, 0, 1), up_hint=(0, 1, 0),
+        width=w, height=h, px_per_mm=k, outline=False,
+        center=(cx, cy, 0))
+    # モデル画像の中心は外形中心。図面上の外形中心 px に平行移動する。
+    dx = int(round((FURN_X0 + FURN_X1) / 2.0 - w / 2.0))
+    dy = int(round((FURN_Y0 + FURN_Y1) / 2.0 - h / 2.0))
+    shifted = Image.fromarray(img).transform(
+        (w, h), Image.AFFINE, (1, 0, -dx, 0, 1, -dy), fillcolor=(252, 252, 250))
+
+    m = np.asarray(shifted.convert("L")).astype(np.float32)
+    solid = m < 248
+    base = np.asarray(src).astype(np.float32)
+    out = np.stack([base, base, base], -1)
+    out[solid] = out[solid] * 0.45 + np.array([0, 90, 230], np.float32) * 0.55
+    p = os.path.join(OUT, "view_D_overlay_vs_furniture_plan.png")
+    Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).save(p)
+    return p
+
+
 def check_xy_lock():
     """XY LOCK の自己検証: 全オブジェクトが外形 + バルコニー内に収まるか."""
     scene, meta = build()
@@ -172,6 +225,9 @@ def main():
     print("overlay C ...")
     pc = overlay(bdata)
     print("  ->", pc)
+    print("overlay D (指定家具配置図) ...")
+    pd = overlay_furniture()
+    print("  ->", pd)
 
     print("\n--- XY LOCK check ---")
     bad = check_xy_lock()
@@ -201,6 +257,24 @@ def main():
              GM.MOVW_EW_TRAVEL[1] - GM.MOVW_EW_TRAVEL[0],
              GM.MOVW_EW_POCKET[0], GM.MOVW_EW_POCKET[1], GM.MOVW_EW_PANELS))
     print("object bbox (panels + rail):", mw["bbox_min"], mw["bbox_max"])
+
+    print("\n--- clearance check (指定家具配置図の主旨) ---")
+    bb = {m["object"]: (m["bbox_min"], m["bbox_max"]) for m in build()[1]}
+
+    def gap(a_obj, a_edge, b_val, axis, label):
+        lo, hi = bb[a_obj]
+        i = 0 if axis == "X" else 1
+        v = hi[i] if a_edge == "max" else lo[i]
+        print("  %-38s %6.0f mm" % (label, abs(b_val - v)))
+
+    gap("DESK_2P", "min", GM.X_IN_W, "X", "デスク西端 -> 西壁内面 (flush 指示)")
+    gap("TASK_CHAIR_1", "max", GM.MOVW_NS_X[0] + 30, "X",
+        "執務チェア東端 -> 可動壁レール")
+    gap("MTG_CHAIR_S", "min", GM.Y_IN_S, "Y", "会議チェア(南)南端 -> 南壁内面")
+    gap("MTG_CHAIR_E1", "max", GM.FURNITURE_XY_LOCK["MONITOR_55"]["wall_x"] - 60,
+        "X", "会議チェア(東)東端 -> ディスプレイ面")
+    gap("MTG_CHAIR_W1", "min", GM.MOVW_NS_X[1], "X", "会議チェア(西)西端 -> 可動壁ゾーン")
+    gap("MEETING_TABLE", "max", GM.X_IN_E, "X", "テーブル東端 -> 東壁内面")
 
     a = GM.areas()
     print("\n--- area check ---")

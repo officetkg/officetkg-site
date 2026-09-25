@@ -136,26 +136,56 @@ OPEN_SHOWER_DOOR   = (6860.0, 7560.0)   # シャワードア (X_WALL_SHOWER_E)
 OPEN_WINDOW        = (1740.0, 4080.0)   # 掃き出し窓 (南外壁)     px x 778-960
 
 # =====================================================================
-#  2.  FURNITURE  XY  LOCK   ( ※暫定値 -- 上記ヘッダ参照 )
+#  2.  FURNITURE  XY  LOCK   ( 添付「FURNITURE CONTACT & CLEARANCE REVIEW」より )
+# =====================================================================
+#  出典: 指定家具配置図 (1440x2160 px)。外形 px x321-1089 / y318-1735 を
+#        マスター外形に一致させて換算した (6.1198 mm/px)。
+#        この図の外形比は 768:1417 -> 8672 mm でマスター 8675 mm と一致する。
+#
+#  ただし この図の壁厚はマスターと異なる (西壁内面 X135 / 東壁内面 X4565 に対し
+#  マスターは 195 / 4495)。したがって **壁に接する要素は図の数値をそのまま使わず、
+#  マスターの実際の壁面にアンカーし直している**。
+#     - DESK_2P   : 図で「flush to wall」と指示 -> 西壁内面 X=195 に密着
+#     - DISPLAY_55: 東壁掛け -> 東壁内面 X=4495 から室内側へ 60 mm
+#     - STORAGE_04: 東壁付け -> 東壁内面 X=4495 に密着
+#  壁から離れている要素 (ミーティングテーブル・チェア) は図の実測値をそのまま採用。
+#
+#  実測値 (図 -> mm)
+#     DESK        X 214-844 (630)  Y 2827-4994 (2167)   西壁に密着指示
+#     モニター    幅 483 / 厚 37、各ステーションの机西端寄り
+#     執務チェア  X 753-1188        Y 4137-4608 / 3211-3694   西向き
+#     TABLE       X 2778-3678 (900) Y 1261-3035 (1775)
+#     会議チェア  西 (2491,2623)(2491,1659) / 東 (3969,2623)(3969,1659)
+#                 北 (3228,3351) / 南 (3228,943)
+#     DISPLAY     Y 1793-2993 (1199 = 55 型 1218 に一致) 東壁掛け・西向き
+#     STORAGE(4)  X 4333-4578 (245) Y 875-1793 (918)   ※図で赤フラグ
 # =====================================================================
 FURNITURE_XY_LOCK = {
-    # 2 人用ワークデスク : 1600 x 700 / バルコニーを向いて着座
-    "DESK_2P":        dict(x0=500.0,  x1=2100.0, y0=430.0,  y1=1130.0),
-    "TASK_CHAIR_1":   dict(cx=900.0,  cy=1500.0, facing="S"),
-    "TASK_CHAIR_2":   dict(cx=1700.0, cy=1500.0, facing="S"),
+    # (1) 2 人用ワークデスク : 西壁に密着 / Master Bedroom 側に南北配置
+    "DESK_2P":        dict(x0=195.0,  x1=825.0,  y0=2825.0, y1=4995.0),
+    "DESK_MON_N":     dict(cy=4373.0, w=483.0),          # 机上モニター (北席)
+    "DESK_MON_S":     dict(cy=3453.0, w=483.0),          # 机上モニター (南席)
+    "TASK_CHAIR_1":   dict(cx=960.0,  cy=4373.0, facing="W"),
+    "TASK_CHAIR_2":   dict(cx=960.0,  cy=3453.0, facing="W"),
 
-    # 6 人用ミーティングテーブル : 1000 x 2100
-    "MEETING_TABLE":  dict(x0=2900.0, x1=3900.0, y0=1350.0, y1=3450.0),
-    "MTG_CHAIR_W1":   dict(cx=2620.0, cy=1875.0, facing="E"),
-    "MTG_CHAIR_W2":   dict(cx=2620.0, cy=2925.0, facing="E"),
-    "MTG_CHAIR_E1":   dict(cx=4180.0, cy=1875.0, facing="W"),
-    "MTG_CHAIR_E2":   dict(cx=4180.0, cy=2925.0, facing="W"),
-    "MTG_CHAIR_S":    dict(cx=3400.0, cy=1050.0, facing="N"),
-    "MTG_CHAIR_N":    dict(cx=3400.0, cy=3750.0, facing="S"),
+    # (2) 6 人用ミーティングテーブル : 900 x 1775
+    "MEETING_TABLE":  dict(x0=2780.0, x1=3680.0, y0=1260.0, y1=3035.0),
+    "MTG_CHAIR_W1":   dict(cx=2491.0, cy=2623.0, facing="E"),
+    "MTG_CHAIR_W2":   dict(cx=2491.0, cy=1659.0, facing="E"),
+    "MTG_CHAIR_E1":   dict(cx=3969.0, cy=2623.0, facing="W"),
+    "MTG_CHAIR_E2":   dict(cx=3969.0, cy=1659.0, facing="W"),
+    "MTG_CHAIR_N":    dict(cx=3228.0, cy=3351.0, facing="S"),
+    "MTG_CHAIR_S":    dict(cx=3228.0, cy=943.0,  facing="N"),
 
-    # 55 インチモニター : 有効画面 1218 x 685 / 南(テーブル側)を向く
-    "MONITOR_55":     dict(cx=3400.0, cy=4300.0, facing="S"),
+    # (3) 55 インチモニター : 東壁掛け・西向き (有効画面 1218 x 685)
+    "MONITOR_55":     dict(y0=1790.0, y1=3010.0, wall_x=4495.0, facing="W"),
 }
+
+# (4) STORAGE : 添付図に赤 (Storage overlap) でフラグされた収納。
+#     「追加収納を絶対に追加しないでください」という既存指示と抵触するため、
+#     座標だけ保持し、既定では生成しない。True にすれば即座に反映される。
+INCLUDE_STORAGE_04 = False
+STORAGE_04 = dict(x0=4250.0, x1=4495.0, y0=875.0, y1=1793.0, z1=800.0)
 
 # ---------------------------------------------------------------------
 # 可動収納壁 (ベッドルーム間仕切) -- L 字 / 常時開放
@@ -481,12 +511,18 @@ def parts():
     # =================================================================
     F = FURNITURE_XY_LOCK
 
+    # (1) 2 人用ワークデスク (机上モニター 2 台を含む)
     d = F["DESK_2P"]
-    desk = [_b(d["x0"], d["x1"], d["y0"], d["y1"], 700, 740)]
-    for sx in (d["x0"] + 60, d["x1"] - 120):
+    desk = [_b(d["x0"], d["x1"], d["y0"], d["y1"], 700, 740)]          # 天板
+    for sx in (d["x0"] + 40, d["x1"] - 100):
         for sy in (d["y0"] + 40, d["y1"] - 100):
-            desk.append(_b(sx, sx + 60, sy, sy + 60, FL, 700))
-    desk.append(_b(d["x0"] + 40, d["x1"] - 40, d["y0"] + 40, d["y0"] + 70, 420, 690))  # 幕板
+            desk.append(_b(sx, sx + 60, sy, sy + 60, FL, 700))          # 脚
+    for k in ("DESK_MON_N", "DESK_MON_S"):
+        m = F[k]
+        cy, w = m["cy"], m["w"]
+        desk.append(_b(d["x0"] + 145, d["x1"] - 330, cy - 178, cy + 178, 740, 780))   # スタンド台
+        desk.append(_b(d["x0"] + 190, d["x1"] - 555, cy - 30, cy + 30, 780, 1010))    # 支柱
+        desk.append(_b(d["x0"] + 31, d["x0"] + 68, cy - w / 2, cy + w / 2, 1010, 1310))  # 画面
     add("DESK_2P", "2人用ワークデスク", desk)
 
     for k in ("TASK_CHAIR_1", "TASK_CHAIR_2"):
@@ -494,6 +530,7 @@ def parts():
         bx, cy = _task_chair(c["cx"], c["cy"], c["facing"])
         add(k, "執務チェア2脚", bx, cy)
 
+    # (2) 6 人用ミーティングテーブル
     m = F["MEETING_TABLE"]
     tbl = [_b(m["x0"], m["x1"], m["y0"], m["y1"], 700, 740)]
     for sx in (m["x0"] + 80, m["x1"] - 160):
@@ -502,18 +539,24 @@ def parts():
     add("MEETING_TABLE", "6人用ミーティングテーブル", tbl)
 
     for k in ("MTG_CHAIR_W1", "MTG_CHAIR_W2", "MTG_CHAIR_E1",
-              "MTG_CHAIR_E2", "MTG_CHAIR_S", "MTG_CHAIR_N"):
+              "MTG_CHAIR_E2", "MTG_CHAIR_N", "MTG_CHAIR_S"):
         c = F[k]
         bx, cy = _meeting_chair(c["cx"], c["cy"], c["facing"])
         add(k, "会議チェア6脚", bx, cy)
 
+    # (3) 55 インチモニター : 東壁掛け
     mo = F["MONITOR_55"]
-    cx, cy = mo["cx"], mo["cy"]
+    wx, y0, y1 = mo["wall_x"], mo["y0"], mo["y1"]
     add("MONITOR_55", "55インチモニター",
-        [_b(cx - 640, cx + 640, cy - 30, cy + 30, 700, 1445),   # 筐体 (55" = 1218x685)
-         _b(cx - 609, cx + 609, cy - 45, cy - 30, 730, 1415),   # 画面
-         _b(cx - 120, cx + 120, cy - 10, cy + 70, 40, 700),     # 支柱
-         _b(cx - 350, cx + 350, cy - 175, cy + 175, FL, 40)])   # ベース
+        [_b(wx - 60, wx, y0, y1, 750, 1435),                    # 筐体
+         _b(wx - 75, wx - 60, y0 + 31, y1 - 31, 780, 1404),     # 画面 (1218 x 685)
+         _b(wx - 40, wx, (y0 + y1) / 2 - 200, (y0 + y1) / 2 + 200, 1000, 1180)])  # 壁掛け金具
+
+    # (4) STORAGE  -- 既定では生成しない (上記 INCLUDE_STORAGE_04 参照)
+    if INCLUDE_STORAGE_04:
+        st = STORAGE_04
+        add("STORAGE_04", "追加収納(要確認)",
+            [_b(st["x0"], st["x1"], st["y0"], st["y1"], FL, st["z1"])])
 
     return P
 
