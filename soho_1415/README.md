@@ -106,7 +106,7 @@ photoreal outputs; `CAM_A..E.png` are the plain shaded views they came from.
 ## Decoration
 
 `decoration.py` adds only what the brief permits — laptops, keyboards, mice,
-notebooks, pens, a small number of books, and one or two small plants. **44
+notebooks, pens, a small number of books, and one or two small plants. **48
 items.** Nothing architectural and no piece of furniture is moved by it; it is a
 purely additive layer read into `build_3d.py` after everything else is built.
 
@@ -115,6 +115,12 @@ purely additive layer read into `build_3d.py` after everything else is built.
 * every mesh must sit **on an approved support** — `WORK_DESK_1/2`,
   `MEETING_TABLE`, `BOOK_SHELF`, or a clear patch of Living Dining floor — and
   inside that support's footprint. Result: **0 items off an approved support**.
+* every mesh must also **clash with nothing**: `_obstacles()` collects every
+  wall, column, PS, casework, storage-wall and furniture rectangle in the
+  master, and no item may overlap any of them but its own support. Result:
+  **0 clashes**. This check was added after the floor plant was found standing
+  inside `W_SEcol_return_head` — the support test alone had passed it, because
+  the FLOOR rect then ran to x 355 / y 666 and swallowed the column return.
 * the banned list (bed, sofa, lounge chair, coffee table, a bank of plants, large
   artwork, clutter, household goods) is asserted empty.
 
@@ -125,8 +131,8 @@ purely additive layer read into `build_3d.py` after everything else is built.
 | Desk_Kit (keyboard, mouse) | 4 | 720 – 757 | work desks |
 | Paper (notebook, pen) | 6 | 720 – 731 | work desks, meeting table |
 | Books | 24 | 820 – 1869 | Book Shelf |
-| Plant_Pots | 2 | 0 – 2140 | Book Shelf, LD floor |
-| Plant_Foliage | 4 | 184 – 2310 | Book Shelf, LD floor |
+| Plant_Pots | 2 | 0 – 2135 | Book Shelf, LD floor |
+| Plant_Foliage | 8 | 188 – 2366 | Book Shelf, LD floor |
 
 `out/PHOTOREAL_BEFORE_AFTER.png` is the same five cameras rendered before and
 after the layer, so the difference is decoration alone.

@@ -70,15 +70,30 @@ def books(x0, x1, y0, z, n=6, h_mm=(190, 250)):
         y += t + P(1.5)
     return out
 
-def plant(cx, cy, z, pot_d=220, pot_h=210, foliage_d=430):
-    pot = trimesh.creation.cylinder(radius=P(pot_d)/2, height=P(pot_h), sections=18)
-    pot.apply_translation((cx, cy, z+P(pot_h)/2))
-    fol = trimesh.creation.icosphere(subdivisions=2, radius=P(foliage_d)/2)
-    fol.apply_transform(np.diag([1.0, 0.92, 0.80, 1.0]))
-    fol.apply_translation((cx, cy, z+P(pot_h)+P(foliage_d)*0.34))
-    stem = trimesh.creation.cylinder(radius=P(14), height=P(foliage_d)*0.4, sections=8)
-    stem.apply_translation((cx, cy, z+P(pot_h)+P(foliage_d)*0.16))
-    return [pot], [fol, stem]
+def plant(cx, cy, z, pot_d=210, pot_h=190, spread=300):
+    """A small plant: a slightly tapered pot, a short trunk and three
+    overlapping leaf clusters.  Deliberately modest -- the brief allows one or
+    two SMALL plants, not a specimen tree, and a single big sphere reads as a
+    blob rather than as planting."""
+    pot = trimesh.creation.cylinder(radius=P(pot_d)/2, height=P(pot_h), sections=24)
+    v = pot.vertices.copy()                       # taper: base 76 % of the rim
+    lo, hi = v[:, 2].min(), v[:, 2].max()
+    k = 0.76 + 0.24*(v[:, 2]-lo)/(hi-lo)
+    v[:, 0] *= k; v[:, 1] *= k
+    pot = trimesh.Trimesh(vertices=v, faces=pot.faces, process=False)
+    pot.apply_translation((cx, cy, z + P(pot_h)/2))
+    trunk = trimesh.creation.cylinder(radius=P(16), height=P(spread)*0.55, sections=10)
+    trunk.apply_translation((cx, cy, z + P(pot_h) + P(spread)*0.27))
+    fol = []
+    for dx, dy, dz, sc in ((-0.26, 0.10, 0.62, 0.62),
+                           ( 0.24, -0.14, 0.78, 0.70),
+                           ( 0.02, 0.16, 1.02, 0.54)):
+        b = trimesh.creation.icosphere(subdivisions=3, radius=P(spread)/2*sc)
+        b.apply_transform(np.diag([1.0, 0.90, 0.72, 1.0]))
+        b.apply_translation((cx + P(spread)*dx, cy + P(spread)*dy,
+                             z + P(pot_h) + P(spread)*dz))
+        fol.append(b)
+    return [pot], [trunk] + fol
 
 # ----------------------------------------------------------------------
 def build():
@@ -107,14 +122,48 @@ def build():
         y0 = bs["y0"] + (bs["y1"]-bs["y0"])*(ycell + .12)/5.0
         out["Books"] += books(bs["x0"]+P(30), bs["x1"]-P(20), y0, z, n=6)
         support += [("BOOK_SHELF", bs)]*6
-    # two small plants: one on the floor by the window, one on a shelf
-    pot, fol = plant(318, 620, 0.0)
+    # two small plants: one on the floor by the window, one on a shelf.
+    # The floor plant stands in the clear band in front of the glazing, beside
+    # the solid stub of the window wall -- 277 mm clear of everything.  It used
+    # to sit at (318, 620), which is INSIDE W_SEcol_return_head, so it grew out
+    # of the wall at the column corner.
+    pot, fol = plant(156, 644, 0.0)
     out["Plant_Pots"] += pot; out["Plant_Foliage"] += fol
     pot, fol = plant(bs["x0"]+P(140), bs["y0"]+P(1500),
                      H.BOOKSHELF_HEIGHT*5/6.0 + P(20),
-                     pot_d=130, pot_h=120, foliage_d=230)
+                     pot_d=130, pot_h=115, spread=190)
     out["Plant_Pots"] += pot; out["Plant_Foliage"] += fol
     return {k: v for k, v in out.items() if v}, support
+
+def _obstacles():
+    """Every solid a decoration item must not intersect, as plan rectangles."""
+    out = []
+    def push(n, x0, y0, x1, y1):
+        out.append((n, dict(x0=min(x0, x1), y0=min(y0, y1),
+                            x1=max(x0, x1), y1=max(y0, y1))))
+    def walk(prefix, v):
+        if isinstance(v, dict):
+            if {"x0", "y0", "x1", "y1"} <= set(v):
+                push(prefix, v["x0"], v["y0"], v["x1"], v["y1"]); return
+            for k, sub in v.items(): walk(f"{prefix}.{k}", sub)
+        elif isinstance(v, list):
+            for i, sub in enumerate(v): walk(f"{prefix}[{i}]", sub)
+    ow = G.OUTER_WALLS
+    for seg in ow["north"]["segments"]: push("OUTER.north", seg["x0"], 0, seg["x1"], seg["inner_y"])
+    for seg in ow["west"]["segments"]:  push("OUTER.west", 0, seg["y0"], seg["inner_x"], seg["y1"])
+    for seg in ow["east"]["segments"]:  push("OUTER.east", seg["inner_x"], seg["y0"], 365, seg["y1"])
+    ss = ow["south"]["solid_segment"]
+    push("OUTER.south_solid", ss["x0"], ss["y0"], ss["x1"], ss["y1"])
+    push("OUTER.south_sash", ow["south"]["sash_segment"]["x0"], 665,
+         ow["south"]["sash_segment"]["x1"], 672)
+    for nm in ("INNER_WALLS", "COLUMNS", "PS", "STORAGE_WALL", "KITCHEN",
+               "CLOSETS", "SHOWER", "WD", "VANITY", "TOILET", "REFRIGERATOR"):
+        if hasattr(G, nm): walk(nm, getattr(G, nm))
+    b = G.BOOK_SHELF["body"]; push("BOOK_SHELF", b["x0"], b["y0"], b["x1"], b["y1"])
+    for k, d in F.FURNITURE.items():
+        bb = d.get("box")
+        if bb: push(k, bb["x0"], bb["y0"], bb["x1"], bb["y1"])
+    return out
 
 BANNED = ["bed", "sofa", "lounge chair", "coffee table", "bank of plants",
           "large artwork", "clutter", "household goods"]
@@ -125,7 +174,13 @@ def _supports():
         b = F.FURNITURE[k]["box"]; out[k] = (b, DESK_TOP)
     b = F.FURNITURE["MEETING_TABLE"]["box"]; out["MEETING_TABLE"] = (b, TABLE_TOP)
     b = G.BOOK_SHELF["body"];                out["BOOK_SHELF"] = (b, 0.0)
-    out["FLOOR"] = ({"x0": 159, "y0": 568, "x1": 355, "y1": 666}, 0.0)   # clear LD floor
+    # Clear LD floor: the band between the meeting chairs and the glazing.
+    # Bounded by the solid stub of the window wall (east end x=135), the west
+    # face of the SE column return (x=317), the north edge of the meeting
+    # chairs (y=613) and the inner face of the sash (y=665).  The old rect ran
+    # to x=355 / y=666 and so swallowed the column return, which let an item be
+    # "on the floor" while standing inside a wall.
+    out["FLOOR"] = ({"x0": 136, "y0": 613, "x1": 317, "y1": 665}, 0.0)
     return out
 
 def verify():
@@ -156,8 +211,31 @@ def verify():
                 if not ok: per.append("OFF-SUPPORT"); bad += 1
             hit = "/".join(sorted(set(per)))
         print(f'{k:16s} {len(v):5d}  {lo[2]*H.MM_PER_PX:6.0f} ..{hi[2]*H.MM_PER_PX:7.0f}   {hit}')
+    # ---- clash: nothing may reach into a wall, a column, casework or a piece
+    # of furniture that is not the item's own support.
+    obs = _obstacles()
+    clash = 0
+    for k, v in objs.items():
+        for mm_ in v:
+            l2, h2 = mm_.bounds
+            own = None
+            for nm, (b, top) in sup.items():
+                if (l2[0] >= b["x0"]-1 and l2[1] >= b["y0"]-1
+                        and h2[0] <= b["x1"]+1 and h2[1] <= b["y1"]+1):
+                    own = nm; break
+            for nm, r in obs:
+                if own and (nm == own or nm.startswith(own)): continue
+                if (l2[0] < r["x1"] and h2[0] > r["x0"]
+                        and l2[1] < r["y1"] and h2[1] > r["y0"]):
+                    ov = (min(h2[0], r["x1"])-max(l2[0], r["x0"]),
+                          min(h2[1], r["y1"])-max(l2[1], r["y0"]))
+                    print(f'  CLASH  {k} overlaps {nm} by '
+                          f'{ov[0]*H.MM_PER_PX:.0f} x {ov[1]*H.MM_PER_PX:.0f} mm')
+                    clash += 1
+
     print(f'\ntotal items: {sum(len(v) for v in objs.values())}')
     print("items off an approved support:", bad)
+    print("items intersecting a wall, column, casework or other furniture:", clash)
     print("banned items: none of", ", ".join(BANNED))
     return objs
 

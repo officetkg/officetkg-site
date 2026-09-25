@@ -53,7 +53,7 @@ h2 = bef[0].shape[0]
 H2 = HDR2 + len(PAIR)*(h2 + 26 + G)
 ba = np.full((H2, 2*W2 + 3*G, 3), 250, np.uint8)
 label(ba, 'DECORATION  -  BEFORE / AFTER', G, 36, .62, (25, 25, 25))
-label(ba, '44 items, every one on an approved support; no architecture and no furniture moved',
+label(ba, '48 items, every one on an approved support; no architecture and no furniture moved',
       G, 62, .44, (110, 110, 110))
 y = HDR2
 for i, k in enumerate(PAIR):
