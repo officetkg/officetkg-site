@@ -191,10 +191,15 @@ def main():
 
     print("\n--- movable wall (bedroom partition) ---")
     mw = [m for m in build()[1] if m["object"] == "MOVABLE_WALL"][0]
-    print("state: %s  | 開口 Y %.0f-%.0f (%.0f mm) は素通し | 戸袋 Y %.0f-%.0f"
-          % (GM.MOVABLE_WALL_STATE, GM.MOVW_OPENING[0], GM.MOVW_OPENING[1],
-             GM.MOVW_OPENING[1] - GM.MOVW_OPENING[0],
-             GM.MOVW_POCKET_Y[0], GM.MOVW_POCKET_Y[1]))
+    print("state: %s (L 字)" % GM.MOVABLE_WALL_STATE)
+    print("  南北レッグ 開口 Y %.0f-%.0f (%.0f mm) 素通し | 戸袋 Y %.0f-%.0f (%d 枚)"
+          % (GM.MOVW_NS_TRAVEL[0], GM.MOVW_NS_TRAVEL[1],
+             GM.MOVW_NS_TRAVEL[1] - GM.MOVW_NS_TRAVEL[0],
+             GM.MOVW_NS_POCKET[0], GM.MOVW_NS_POCKET[1], GM.MOVW_NS_PANELS))
+    print("  東西レッグ 開口 X %.0f-%.0f (%.0f mm) 素通し | 戸袋 X %.0f-%.0f (%d 枚)"
+          % (GM.MOVW_EW_TRAVEL[0], GM.MOVW_EW_TRAVEL[1],
+             GM.MOVW_EW_TRAVEL[1] - GM.MOVW_EW_TRAVEL[0],
+             GM.MOVW_EW_POCKET[0], GM.MOVW_EW_POCKET[1], GM.MOVW_EW_PANELS))
     print("object bbox (panels + rail):", mw["bbox_min"], mw["bbox_max"])
 
     a = GM.areas()

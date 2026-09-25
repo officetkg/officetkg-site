@@ -101,7 +101,7 @@
       "group": "内壁",
       "bbox_min": [
         195.0,
-        2320.0,
+        5035.0,
         0.0
       ],
       "bbox_max": [
@@ -109,7 +109,7 @@
         7710.0,
         2450.0
       ],
-      "triangles": 192
+      "triangles": 180
     },
     {
       "object": "PS",
@@ -295,16 +295,16 @@
       "object": "MOVABLE_WALL",
       "group": "可動収納壁／レール",
       "bbox_min": [
-        1983.0,
-        2410.0,
+        195.0,
+        2292.0,
         0.0
       ],
       "bbox_max": [
         2095.0,
-        5060.0,
+        5035.0,
         2450.0
       ],
-      "triangles": 48
+      "triangles": 84
     },
     {
       "object": "WINDOW_SASH",

@@ -121,20 +121,46 @@ FURNITURE_XY_LOCK = {
 }
 
 # ---------------------------------------------------------------------
-# 可動収納壁 (ベッドルーム間仕切) の状態
-#   平面図実測: レール Y 2410-5060 / 戸袋 Y 4350-5060 / 建具走行 Y 2410-4350
-#               作図上のパネル継ぎ目は Y 3065 付近・Y 3660 付近 (3 枚引込み)
-#   MOVABLE_WALL_STATE = "OPEN"   -> 常時開放。3 枚とも戸袋に納まる。
-#                        "CLOSED" -> 参考用。走行範囲を塞いだ状態。
-#   どちらでもレール・戸袋・袖壁の XY は変わらない。
+# 可動収納壁 (ベッドルーム間仕切) -- L 字 / 常時開放
+#
+# 平面図実測 (投影プロファイルによる画素実測):
+#   南北レッグ (MBR 東側)
+#     建具ライン x=799 (X 2008) / 吊り金物 y 651-654, 696-700
+#     戸袋(破線) y 551-606        -> Y 4330-5035 (705)
+#     走行範囲                    -> Y 2360-4330 (1970) = 3 枚 x 657
+#   東西レッグ (MBR 南側)
+#     建具ライン y=759,762        -> Y 2318-2356 (薄い引戸の二重線)
+#     戸袋(破線) x 658-709        -> X  195- 850 (655)
+#     走行範囲                    -> X  850-1975 (1125) = 2 枚 x 563
+#
+#   2 本のレッグは MBR 南東コーナーで直交し、戸袋はそれぞれコーナーから
+#   最も遠い端 (北端 / 西端) にある。両方を引き込むとコーナーが完全に開き、
+#   MBR は南側と東側の 2 面が開放される = L 字開放。
+#
+#   ※ 旧版ではこの東西レッグを固定内壁と誤判断していた。躯体壁ではない。
+#
+#   MOVABLE_WALL_STATE = "OPEN"   -> 常時開放 (既定)
+#                        "CLOSED" -> 参考用
+#   いずれの状態でもレール・戸袋・袖壁の XY は不変。
 # ---------------------------------------------------------------------
-MOVABLE_WALL_STATE = "OPEN"          # ベッドルーム間仕切壁は常時開放
-MOVW_RAIL_Y   = (2410.0, 5060.0)     # レール全長
-MOVW_OPENING  = (2410.0, 4350.0)     # 建具走行範囲 (開放時はここが素通し)
-MOVW_POCKET_Y = (4350.0, 5060.0)     # 戸袋
-MOVW_PANELS   = 3
-MOVW_PANEL_X  = [(1983.0, 2015.0), (2023.0, 2055.0), (2063.0, 2095.0)]  # 3 レーン
-MOVW_PANEL_H  = 2400.0
+MOVABLE_WALL_STATE = "OPEN"          # ベッドルーム間仕切壁は常時開放 (L 字)
+
+# 南北レッグ (MBR 東側)
+MOVW_NS_X       = (1975.0, 2095.0)   # 建具ゾーン
+MOVW_NS_LANES   = [(1983.0, 2015.0), (2023.0, 2055.0), (2063.0, 2095.0)]
+MOVW_NS_TRAVEL  = (2360.0, 4330.0)   # 閉時に塞ぐ範囲
+MOVW_NS_POCKET  = (4330.0, 5035.0)   # 戸袋 (北端)
+MOVW_NS_PANELS  = 3
+
+# 東西レッグ (MBR 南側)
+MOVW_EW_Y       = (2290.0, 2360.0)   # 建具ゾーン
+MOVW_EW_LANES   = [(2292.0, 2324.0), (2328.0, 2360.0)]
+MOVW_EW_TRAVEL  = (850.0, 1975.0)    # 閉時に塞ぐ範囲
+MOVW_EW_POCKET  = (195.0, 850.0)     # 戸袋 (西端)
+MOVW_EW_PANELS  = 2
+
+MOVW_PANEL_H    = 2400.0
+MOVW_PIER_Y     = (5035.0, 5280.0)   # 北端の固定袖壁
 
 # 既存 Book Shelf : 承認済み平面図の実測値 -- 変更禁止
 BOOK_SHELF = dict(x0=205.0, x1=490.0, y0=425.0, y1=2190.0, z1=2100.0,
@@ -225,8 +251,7 @@ def parts():
     # 内壁  INTERIOR WALLS
     # -----------------------------------------------------------------
     iw = []
-    # MBR 南壁
-    iw.append(_b(X_IN_W, X_WALL_MBR_E[1], Y_WALL_MBR_S[0], Y_WALL_MBR_S[1], FL, CH_MAIN))
+    # ※ MBR 南側は固定壁ではなく可動収納壁の東西レッグ (MOVABLE_WALL を参照)
     # 便所南壁 + LD 入口壁 (開口部を残す)
     iw.append(_b(X_WALL_CLO_WC[0], OPEN_LD_DOOR[0], Y_WALL_WC_S[0], Y_WALL_WC_S[1], FL, CH_MAIN))
     iw.append(_b(OPEN_LD_DOOR[1], X_IN_E, Y_WALL_WC_S[0], Y_WALL_WC_S[1], FL, CH_MAIN))
@@ -249,7 +274,7 @@ def parts():
     # 洗面室北壁 / PS 南壁 (玄関土間まで)
     iw.append(_b(X_IN_W, X_WALL_WET_E[1], Y_WALL_PWD_N[0], Y_WALL_PWD_N[1], FL, CH_WET))
     # MBR 東 : 可動壁の戸袋側 袖壁
-    iw.append(_b(X_WALL_MBR_E[0], X_WALL_MBR_E[1], 5060, Y_WALL_WC_S[0], FL, CH_MAIN))
+    iw.append(_b(MOVW_NS_X[0], MOVW_NS_X[1], MOVW_PIER_Y[0], Y_WALL_WC_S[0], FL, CH_MAIN))
     add("WALL_INT", "内壁", iw)
 
     # -----------------------------------------------------------------
@@ -345,21 +370,32 @@ def parts():
     # -----------------------------------------------------------------
     # 可動収納壁 / レール
     # -----------------------------------------------------------------
-    mx0, mx1 = X_WALL_MBR_E
-    plen = (MOVW_OPENING[1] - MOVW_OPENING[0]) / MOVW_PANELS
     mw = []
+    ns_len = (MOVW_NS_TRAVEL[1] - MOVW_NS_TRAVEL[0]) / MOVW_NS_PANELS
+    ew_len = (MOVW_EW_TRAVEL[1] - MOVW_EW_TRAVEL[0]) / MOVW_EW_PANELS
     if MOVABLE_WALL_STATE == "OPEN":
-        # 常時開放 : 3 枚とも戸袋 (Y 4350-5060) に納まり、走行範囲は素通し
-        pc = (MOVW_POCKET_Y[0] + MOVW_POCKET_Y[1]) / 2.0
-        for x0, x1 in MOVW_PANEL_X:
-            mw.append(_b(x0, x1, pc - plen / 2, pc + plen / 2, FL, MOVW_PANEL_H))
+        # 常時開放 : 各レッグの建具はコーナーから最も遠い戸袋へ引き込む
+        c = (MOVW_NS_POCKET[0] + MOVW_NS_POCKET[1]) / 2.0
+        for x0, x1 in MOVW_NS_LANES:
+            mw.append(_b(x0, x1, c - ns_len / 2, c + ns_len / 2, FL, MOVW_PANEL_H))
+        c = (MOVW_EW_POCKET[0] + MOVW_EW_POCKET[1]) / 2.0
+        for y0, y1 in MOVW_EW_LANES:
+            mw.append(_b(c - ew_len / 2, c + ew_len / 2, y0, y1, FL, MOVW_PANEL_H))
     else:
-        # 参考 : 閉。3 枚が 1 本のライン上に並ぶ
-        for i in range(MOVW_PANELS):
-            y0 = MOVW_OPENING[0] + i * plen
-            mw.append(_b(mx0 + 15, mx1 - 15, y0, y0 + plen, FL, MOVW_PANEL_H))
-    mw.append(_b(mx0 + 30, mx1 - 30, MOVW_RAIL_Y[0], MOVW_RAIL_Y[1],
-                 MOVW_PANEL_H, CH_MAIN))                       # レール
+        # 参考 : 閉。L 字に建具が並び MBR が閉じる
+        for i in range(MOVW_NS_PANELS):
+            y0 = MOVW_NS_TRAVEL[0] + i * ns_len
+            mw.append(_b(MOVW_NS_X[0] + 15, MOVW_NS_X[1] - 15, y0, y0 + ns_len,
+                         FL, MOVW_PANEL_H))
+        for i in range(MOVW_EW_PANELS):
+            x0 = MOVW_EW_TRAVEL[0] + i * ew_len
+            mw.append(_b(x0, x0 + ew_len, MOVW_EW_Y[0] + 15, MOVW_EW_Y[1] - 15,
+                         FL, MOVW_PANEL_H))
+    # レール (L 字・状態によらず不変)
+    mw.append(_b(MOVW_NS_X[0] + 30, MOVW_NS_X[1] - 30,
+                 MOVW_NS_TRAVEL[0], MOVW_NS_POCKET[1], MOVW_PANEL_H, CH_MAIN))
+    mw.append(_b(MOVW_EW_POCKET[0], MOVW_EW_TRAVEL[1],
+                 MOVW_EW_Y[0] + 15, MOVW_EW_Y[1] - 15, MOVW_PANEL_H, CH_MAIN))
     add("MOVABLE_WALL", "可動収納壁／レール", mw)
 
     # -----------------------------------------------------------------
