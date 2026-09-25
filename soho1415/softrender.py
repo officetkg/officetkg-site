@@ -115,34 +115,40 @@ def render(tris, face_rgb, face_obj, eye_dir, width=1800, height=1400,
 #  透視投影 (室内パース用)
 #  同一ジオメトリをカメラだけ変えて通常レンダリングする。画像生成ではない。
 # =====================================================================
-def _clip_near(tri_cam, near):
-    """カメラ空間三角形を近接面 cz >= near でクリップし三角形群を返す."""
-    inside = [v for v in range(3) if tri_cam[v, 2] >= near]
-    if len(inside) == 3:
-        return [tri_cam]
-    if not inside:
+def _clip_near(tri_cam, near, attr=None):
+    """カメラ空間三角形を近接面 cz >= near でクリップ。頂点属性も一緒に補間する."""
+    n_in = int((tri_cam[:, 2] >= near).sum())
+    if n_in == 3:
+        return [(tri_cam, attr)]
+    if n_in == 0:
         return []
-    poly = []
+    poly, pat = [], []
     for i in range(3):
-        a = tri_cam[i]
-        b = tri_cam[(i + 1) % 3]
-        ain = a[2] >= near
-        bin_ = b[2] >= near
+        a, b = tri_cam[i], tri_cam[(i + 1) % 3]
+        ain, bin_ = a[2] >= near, b[2] >= near
         if ain:
             poly.append(a)
+            if attr is not None:
+                pat.append(attr[i])
         if ain != bin_:
             t = (near - a[2]) / (b[2] - a[2])
             poly.append(a + t * (b - a))
+            if attr is not None:
+                pat.append(attr[i] + t * (attr[(i + 1) % 3] - attr[i]))
     if len(poly) < 3:
         return []
     poly = np.asarray(poly)
-    return [np.stack([poly[0], poly[i], poly[i + 1]]) for i in range(1, len(poly) - 1)]
+    pat = np.asarray(pat) if attr is not None else None
+    return [(np.stack([poly[0], poly[i], poly[i + 1]]),
+             None if pat is None else np.stack([pat[0], pat[i], pat[i + 1]]))
+            for i in range(1, len(poly) - 1)]
 
 
 def render_perspective(tris, face_rgb, face_alpha, eye, target, focal_mm=30.0,
                        width=1800, height=1200, up_world=(0.0, 0.0, 1.0),
                        sensor_mm=36.0, near=40.0,
-                       key=(0.15, -0.95, 0.28), ambient=0.46,
+                       key=(0.15, -0.95, 0.28), ambient=0.46, prelit=False,
+                       vertex_rgb=None,
                        bg_top=(206, 222, 238), bg_bot=(238, 240, 240)):
     """フルサイズ換算 focal_mm の透視投影でラスタライズする."""
     eye = np.asarray(eye, float)
@@ -165,8 +171,11 @@ def render_perspective(tris, face_rgb, face_alpha, eye, target, focal_mm=30.0,
     n = n / ln
     k = np.asarray(key, float)
     k = k / np.linalg.norm(k)
-    sky = 0.14 * (n[:, 2] * 0.5 + 0.5)          # 半球天空光
-    shade = np.clip(ambient + 0.38 * np.abs(n @ k) + sky, 0, 1)
+    if prelit:
+        shade = np.ones(len(tris), np.float32)     # 照度は light_faces で計算済み
+    else:
+        sky = 0.14 * (n[:, 2] * 0.5 + 0.5)         # 半球天空光
+        shade = np.clip(ambient + 0.38 * np.abs(n @ k) + sky, 0, 1)
 
     img = np.zeros((height, width, 3), np.float32)
     g = np.linspace(0, 1, height)[:, None]
@@ -179,7 +188,8 @@ def render_perspective(tris, face_rgb, face_alpha, eye, target, focal_mm=30.0,
     glass = [t for t in order if face_alpha[t] < 0.999]
 
     def raster(t, blend):
-        for c in _clip_near(cam[t], near):
+        vc = None if vertex_rgb is None else vertex_rgb[t].astype(np.float32)
+        for c, va in _clip_near(cam[t], near, vc):
             sx = width * 0.5 + c[:, 0] * scale / c[:, 2]
             sy = height * 0.5 - c[:, 1] * scale / c[:, 2]
             w = 1.0 / c[:, 2]
@@ -207,7 +217,13 @@ def render_perspective(tris, face_rgb, face_alpha, eye, target, focal_mm=30.0,
             hit = m & (z > zbuf[sl])
             if not hit.any():
                 continue
-            col = face_rgb[t].astype(np.float32) * shade[t]
+            if va is None:
+                col = face_rgb[t].astype(np.float32) * shade[t]
+            else:
+                zc = np.maximum(z, 1e-9)
+                col = ((w0[..., None] * va[0] * w[0] + w1[..., None] * va[1] * w[1]
+                        + w2[..., None] * va[2] * w[2]) / zc[..., None])
+                col = col[hit]
             tile = img[sl]
             if blend:
                 a = face_alpha[t]
@@ -224,3 +240,145 @@ def render_perspective(tris, face_rgb, face_alpha, eye, target, focal_mm=30.0,
     for t in glass:
         raster(t, True)
     return np.clip(img, 0, 255).astype(np.uint8)
+
+
+# =====================================================================
+#  照明 (工程 "光")
+#  ジオメトリは変更しない。面を細分してから照度を計算するだけ。
+# =====================================================================
+def tessellate(tris, rgb, alpha, max_edge=260.0, max_faces=1200000):
+    """長辺が max_edge を超える三角形を再帰分割する (形状は不変)."""
+    T, C, A = [tris], [rgb], [alpha]
+    for _ in range(12):
+        t = np.concatenate(T); c = np.concatenate(C); a = np.concatenate(A)
+        e = np.stack([np.linalg.norm(t[:, 1] - t[:, 0], axis=1),
+                      np.linalg.norm(t[:, 2] - t[:, 1], axis=1),
+                      np.linalg.norm(t[:, 0] - t[:, 2], axis=1)], 1)
+        big = e.max(1) > max_edge
+        if not big.any() or len(t) * 4 > max_faces:
+            return t, c, a
+        keep = ~big
+        b = t[big]
+        m01 = (b[:, 0] + b[:, 1]) / 2
+        m12 = (b[:, 1] + b[:, 2]) / 2
+        m20 = (b[:, 2] + b[:, 0]) / 2
+        sub = np.concatenate([
+            np.stack([b[:, 0], m01, m20], 1), np.stack([m01, b[:, 1], m12], 1),
+            np.stack([m20, m12, b[:, 2]], 1), np.stack([m01, m12, m20], 1)])
+        T = [t[keep], sub]
+        C = [c[keep], np.tile(c[big], (4, 1))]
+        A = [a[keep], np.tile(a[big], 4)]
+    return np.concatenate(T), np.concatenate(C), np.concatenate(A)
+
+
+def light_faces(tris, base_rgb, portal, downlights,
+                sky=(0.36, 0.375, 0.41), ground=(0.42, 0.405, 0.375),
+                exterior_y=190.0, sun=(0.10, -0.62, 0.78),
+                sun_color=(1.18, 1.15, 1.10), sky_out=(0.82, 0.87, 0.98),
+                exposure=1.0):
+    """面ごとの照度を計算して着色済み RGB を返す (影計算なし)。
+
+    portal      : dict(center, normal, size, color, intensity)  掃き出し窓
+    downlights  : list of dict(pos, color, intensity)           ダウンライト
+    """
+    c = tris.mean(axis=1)
+    n = np.cross(tris[:, 1] - tris[:, 0], tris[:, 2] - tris[:, 0])
+    ln = np.linalg.norm(n, axis=1, keepdims=True)
+    ln[ln == 0] = 1.0
+    n = n / ln
+
+    # 半球環境光
+    up = n[:, 2:3] * 0.5 + 0.5
+    L = np.asarray(sky, float) * up + np.asarray(ground, float) * (1 - up)
+
+    # 窓 (面光源近似) : 室内の主光源
+    pc = np.asarray(portal["center"], float)
+    d = pc - c
+    r = np.linalg.norm(d, axis=1, keepdims=True)
+    r = np.maximum(r, 300.0)
+    wdir = d / r
+    facing = np.maximum((n * wdir).sum(1, keepdims=True), 0.0)
+    # 窓法線と視線方向の一致度 (窓の裏側は寄与しない)
+    pn = np.asarray(portal["normal"], float)
+    front = np.maximum(-(wdir * pn).sum(1, keepdims=True), 0.0)
+    ff = portal["size"] / (portal["size"] + np.pi * r ** 2 / 1.0e6)
+    L = L + np.asarray(portal["color"], float) * portal["intensity"] * facing * front * ff
+
+    # 屋外面 (バルコニー側) は昼光を直接受ける
+    out_m = (c[:, 1] < exterior_y)[:, None]
+    sv = np.asarray(sun, float)
+    sv = sv / np.linalg.norm(sv)
+    L = L + out_m * (np.asarray(sky_out, float) * (n[:, 2:3] * 0.5 + 0.5)
+                     + np.asarray(sun_color, float)
+                     * np.maximum((n * sv).sum(1, keepdims=True), 0.0))
+
+    # ダウンライト (下向き配光)
+    for dl in downlights:
+        p = np.asarray(dl["pos"], float)
+        d = p - c
+        r = np.linalg.norm(d, axis=1, keepdims=True)
+        r = np.maximum(r, 700.0)
+        u = d / r
+        cosf = np.maximum((n * u).sum(1, keepdims=True), 0.0)      # 面の向き
+        # u は面->光源。光源->面 は -u なので、下向き配光との一致度は u_z。
+        spot = np.maximum(u[:, 2:3], 0.0) ** 1.6                   # 下向き配光
+        att = 1.0 / (1.0 + (r / 1300.0) ** 2)
+        L = L + np.asarray(dl["color"], float) * dl["intensity"] * cosf * spot * att
+
+    L = L * exposure
+    out = base_rgb.astype(np.float32) * L                 # 拡散反射
+    out = 255.0 * (1.0 - np.exp(-out / 255.0 * 1.15))     # トーンマップ
+    return np.clip(out, 0, 255).astype(np.uint8)
+
+
+def light_vertices(tris, base_rgb, portal, downlights, **kw):
+    """頂点位置ごとに照度を計算する (面法線・グーロー補間用). -> (N,3,3)"""
+    out = np.empty((len(tris), 3, 3), np.float32)
+    for v in range(3):
+        out[:, v] = _light_at(tris, tris[:, v], base_rgb, portal, downlights, **kw)
+    return out
+
+
+def _light_at(tris, pts, base_rgb, portal, downlights,
+              sky=(0.36, 0.375, 0.41), ground=(0.42, 0.405, 0.375),
+              exterior_y=190.0, sun=(0.10, -0.62, 0.78),
+              sun_color=(1.18, 1.15, 1.10), sky_out=(0.82, 0.87, 0.98),
+              exposure=1.0):
+    n = np.cross(tris[:, 1] - tris[:, 0], tris[:, 2] - tris[:, 0])
+    ln = np.linalg.norm(n, axis=1, keepdims=True)
+    ln[ln == 0] = 1.0
+    n = n / ln
+    c = pts
+    up = n[:, 2:3] * 0.5 + 0.5
+    L = np.asarray(sky, float) * up + np.asarray(ground, float) * (1 - up)
+
+    pc = np.asarray(portal["center"], float)
+    d = pc - c
+    r = np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 700.0)
+    wdir = d / r
+    facing = np.maximum((n * wdir).sum(1, keepdims=True), 0.0)
+    pn = np.asarray(portal["normal"], float)
+    front = np.maximum(-(wdir * pn).sum(1, keepdims=True), 0.0)
+    ff = portal["size"] / (portal["size"] + np.pi * r ** 2 / 1.0e6)
+    L = L + np.asarray(portal["color"], float) * portal["intensity"] * facing * front * ff
+
+    out_m = (c[:, 1] < exterior_y)[:, None]
+    sv = np.asarray(sun, float)
+    sv = sv / np.linalg.norm(sv)
+    L = L + out_m * (np.asarray(sky_out, float) * (n[:, 2:3] * 0.5 + 0.5)
+                     + np.asarray(sun_color, float)
+                     * np.maximum((n * sv).sum(1, keepdims=True), 0.0))
+
+    for dl in downlights:
+        p = np.asarray(dl["pos"], float)
+        d = p - c
+        r = np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 700.0)
+        u = d / r
+        cosf = np.maximum((n * u).sum(1, keepdims=True), 0.0)
+        spot = np.maximum(u[:, 2:3], 0.0) ** 1.6
+        att = 1.0 / (1.0 + (r / 1300.0) ** 2)
+        L = L + np.asarray(dl["color"], float) * dl["intensity"] * cosf * spot * att
+
+    o = base_rgb.astype(np.float32) * (L * exposure)
+    o = 255.0 * (1.0 - np.exp(-o / 255.0 * 1.15))
+    return np.clip(o, 0, 255)

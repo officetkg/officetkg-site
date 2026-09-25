@@ -35,6 +35,55 @@ TGT_H = 1300.0          # 注視点高 (わずかに見下ろし)
 # 透明度 (ガラスのみ)
 ALPHA = {"WINDOW_GLASS": 0.20, "BALCONY_GLASS": 0.26}
 
+# ---------------------------------------------------------------------
+# 照明 (工程 "光" -- ジオメトリは変更しない)
+#
+# 竣工写真の天井を実測すると、LD は折上げ天井でダウンライトが
+# **ペア** で周囲のバンドに多数入っている。熱感知器も 1 個見える。
+# 照明「器具」の造形はジオメトリ変更にあたるため作っていない。
+# ここで与えているのは光源位置と配光だけである。
+# 電気図が入手できれば下の座標を差し替えればよい。
+# ---------------------------------------------------------------------
+DL_Z = 2430.0
+DL_WARM = (1.00, 0.91, 0.79)     # 電球色 3000K 相当
+
+
+def _pair(x, y, axis="x", gap=260.0, inten=1.9):
+    o = gap / 2.0
+    if axis == "x":
+        pts = [(x - o, y), (x + o, y)]
+    else:
+        pts = [(x, y - o), (x, y + o)]
+    return [dict(pos=(px, py, DL_Z), color=DL_WARM, intensity=inten) for px, py in pts]
+
+
+DOWNLIGHTS = (
+    # Living Dining : 周囲バンドにペア配置
+    _pair(2700, 1000) + _pair(3900, 1000)
+    + _pair(2600, 2300) + _pair(3900, 2300)
+    + _pair(2700, 4300) + _pair(3900, 4300)
+    # 西ベイ (Book Shelf 側)
+    + _pair(800, 900, "y") + _pair(800, 1900, "y")
+    # ワークスペース (Master Bedroom 側)
+    + _pair(750, 3150, "y") + _pair(750, 4450, "y")
+    # 廊下・キッチン
+    + _pair(3350, 5900) + _pair(4100, 6850) + _pair(3350, 7850)
+    # 水回り・玄関
+    + [dict(pos=(1900, 6900, 2180.0), color=DL_WARM, intensity=2.0),
+       dict(pos=(2100, 5750, 2180.0), color=DL_WARM, intensity=1.4),
+       dict(pos=(580, 7000, 1980.0), color=DL_WARM, intensity=1.6),
+       dict(pos=(3500, 8100, 2180.0), color=DL_WARM, intensity=2.0)]
+)
+
+# 掃き出し窓を面光源として扱う (室内の主光源)
+WINDOW_PORTAL = dict(
+    center=((GM.OPEN_WINDOW[0] + GM.OPEN_WINDOW[1]) / 2.0, 120.0,
+            GM.WIN_HEAD / 2.0),
+    normal=(0.0, -1.0, 0.0),
+    size=(GM.OPEN_WINDOW[1] - GM.OPEN_WINDOW[0]) * GM.WIN_HEAD / 1.0e6,  # m2
+    color=(1.00, 1.00, 1.04),     # 昼光 (北向きの空 = ニュートラル)
+    intensity=13.0)
+
 CAMERAS = [
     dict(name="CAMERA_1_balcony_to_entrance",
          title="CAMERA 1  バルコニー側 -> 入口方向",
@@ -67,8 +116,13 @@ def collect():
 def main():
     os.makedirs(OUT, exist_ok=True)
     tris, rgb, alpha, meta = collect()
-    print("scene: %d objects / %d triangles  (A/B 承認時と同一)"
-          % (len(meta), len(tris)))
+    n_src = len(tris)
+    tris, rgb, alpha = softrender.tessellate(tris, rgb, alpha, max_edge=380.0)
+    print("scene: %d objects / %d triangles  (A/B 承認時と同一)" % (len(meta), n_src))
+    print("照明用に %d 面へ細分 (形状は不変) / 光源 %d 灯 + 窓 %.1f m2"
+          % (len(tris), len(DOWNLIGHTS), WINDOW_PORTAL["size"]))
+    lit = softrender.light_vertices(tris, rgb, WINDOW_PORTAL, DOWNLIGHTS,
+                                    exposure=1.0)
     print("方位: 平面 +Y = N%.0fE / バルコニー = S%.0fW\n"
           % (GM.PLAN_UP_BEARING_DEG, GM.PLAN_UP_BEARING_DEG))
 
@@ -83,7 +137,8 @@ def main():
         fov = 2 * np.degrees(np.arctan(18.0 / c["focal"]))
         img = softrender.render_perspective(
             tris, rgb, alpha, eye=eye, target=tgt, focal_mm=c["focal"],
-            width=1800, height=1200, key=sun)
+            width=1800, height=1200, prelit=True, vertex_rgb=lit,
+            bg_top=(196, 214, 236), bg_bot=(236, 241, 244))
         p = os.path.join(OUT, c["name"] + ".png")
         Image.fromarray(img).save(p)
         d = np.hypot(tgt[0] - eye[0], tgt[1] - eye[1])
