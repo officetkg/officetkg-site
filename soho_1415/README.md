@@ -77,6 +77,14 @@ that; without it a 3D view comes out mirrored.
 * X right (plan east), Y down (plan south, balcony side)
 * **Unit = 1 source-image pixel. No mm conversion.** mm calibration is deferred until
   after `2D GEOMETRY APPROVED`, and must use a real dimension, not the floor area.
+* The balcony sash, the balustrade and the balcony partitions are modelled from
+  the listing photos: 2 unequal sliding leaves (wide WEST, narrow EAST) with the
+  head **below** the ceiling, a **clear glass** balustrade with a dark capping and
+  posts, full-height maroon escape partitions on both raked sides, and the
+  rainwater downpipe that the plan draws as a small circle.
+* `BOOKSHELF_HEIGHT` is set to ceiling height because the photos show the existing
+  shelf running floor to ceiling. The brief says not to expand the Book Shelf into
+  a floor-to-ceiling unit — revert this one variable to 2000 if the brief wins.
 * The balcony faces **north**: no direct sun reaches the living zone. PHASE 9
   lighting must be built on even north daylight, not on a south-facing model.
 

@@ -34,6 +34,7 @@ EXPECT = {
  "Storage_Wall_Parked_Panels": union(G.STORAGE_WALL["run_EAST"]["panels_parked"]
                                      + G.STORAGE_WALL["run_SOUTH"]["panels_parked"]),
  "Balcony_Railing": rb(G.BALCONY["railing"]),
+ "Windows":         rb(G.WINDOWS["W_BALCONY"]["opening"]),
  "Work_Desks": union([F.FURNITURE["WORK_DESK_1"]["box"], F.FURNITURE["WORK_DESK_2"]["box"]]),
  "Work_Chairs": union([F.FURNITURE["WORK_CHAIR_1"]["box"], F.FURNITURE["WORK_CHAIR_2"]["box"]]),
  "Printer_Unit": rb(F.FURNITURE["PRINTER_UNIT"]["box"]),
@@ -41,6 +42,12 @@ EXPECT = {
  "Meeting_Chairs": union([F.FURNITURE[f"MEETING_CHAIR_{i}"]["box"] for i in range(1,7)]),
  "Monitor_55": rb(F.FURNITURE["MONITOR_55"]["box"]),
  "Interior_Walls": union(list(G.INNER_WALLS.values())),
+}
+# components that legitimately sit INSIDE a master rect rather than filling it:
+# a pane of glass is thinner than the band it is drawn as.
+CONTAINED = {
+ "Balcony_Glass": (rb(G.BALCONY["railing"]), "x"),          # x must match, y inside
+ "Window_Glass":  (rb(G.WINDOWS["W_BALCONY"]["opening"]), None),
 }
 print(f'{"3D object":30s} {"dx0":>6s} {"dy0":>6s} {"dx1":>6s} {"dy1":>6s}   max|d| px / mm')
 print('-'*78)
@@ -52,6 +59,17 @@ for name, exp in EXPECT.items():
     flag = '' if mx <= 1.01 else '   <== CHECK'
     if mx > 1.01: bad.append(name)
     print(f'{name:30s} {d[0]:6.1f} {d[1]:6.1f} {d[2]:6.1f} {d[3]:6.1f}   {mx:5.2f} / {mx*13.2:5.1f}{flag}')
+for name,(exp,exact_axis) in CONTAINED.items():
+    got = bnds(name)
+    inside = (got[0] >= exp[0]-.01 and got[1] >= exp[1]-.01
+              and got[2] <= exp[2]+.01 and got[3] <= exp[3]+.01)
+    ex = True
+    if exact_axis == "x": ex = abs(got[0]-exp[0]) <= .01 and abs(got[2]-exp[2]) <= .01
+    ok = inside and ex
+    if not ok: bad.append(name)
+    print(f'{name:30s} {"inside master rect" if inside else "OUTSIDE master rect":>28s}'
+          f'{"  + x exact" if exact_axis=="x" and ex else ""}')
 print('-'*78)
-print(f'objects compared: {len(EXPECT)}   worst XY deviation: {worst:.2f} px = {worst*13.2:.1f} mm')
+print(f'objects compared: {len(EXPECT)} exact + {len(CONTAINED)} contained'
+      f'   worst XY deviation: {worst:.2f} px = {worst*13.2:.1f} mm')
 print('RESULT:', 'PASS  (3D XY == 2D MASTER XY)' if not bad else f'FAIL {bad}')

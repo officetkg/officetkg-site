@@ -164,15 +164,25 @@ for tag, run in (("EAST", G.STORAGE_WALL["run_EAST"]),
                                       run["pocket"]["y1"], WH-H.PARTITION_RAIL_DROP, WH))
 
 # ======================================================================
-# 16. WINDOWS
+# 16. WINDOWS  --  2 leaves, unequal, wide leaf WEST / narrow leaf EAST,
+#     head below the ceiling.  All confirmed against the listing photos;
+#     XY unchanged, taken from WINDOWS["W_BALCONY"].
 # ======================================================================
 wb = G.WINDOWS["W_BALCONY"]["opening"]
-add("Windows", _box(M(539,0)[0], wb["y0"]+2, M(602,0)[0], wb["y1"]-2,
-                    H.WINDOW_SILL, H.WINDOW_HEAD))
-add("Windows", _box(M(602,0)[0], wb["y0"]+2, M(718,0)[0], wb["y1"]-2,
-                    H.WINDOW_SILL, H.WINDOW_HEAD))
-add("Windows", _box(M(600,0)[0], wb["y0"], M(604,0)[0], wb["y1"],
-                    H.WINDOW_SILL, H.WINDOW_HEAD))              # mullion
+FR  = H.WINDOW_FRAME
+yc  = (wb["y0"] + wb["y1"]) / 2
+gt  = H.GLASS_THICKNESS / 2
+add("Windows",                                            # outer frame
+    _box(wb["x0"], wb["y0"], wb["x1"], wb["y1"], H.WINDOW_HEAD - FR, H.WINDOW_HEAD),
+    _box(wb["x0"], wb["y0"], wb["x1"], wb["y1"], 0, FR * 0.4),
+    _box(wb["x0"], wb["y0"], wb["x0"] + FR, wb["y1"], 0, H.WINDOW_HEAD),
+    _box(wb["x1"] - FR, wb["y0"], wb["x1"], wb["y1"], 0, H.WINDOW_HEAD))
+add("Windows",                                            # meeting stile
+    _box(M(600,0)[0], wb["y0"], M(604,0)[0], wb["y1"], 0, H.WINDOW_HEAD))
+add("Window_Glass",                                       # narrow leaf, EAST
+    _box(M(539,0)[0] + FR, yc - gt, M(600,0)[0], yc + gt, FR * 0.4, H.WINDOW_HEAD - FR))
+add("Window_Glass",                                       # wide leaf, WEST
+    _box(M(604,0)[0], yc - gt, M(718,0)[0] - FR, yc + gt, FR * 0.4, H.WINDOW_HEAD - FR))
 
 # ======================================================================
 # 17-18. BALCONY
@@ -193,8 +203,53 @@ poly = [(B["side_west"]["vertical_stub"][0][0], B["north_edge_y"]),
 bal = trimesh.creation.extrude_polygon(Polygon(poly), height=bz1-bz0)
 bal.apply_translation((0, 0, bz0))
 add("Balcony_Floor", bal)
-add("Balcony_Railing", R(B["railing"], bz0 + H.BALCONY_RAILING_BASE,
-                         bz0 + H.BALCONY_RAILING_HEIGHT))
+
+# --- balustrade: clear glass, dark capping, dark posts (per the photos) ---
+rail = B["railing"]; rz = bz0
+ry0, ry1 = rail["y0"], rail["y1"]
+rmid = (ry0 + ry1) / 2
+add("Balcony_Railing",                                     # base channel, full footprint
+    _box(rail["x0"], ry0, rail["x1"], ry1, rz, rz + H.BALCONY_RAILING_BASE))
+add("Balcony_Railing",                                     # flat capping
+    _box(rail["x0"], ry0 + 1, rail["x1"], ry1 - 1,
+         rz + H.BALCONY_RAILING_HEIGHT - H.BALCONY_RAILING_CAP,
+         rz + H.BALCONY_RAILING_HEIGHT))
+_pitch = H.BALCONY_POST_PITCH
+_x = rail["x0"]
+while _x < rail["x1"]:                                     # posts
+    add("Balcony_Railing", _box(_x, rmid - 3, min(_x + 5, rail["x1"]), rmid + 3,
+                                rz, rz + H.BALCONY_RAILING_HEIGHT))
+    _x += _pitch
+add("Balcony_Glass",                                       # clear infill
+    _box(rail["x0"], rmid - H.GLASS_THICKNESS/2, rail["x1"], rmid + H.GLASS_THICKNESS/2,
+         rz + H.BALCONY_RAILING_BASE, rz + H.BALCONY_RAILING_GLASS_TOP))
+
+# --- hedate-ita: the maroon escape partitions on the two raked side lines ---
+def _slab(p, q, t, z0, z1):
+    """thin panel of thickness t along the segment p->q (master XY)."""
+    import math
+    dx, dy = q[0]-p[0], q[1]-p[1]
+    L = math.hypot(dx, dy)
+    m = trimesh.creation.box(extents=(L, t, z1-z0))
+    m.apply_transform(trimesh.transformations.rotation_matrix(math.atan2(dy, dx), (0,0,1)))
+    m.apply_translation(((p[0]+q[0])/2, (p[1]+q[1])/2, (z0+z1)/2))
+    return m
+PT = 2.5                                                   # ~33 mm panel
+pz1 = bz0 + H.BALCONY_PARTITION_HEIGHT
+ws = B["side_west"]
+add("Balcony_Partitions", _slab(ws["vertical_stub"][0], ws["vertical_stub"][1], PT, bz0, pz1))
+_wr = ws["raked"]
+_we = (rake(_wr[0], _wr[1], ry1), ry1)
+add("Balcony_Partitions", _slab(_wr[0], _we, PT, bz0, pz1))
+_er = B["side_east"]["raked"]
+_ee = (rake(_er[0], _er[1], ry1), ry1)
+add("Balcony_Partitions", _slab(_er[0], _ee, PT, bz0, pz1))
+
+# --- rainwater downpipe: the small circle at the west bend, identified in BAL_3 ---
+_pc = ws["pivot_circle_at"]; _pr = H.DOWNPIPE_DIA / 2
+_dp = trimesh.creation.cylinder(radius=_pr, height=H.BALCONY_SOFFIT, sections=16)
+_dp.apply_translation((_pc[0], _pc[1], bz0 + H.BALCONY_SOFFIT/2))
+add("Downpipe", _dp)
 
 # ======================================================================
 # 19-23. FURNITURE  (XY straight from the approved layout)

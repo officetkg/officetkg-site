@@ -1,7 +1,5 @@
 element                                mean    p95    max
 --------------------------------------------------------------
-BALCONY east raked (to railing)        1.53   8.72  11.00
-BALCONY west raked (to railing)        1.47   8.67  11.00
 STORAGE SOUTH parked panel 2           3.63   6.00   6.00
 FURN MEETING_CHAIR_1                   1.65   6.00   6.00
 STORAGE EAST parked panel 1            2.77   5.00   5.00
@@ -24,11 +22,15 @@ INNER W_toilet_west                    0.75   2.00   4.00
 INNER W_SEcol_return_fin               0.22   2.00   4.00
 INNER W_shower_east_thin               0.19   1.77   3.07
 INNER W_SEcol_return_head              0.18   1.67   4.00
+BALCONY west stub                      1.26   1.48   2.73
 INNER W_powder_south                   0.15   1.33   4.13
+BALCONY east raked (to railing)        1.19   1.33   1.33
+BALCONY west raked (to railing)        1.12   1.31   2.73
 INNER W_NEcol_return                   0.12   1.12   2.33
 OUTER south solid band                 0.19   1.00   7.33
 WD                                     0.08   1.00   1.00
 BOOK_SHELF                             0.14   1.00   1.00
+BALCONY railing                        0.46   1.00   1.20
 FURN WORK_CHAIR_1                      0.75   1.00   1.40
 FURN WORK_CHAIR_2                      0.75   1.00   1.40
 FURN MEETING_CHAIR_2                   0.75   1.00   1.40
@@ -37,7 +39,6 @@ FURN MEETING_CHAIR_4                   0.75   1.00   1.40
 FURN MEETING_CHAIR_5                   0.75   1.00   1.40
 FURN MEETING_CHAIR_6                   0.75   1.00   1.40
 INNER W_niche_head                     0.08   0.67   2.33
-BALCONY west stub                      0.41   0.67   0.67
 OUTER envelope                         0.00   0.00   0.00
 OUTER west inner                       0.00   0.00   0.33
 OUTER east inner                       0.00   0.00   0.00
@@ -55,14 +56,13 @@ CLO CLO_2                              0.00   0.00   0.00
 KITCHEN counter                        0.00   0.00   0.00
 WINDOW balcony opening                 0.09   0.00   4.33
 BALCONY north edge                     0.00   0.00   0.00
-BALCONY railing                        0.00   0.00   0.00
 FURN WORK_DESK_1                       0.00   0.00   0.00
 FURN WORK_DESK_2                       0.00   0.00   0.00
 FURN PRINTER_UNIT                      0.00   0.00   0.00
 FURN MEETING_TABLE                     0.00   0.00   0.00
 FURN MONITOR_55                        0.00   0.00   0.00
 --------------------------------------------------------------
-61 elements   mean-of-means 0.60 px   worst p95 8.72 px = 115 mm
+61 elements   mean-of-means 0.61 px   worst p95 6.00 px = 79 mm
 
 mechanical classification of residual points (> 1.5 px)
 element                             pts  buried  loose   occupying solid
@@ -93,8 +93,7 @@ STORAGE SOUTH parked panel 1        145     145      0   Storage_Wall_Rail
 STORAGE SOUTH parked panel 2        287     287      0   Storage_Wall_Rail
 SC                                  267     267      0   Interior_Walls
 OUTER west inner y195                90      90      0   Exterior_Walls
-BALCONY west raked                   61      61      0   Balcony_Railing
-BALCONY east raked                   61      61      0   Balcony_Railing
+BALCONY west raked                    8       8      0   Downpipe
 FURN MEETING_CHAIR_1                112     112      0   Storage_Wall_Rail
 
 residual points not covered by any solid: 0

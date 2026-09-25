@@ -151,6 +151,8 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
       <dt>玄関・廊下</dt><dd>南</dd>
       <dt>Book Shelf 側</dt><dd>東壁</dd>
       <dt>モニター側</dt><dd>西壁</dd>
+      <dt>サッシ</dt><dd>2枚・西広/東狭</dd>
+      <dt>手すり</dt><dd>ガラス＋笠木</dd>
       <dt>単位</dt><dd>1 px = 13.2 mm</dd>
       <dt>外形</dt><dd>4818 × 8870 mm</dd>
     </dl>
@@ -194,24 +196,27 @@ const COLORS={
  Entrance:0x7C9CBE, Shower:0xCBD8DE, WD:0xD6D9DA, Powder_Room_Fixtures:0xE1E4E6,
  Toilet:0xE4E7E8, Kitchen:0x9FB6C6, Refrigerator:0xCBD0D3, Closets:0x8FAFC8,
  Book_Shelf:0x6E9BBE, Storage_Wall_Pocket:0x4FA07F, Storage_Wall_Parked_Panels:0x2FBE85,
- Storage_Wall_Rail:0x2E6D55, Windows:0x9CC6D8, Balcony_Floor:0xC2C7CB,
- Balcony_Railing:0xADB4B9, Work_Desks:0x5E8FC0, Work_Chairs:0x4A5158,
+ Storage_Wall_Rail:0x2E6D55, Windows:0x3A3F45, Window_Glass:0x9FC4D6,
+ Balcony_Floor:0xC2C7CB, Balcony_Railing:0x3A3F45, Balcony_Glass:0xAFCEDD,
+ Balcony_Partitions:0x7A3040, Downpipe:0xD8D4CC, Work_Desks:0x5E8FC0, Work_Chairs:0x4A5158,
  Printer_Unit:0x9AA0A6, Meeting_Table:0x4E82B8, Meeting_Chairs:0x525960,
  Monitor_55:0x23282E, Floor_Slab:0xD9D6D2
 };
 const GROUPS=[
  ["躯体・仕上げ",["Exterior_Walls","Interior_Walls","Columns","PS","Floor_Slab"],0xD3D9DD],
- ["建具・開口",["Windows","Entrance"],0x7C9CBE],
+ ["建具・開口",["Windows","Window_Glass","Entrance"],0x7C9CBE],
  ["収納壁 (OPEN)",["Storage_Wall_Pocket","Storage_Wall_Parked_Panels","Storage_Wall_Rail"],0x2FBE85],
  ["設備・造作",["Shower","WD","Powder_Room_Fixtures","Toilet","Kitchen","Refrigerator","Closets","Book_Shelf"],0x9FB6C6],
  ["家具",["Work_Desks","Work_Chairs","Printer_Unit","Meeting_Table","Meeting_Chairs","Monitor_55"],0x4E82B8],
- ["バルコニー",["Balcony_Floor","Balcony_Railing"],0xADB4B9]
+ ["バルコニー",["Balcony_Floor","Balcony_Railing","Balcony_Glass",
+                "Balcony_Partitions","Downpipe"],0xADB4B9]
 ];
 const JP={Exterior_Walls:"外壁",Interior_Walls:"内壁",Columns:"柱",PS:"PS",Entrance:"玄関",
  Shower:"シャワー",WD:"洗濯機置場",Powder_Room_Fixtures:"洗面",Toilet:"トイレ",Kitchen:"キッチン",
  Refrigerator:"冷蔵庫置場",Closets:"クローゼット",Book_Shelf:"Book Shelf",
  Storage_Wall_Pocket:"戸袋",Storage_Wall_Parked_Panels:"格納パネル",Storage_Wall_Rail:"レール",
- Windows:"バルコニーサッシ",Balcony_Floor:"バルコニー床",Balcony_Railing:"手すり",
+ Windows:"サッシ枠",Window_Glass:"ガラス",
+ Balcony_Glass:"手すりガラス",Balcony_Partitions:"隔て板",Downpipe:"縦樋",Balcony_Floor:"バルコニー床",Balcony_Railing:"手すり",
  Work_Desks:"執務デスク",Work_Chairs:"執務チェア",Printer_Unit:"プリンター",
  Meeting_Table:"ミーティングテーブル",Meeting_Chairs:"会議チェア",Monitor_55:"55型モニター",
  Floor_Slab:"床スラブ"};

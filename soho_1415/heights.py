@@ -27,7 +27,7 @@ PROVISIONAL = {                            # mm  -- all unverified
     "TABLE_TOP_THICKNESS":        30,
     "MEETING_CHAIR_SEAT":        440,
     "MEETING_CHAIR_BACK_TOP":    830,
-    "BOOKSHELF_HEIGHT":         2000,      # UNKNOWN on the sheet - flagged
+    "BOOKSHELF_HEIGHT":         2400,      # photos show it floor-to-ceiling - see README
     "KITCHEN_COUNTER_HEIGHT":    850,
     "KITCHEN_UPPER_BOTTOM":     1500,
     "KITCHEN_UPPER_TOP":        2100,
@@ -48,8 +48,16 @@ PROVISIONAL = {                            # mm  -- all unverified
     "MONITOR_SCREEN_H":          692,
     "MONITOR_DEPTH":              55,
     "BALCONY_SLAB_DROP":         150,      # balcony FL below interior FL
-    "BALCONY_RAILING_HEIGHT":   1200,
-    "BALCONY_RAILING_BASE":      100,
+    "BALCONY_RAILING_HEIGHT":   1200,      # top of the capping, from balcony FL
+    "BALCONY_RAILING_BASE":      100,      # upstand / base channel
+    "BALCONY_RAILING_GLASS_TOP":1130,      # glass stops under the capping
+    "BALCONY_RAILING_CAP":        70,      # flat capping depth
+    "BALCONY_POST_PITCH":       1300,      # posts along the run
+    "BALCONY_PARTITION_HEIGHT": 2350,      # hedate-ita, floor to soffit in the photos
+    "BALCONY_SOFFIT":           2400,
+    "DOWNPIPE_DIA":              100,
+    "WINDOW_FRAME":               70,      # sash frame member
+    "GLASS_THICKNESS":            16,
     "PS_HEIGHT":                2450,
     "COLUMN_HEIGHT":            2450,
     "SLAB_THICKNESS":            200,

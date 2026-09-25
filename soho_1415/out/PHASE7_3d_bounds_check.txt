@@ -14,6 +14,7 @@ Refrigerator                      0.0    0.0    0.0    0.0    0.00 /   0.0
 Storage_Wall_Pocket               0.0    0.0    0.0    0.0    0.00 /   0.0
 Storage_Wall_Parked_Panels        0.0    0.0    0.0    0.0    0.00 /   0.0
 Balcony_Railing                   0.0    0.0    0.0    0.0    0.00 /   0.0
+Windows                           0.0    0.0    0.0    0.0    0.00 /   0.0
 Work_Desks                        0.0    0.0    0.0    0.0    0.00 /   0.0
 Work_Chairs                       1.0    1.0   -1.0   -1.0    1.00 /  13.2
 Printer_Unit                      0.0    0.0    0.0    0.0    0.00 /   0.0
@@ -21,6 +22,8 @@ Meeting_Table                     0.0    0.0    0.0    0.0    0.00 /   0.0
 Meeting_Chairs                    1.0    1.0   -1.0   -1.0    1.00 /  13.2
 Monitor_55                        0.0    0.0    0.0    0.0    0.00 /   0.0
 Interior_Walls                    0.0    0.0    0.0    0.0    0.00 /   0.0
+Balcony_Glass                            inside master rect  + x exact
+Window_Glass                             inside master rect
 ------------------------------------------------------------------------------
-objects compared: 21   worst XY deviation: 1.00 px = 13.2 mm
+objects compared: 22 exact + 2 contained   worst XY deviation: 1.00 px = 13.2 mm
 RESULT: PASS  (3D XY == 2D MASTER XY)
