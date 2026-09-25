@@ -213,6 +213,8 @@ def _normals(g):
     n[(n*v).sum(2) < 0] *= -1.0
     return n
 
+AO_STRENGTH = 0.70          # calibrated below; see the AO block in shading.py
+
 def shade_pr(g, exposure=0.80, bump_k=0.055):
     alb, obj, pos, names = g["albedo"], g["obj"], g["pos"], g["names"]
     hit = obj >= 0
@@ -235,15 +237,15 @@ def shade_pr(g, exposure=0.80, bump_k=0.055):
     bounce = np.clip(-up, 0, 1)*0.20 + np.clip(1.0-np.abs(up), 0, 1)*0.12
     amb    = 0.20
     lamps  = S.downlights(pos, n) + 0.02
-    ao     = S.ssao(pos, n, obj, strength=1.05)
-    a2     = ao**1.2
+    # AO is applied ONCE, to the ambient terms only, through the
+    # interreflection correction calibrated in shading.py against the photos.
+    a2     = S.ao_apply(S.ssao(pos, n, obj, strength=AO_STRENGTH), alb)[..., None]
 
     col = alb*(win[..., None]*S.WIN_TINT
-               + sky[..., None]*S.SKY_COOL*a2[..., None]
-               + bounce[..., None]*S.BOUNCE*a2[..., None]
-               + lamps[..., None]*S.LAMP_TINT*a2[..., None]
-               + amb*a2[..., None])
-    col *= ao[..., None]**0.50
+               + sky[..., None]*S.SKY_COOL*a2
+               + bounce[..., None]*S.BOUNCE*a2
+               + lamps[..., None]*S.LAMP_TINT*a2
+               + amb*a2)
     sp = specular(g, n, [(WIN_L, 0.85*float(np.nanmean(vis))+0.25), ((0.2, 0.3, 1.0), 0.35)])
     col += (sp*np.clip(vis*0.7+0.3, 0, 1))[..., None]*np.array([1.0, 1.0, 1.02], np.float32)
     if "Downlights" in names:

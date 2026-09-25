@@ -22,26 +22,62 @@ BOUNCE    = np.array([1.06, 1.01, 0.94])
 LAMP_TINT = np.array([1.06, 1.00, 0.92])
 SKY_BG    = np.array([0.93, 0.945, 0.96])
 
-def ssao(pos, nrm, obj, radius=24.0, samples=14, strength=1.0):
+# ----------------------------------------------------------------------
+# AMBIENT OCCLUSION
+# ----------------------------------------------------------------------
+# Calibrated against the listing photos, not chosen by eye.  Two ratios are
+# measured off the reference photo of the Living Dining and reproduced here:
+#     internal wall/ceiling corner  /  flat wall face      = 0.935
+#     Book Shelf cubby shadow       /  shelf board face    = 0.679
+# Raw geometric occlusion cannot give those numbers: a 90 degree corner between
+# two white surfaces hides half the hemisphere, yet the photo shows it only
+# 6.5 % darker, because the light comes straight back off the facing white
+# wall.  ao_apply() is that first-order interreflection correction -- a bright
+# surface keeps nearly all of its ambient in a corner, a darker recess loses
+# more.  Without it every internal corner and every shelf cubby renders as a
+# black line, which is exactly what the photos do NOT show.
+AO_RADIUS_MM   = 340.0     # world radius the occlusion test looks over
+AO_SCREEN_PX   = (7, 15, 29)   # screen radii sampled, so near and far both work
+AO_FLOOR       = 0.30      # raw occlusion never closes completely
+INTERREFLECT   = 0.96      # how much of the lost ambient a bright surface wins back
+
+def ssao(pos, nrm, obj, radius_mm=None, samples=10, strength=1.0):
+    """Raw geometric openness in 0..1 (1 = fully open).
+
+    The world distance window is set in millimetres and is independent of the
+    screen radius sampled, so the term means the same thing near and far.
+    """
     h, w = obj.shape
     valid = obj >= 0
+    R = (AO_RADIUS_MM if radius_mm is None else radius_mm)/13.2   # mm -> MASTER px
     occ = np.zeros((h, w), np.float32); cnt = 0
     rng = np.random.default_rng(7)
-    for k in range(samples):
-        a = 2*np.pi*k/samples + rng.uniform(0, .4)
-        r = radius*(0.30 + 0.70*rng.random())
-        dx, dy = int(round(r*np.cos(a))), int(round(r*np.sin(a)))
-        if dx == 0 and dy == 0: continue
-        sp = np.roll(np.roll(pos, dy, 0), dx, 1)
-        sv = np.roll(np.roll(valid, dy, 0), dx, 1)
-        d = sp - pos
-        dist = np.linalg.norm(d, axis=2) + 1e-6
-        cosang = (d*nrm).sum(2)/dist
-        occ += np.where(sv & (dist < radius*1.6) & (cosang > 0.20),
-                        np.clip(cosang, 0, 1), 0)
-        cnt += 1
-    ao = np.clip(1.0 - strength*np.clip(occ/max(cnt, 1), 0, 1)*1.70, 0.22, 1.0)
+    for ring in AO_SCREEN_PX:
+        for k in range(samples):
+            a = 2*np.pi*k/samples + rng.uniform(0, .4)
+            dx, dy = int(round(ring*np.cos(a))), int(round(ring*np.sin(a)))
+            if dx == 0 and dy == 0: continue
+            sp = np.roll(np.roll(pos, dy, 0), dx, 1)
+            sv = np.roll(np.roll(valid, dy, 0), dx, 1)
+            d = sp - pos
+            dist = np.linalg.norm(d, axis=2) + 1e-6
+            cosang = (d*nrm).sum(2)/dist
+            occ += np.where(sv & (dist < R) & (cosang > 0.20),
+                            np.clip(cosang, 0, 1), 0)
+            cnt += 1
+    ao = np.clip(1.0 - strength*np.clip(occ/max(cnt, 1), 0, 1)*1.70, AO_FLOOR, 1.0)
     return np.where(valid, cv2.GaussianBlur(ao, (0, 0), 3.0), 1.0)
+
+def _luma(alb):
+    return alb[..., 0]*0.2126 + alb[..., 1]*0.7152 + alb[..., 2]*0.0722
+
+def ao_apply(ao, alb, interreflect=None):
+    """Interreflection-corrected occlusion, to be multiplied into the AMBIENT
+    terms only -- never into the window term, which the shadow map already
+    handles."""
+    if interreflect is None: interreflect = INTERREFLECT   # read at call time
+    k = np.clip(1.0 - interreflect*_luma(alb), 0.0, 1.0)
+    return np.clip(1.0 - k*(1.0 - ao), 0.0, 1.0)
 
 _R0 = LT.P(1600)                       # downlight falloff reference
 def downlights(pos, n):
@@ -80,14 +116,12 @@ def _linear(g, ao_strength=1.0):
     amb    = 0.24
     lamps  = downlights(pos, n) + 0.02
 
-    ao = ssao(pos, n, obj, strength=ao_strength)
-    a2 = ao**1.2
+    a2 = ao_apply(ssao(pos, n, obj, strength=ao_strength), alb)[..., None]
     col = alb*(win[..., None]*WIN_TINT
-               + sky[..., None]*SKY_COOL*a2[..., None]
-               + bounce[..., None]*BOUNCE*a2[..., None]
-               + lamps[..., None]*LAMP_TINT*a2[..., None]
-               + amb*a2[..., None])
-    col *= ao[..., None]**0.50
+               + sky[..., None]*SKY_COOL*a2
+               + bounce[..., None]*BOUNCE*a2
+               + lamps[..., None]*LAMP_TINT*a2
+               + amb*a2)
     names = g.get("names") or []
     if "Downlights" in names:
         m = obj == names.index("Downlights")

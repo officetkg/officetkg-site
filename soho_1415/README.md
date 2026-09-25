@@ -177,6 +177,45 @@ purely additive layer read into `build_3d.py` after everything else is built.
 `out/PHOTOREAL_BEFORE_AFTER.png` is the same five cameras rendered before and
 after the layer, so the difference is decoration alone.
 
+## Ambient occlusion — calibrated against the photos
+
+An earlier pass drew a near-black hairline at every internal corner, along
+every edge of the ceiling coffer and around every Book Shelf cubby. None of
+that is in the listing photos. Measured off the reference photo of the Living
+Dining and off the render:
+
+| ratio | photo | render before | render after |
+|---|---|---|---|
+| internal wall/ceiling corner ÷ flat wall | 0.935 | **0.281** | 0.894 |
+| Book Shelf cubby ÷ shelf board face | 0.679 | **0.462** | 0.730 |
+| darkest interior pixel | 0.31 | 0.16 | — |
+
+Three faults, all in the AO term:
+
+1. **AO was multiplied in twice** — once as `ao**1.2` on the ambient terms and
+   again as `ao**0.5` over the whole colour, a combined exponent of 1.7. It
+   also darkened the window term, which `window_visibility()` already handles.
+2. **The occlusion radius mixed screen and world units**: a 24-pixel screen
+   radius was compared against a world distance of `radius*1.6`, so on a large
+   flat wall every neighbour on the adjoining wall counted as an occluder.
+   `AO_RADIUS_MM` now sets the world window in millimetres, sampled at three
+   screen radii so near and far behave the same.
+3. **No interreflection.** A 90° corner between two white surfaces hides half
+   the hemisphere, yet the photo shows it only 6.5 % darker, because the light
+   comes straight back off the facing wall. `ao_apply()` is that first-order
+   correction: a bright surface keeps nearly all of its ambient in a corner, a
+   darker recess loses more. Without it, every white corner goes black.
+
+Disabling AO entirely gives a corner ratio of 0.913, so the remaining 0.894 is
+within 2 % of the geometric floor — the rest is the genuine lighting difference
+between two wall faces at 90°, not an artefact.
+
+Separately, `Storage_Wall_Rail` was **matte black** in the palette. The photo
+taken from the Master Bedroom into the Living Dining shows the partition head
+at **1.21 × the ceiling luma** — a light head, not a black track — so the rail
+is now (230, 228, 223) and the parked panels are the light oak the same photo
+shows, not off-white.
+
 ## Architectural lighting
 
 `lighting.py` carries the coffered ceiling and the downlights, read from the

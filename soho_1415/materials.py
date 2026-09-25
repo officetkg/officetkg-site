@@ -35,8 +35,9 @@ PALETTE = {
  # --- joinery -----------------------------------------------------------
  "Book_Shelf":                 (214, 194, 166),   # pale oak, open grid
  "Storage_Wall_Pocket":        (234, 230, 224),
- "Storage_Wall_Parked_Panels": (228, 222, 214),
- "Storage_Wall_Rail":          ( 72,  72,  74),   # matte black track
+ "Storage_Wall_Parked_Panels": (205, 180, 152),   # photo: light oak sliding panel
+ "Storage_Wall_Rail":          (230, 228, 223),   # photo: light head, 1.2x the
+                                                  # ceiling luma -- NOT a black track
  # --- balcony -----------------------------------------------------------
  "Balcony_Floor":              (176, 176, 172),
  "Balcony_Railing":            ( 52,  52,  54),   # dark capping, posts, base
@@ -71,6 +72,6 @@ for _k in ("Laptops","Laptop_Screens","Desk_Kit","Paper","Books",
            "Plant_Pots","Plant_Foliage"): CLAY[_k] = (200, 198, 194)
 CLAY.update({"Window_Glass": (198, 210, 216), "Balcony_Glass": (200, 212, 210),
              "Windows": (92, 92, 94), "Balcony_Railing": (96, 96, 98),
-             "Monitor_55": (70, 70, 72), "Storage_Wall_Rail": (110,110,112),
+             "Monitor_55": (70, 70, 72), "Storage_Wall_Rail": (214,212,208),
              "Storage_Wall_Parked_Panels": (150, 190, 150),
              "Storage_Wall_Pocket": (170, 200, 170)})

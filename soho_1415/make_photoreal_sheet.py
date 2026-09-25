@@ -72,6 +72,10 @@ before_after('out/_preproducts', 'out/PHOTOREAL_BEFORE_AFTER.png',
              'SPECIFIED PRODUCTS  -  BEFORE / AFTER',
              'E-CAD-2190KW walnut table (1800 -> 2100), Aeron x2, Setu x6; '
              'architecture untouched, all circulation still PASS')
+before_after('out/_preao', 'out/PHOTOREAL_BEFORE_AFTER_shading.png',
+             'SHADING FIX  -  BEFORE / AFTER',
+             'ambient occlusion applied once with an interreflection correction, and the '
+             'partition head track recoloured from matte black to the light head the photos show')
 before_after('out/_predeco', 'out/PHOTOREAL_BEFORE_AFTER_decoration.png',
              'DECORATION  -  BEFORE / AFTER',
              '48 items, every one on an approved support '
