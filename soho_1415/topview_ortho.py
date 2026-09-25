@@ -29,11 +29,19 @@ COLORS = {
  "Monitor_55":(0,0,220),"Floor_Slab":(248,248,248),
 }
 
+# A plan view is cut BELOW the ceiling, so the ceiling, its coffer and the
+# downlights are never part of it -- leaving them in simply paints the whole
+# sheet with the slab.  Decoration is a finishing layer, not geometry under
+# verification, so it is left out of this view too.
+SKIP_TOP = {"Ceiling_Slab", "Ceiling_Coffer", "Downlights",
+            "Laptops", "Laptop_Screens", "Desk_Kit", "Paper", "Books",
+            "Plant_Pots", "Plant_Foliage"}
+
 def render_top():
     w, h = W_*SS, H_*SS
     zbuf = np.full((h, w), -1e9, np.float32)
     idx  = np.full((h, w), -1, np.int32)
-    names = list(B.OBJECTS.keys())
+    names = [n for n in B.OBJECTS.keys() if n not in SKIP_TOP]
     for oi, name in enumerate(names):
         for m in B.OBJECTS[name]:
             V, Fc = m.vertices, m.faces

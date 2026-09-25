@@ -50,11 +50,21 @@ PALETTE = {
  "Meeting_Table":              (170, 136,  98),   # medium oak
  "Meeting_Chairs":             ( 62,  60,  62),   # dark greige / charcoal
  "Monitor_55":                 ( 26,  26,  28),
+ # --- decoration (brief's permitted list only) ---------------------------
+ "Laptops":                    (168, 170, 173),   # aluminium
+ "Laptop_Screens":             ( 34,  34,  38),
+ "Desk_Kit":                   (222, 221, 218),
+ "Paper":                      (248, 246, 240),
+ "Books":                      (176, 160, 140),   # varied by texture
+ "Plant_Pots":                 (214, 208, 198),
+ "Plant_Foliage":              ( 88, 106,  74),
 }
 CLAY = {k: (206, 203, 197) for k in PALETTE}
 CLAY["Ceiling_Slab"] = (214, 212, 208)
 CLAY["Ceiling_Coffer"] = (208, 206, 202)
 CLAY["Downlights"] = (250, 246, 236)
+for _k in ("Laptops","Laptop_Screens","Desk_Kit","Paper","Books",
+           "Plant_Pots","Plant_Foliage"): CLAY[_k] = (200, 198, 194)
 CLAY.update({"Window_Glass": (198, 210, 216), "Balcony_Glass": (200, 212, 210),
              "Windows": (92, 92, 94), "Balcony_Railing": (96, 96, 98),
              "Monitor_55": (70, 70, 72), "Storage_Wall_Rail": (110,110,112),

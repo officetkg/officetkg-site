@@ -333,6 +333,14 @@ for lx, ly, kind in LT.luminaires():
     _dl.apply_translation((lx, ly, z-0.35))
     add("Downlights", _dl)
 
+# ======================================================================
+# DECORATION -- only the items the brief permits, each sitting on an
+# approved surface.  See decoration.py; nothing architectural is touched.
+# ======================================================================
+import decoration as DEC
+for _g, _ms in DEC.build()[0].items():
+    add(_g, *_ms)
+
 if __name__ == "__main__":
     scene = trimesh.Scene()
     rows = []

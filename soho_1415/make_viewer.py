@@ -90,9 +90,9 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
 <header class="head">
   <div style="flex:1 1 320px;min-width:0">
     <h1>OIMACHI TRACKS RESIDENCE 1415</h1>
-    <p class="sub">PHASE 6 で構築した 3D ジオメトリ。元図面の 2D MASTER 座標をそのまま押し出したもので、画像生成は使っていません。バルコニーは<b>北向き</b>です。</p>
+    <p class="sub">元図面の 2D MASTER 座標をそのまま押し出した 3D ジオメトリに、天井・照明・家具・デコレーションまで載せた最終モデルです。画像生成は使っていません。バルコニーは<b>北向き</b>です。</p>
   </div>
-  <span class="tag">Phase 7 · 3D geometry review</span>
+  <span class="tag">Phase 10 · final coordinate model</span>
 </header>
 
 <div class="stage">
@@ -161,10 +161,10 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
   <div class="note">
     <h3>XY 一致検証</h3>
     <dl class="kv">
-      <dt>比較群</dt><dd>21</dd>
-      <dt>完全一致</dt><dd>19 群 / 0.00 px</dd>
+      <dt>比較群</dt><dd>24</dd>
+      <dt>完全一致</dt><dd>22 群 / 0.00 px</dd>
       <dt>椅子</dt><dd>1.00 px 内側</dd>
-      <dt>TOP 線検証</dt><dd>59 要素 / 0.66 px</dd>
+      <dt>TOP 線検証</dt><dd>61 要素 / 0.61 px</dd>
       <dt>未説明残差</dt><dd>0 点</dd>
     </dl>
   </div>
@@ -180,7 +180,7 @@ footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
   </div>
 </div>
 
-<footer>build_3d.py → model_3d.glb · 26 objects · orthographic viewer, three.js r128</footer>
+<footer>build_3d.py → model_3d.glb · 40 objects · orthographic viewer, three.js r128</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
@@ -200,7 +200,10 @@ const COLORS={
  Balcony_Floor:0xC2C7CB, Balcony_Railing:0x3A3F45, Balcony_Glass:0xAFCEDD,
  Balcony_Partitions:0x7A3040, Downpipe:0xD8D4CC, Work_Desks:0x5E8FC0, Work_Chairs:0x4A5158,
  Printer_Unit:0x9AA0A6, Meeting_Table:0x4E82B8, Meeting_Chairs:0x525960,
- Monitor_55:0x23282E, Floor_Slab:0xD9D6D2
+ Monitor_55:0x23282E, Floor_Slab:0xD9D6D2,
+ Ceiling_Slab:0xE6E4E1, Ceiling_Coffer:0xDCD9D5, Downlights:0xF2E6C8,
+ Laptops:0xA8AAAD, Laptop_Screens:0x222226, Desk_Kit:0xDEDDDA, Paper:0xF8F6F0,
+ Books:0xB0A08C, Plant_Pots:0xD6D0C6, Plant_Foliage:0x586A4A
 };
 const GROUPS=[
  ["躯体・仕上げ",["Exterior_Walls","Interior_Walls","Columns","PS","Floor_Slab"],0xD3D9DD],
@@ -209,7 +212,10 @@ const GROUPS=[
  ["設備・造作",["Shower","WD","Powder_Room_Fixtures","Toilet","Kitchen","Refrigerator","Closets","Book_Shelf"],0x9FB6C6],
  ["家具",["Work_Desks","Work_Chairs","Printer_Unit","Meeting_Table","Meeting_Chairs","Monitor_55"],0x4E82B8],
  ["バルコニー",["Balcony_Floor","Balcony_Railing","Balcony_Glass",
-                "Balcony_Partitions","Downpipe"],0xADB4B9]
+                "Balcony_Partitions","Downpipe"],0xADB4B9],
+ ["天井・照明",["Ceiling_Slab","Ceiling_Coffer","Downlights"],0xDCD9D5],
+ ["デコレーション",["Laptops","Laptop_Screens","Desk_Kit","Paper","Books",
+                "Plant_Pots","Plant_Foliage"],0x586A4A]
 ];
 const JP={Exterior_Walls:"外壁",Interior_Walls:"内壁",Columns:"柱",PS:"PS",Entrance:"玄関",
  Shower:"シャワー",WD:"洗濯機置場",Powder_Room_Fixtures:"洗面",Toilet:"トイレ",Kitchen:"キッチン",
@@ -219,7 +225,10 @@ const JP={Exterior_Walls:"外壁",Interior_Walls:"内壁",Columns:"柱",PS:"PS",
  Balcony_Glass:"手すりガラス",Balcony_Partitions:"隔て板",Downpipe:"縦樋",Balcony_Floor:"バルコニー床",Balcony_Railing:"手すり",
  Work_Desks:"執務デスク",Work_Chairs:"執務チェア",Printer_Unit:"プリンター",
  Meeting_Table:"ミーティングテーブル",Meeting_Chairs:"会議チェア",Monitor_55:"55型モニター",
- Floor_Slab:"床スラブ"};
+ Floor_Slab:"床スラブ",
+ Ceiling_Slab:"天井スラブ",Ceiling_Coffer:"折上げ天井",Downlights:"ダウンライト",
+ Laptops:"ノートPC",Laptop_Screens:"PC画面",Desk_Kit:"キーボード・マウス",
+ Paper:"ノート・書類",Books:"書籍",Plant_Pots:"鉢",Plant_Foliage:"植栽"};
 
 document.getElementById('provlist').textContent =
   ["WALL_HEIGHT","DOOR_HEIGHT","WINDOW_HEAD","BOOKSHELF_HEIGHT","PARTITION_PANEL_HEIGHT"]

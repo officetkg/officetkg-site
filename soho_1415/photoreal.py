@@ -149,6 +149,21 @@ def texture(g):
         t = 0.94 + 0.12*fbm(e*6.0, n*6.0, 4)
         mul[m] = np.stack([t, t, t], -1)[m]
 
+    # --- books: each spine its own tone ------------------------------------
+    m = obj == idx("Books")
+    if m.any():
+        key = np.floor(n/LT.P(26.0)).astype(np.int64)
+        hsh = _hash(key, np.int64(17))
+        t = 0.55 + 0.75*hsh
+        warm = 0.90 + 0.35*_hash(key, np.int64(23))
+        mul[m] = np.stack([t*warm, t*(0.95+0.10*hsh), t*(1.05-0.18*warm)], -1)[m]
+
+    # --- foliage: leaf break-up --------------------------------------------
+    m = obj == idx("Plant_Foliage")
+    if m.any():
+        t = 0.72 + 0.55*fbm(e*14.0, (n+u)*14.0, 3)
+        mul[m] = np.stack([t*0.95, t, t*0.85], -1)[m]
+
     # --- fabric on the chairs ---------------------------------------------
     for k in ("Work_Chairs", "Meeting_Chairs"):
         m = obj == idx(k)
