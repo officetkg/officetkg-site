@@ -105,6 +105,29 @@ def texture(g):
     bump = np.zeros(pos.shape[:2], np.float32)
     idx = lambda k: names.index(k) if k in names else -999
 
+    # --- LD carpet: a fine even speckle, no direction.  The photo measures a
+    # standard deviation of only about 7/255 across the pile, so the grain is
+    # deliberately much quieter than the plank floor's.
+    c = obj == idx("Floor_Carpet")
+    if c.any():
+        sp = 0.965 + 0.070*fbm(e*9.0, n*9.0, 3)
+        tuft = 0.985 + 0.030*_hash(np.floor(e/LT.P(9.0)).astype(np.int64),
+                                   np.floor(n/LT.P(9.0)).astype(np.int64))
+        v = sp*tuft
+        mul[c] = np.stack([v, v, v*1.004], -1)[c]
+        bump[c] = (fbm(e*22.0, n*22.0, 2)-0.5)[c]*0.5
+
+    # --- hall / wet-area tile: large stone-look squares with a fine mottle
+    t = obj == idx("Floor_Tile")
+    if t.any():
+        tp = LT.P(600.0)                                   # tile module
+        jx = np.abs((e/tp) % 1.0 - 0.5)*2.0
+        jy = np.abs((n/tp) % 1.0 - 0.5)*2.0
+        joint = np.clip((np.maximum(jx, jy)-0.975)/0.025, 0, 1)*0.18
+        mott = 0.93 + 0.14*fbm(e*2.6, n*2.6, 4)
+        v = mott*(1.0-joint)
+        mul[t] = np.stack([v, v*0.99, v*0.965], -1)[t]
+
     # --- oak floor: planks running north-south, grain along the plank -----
     f = obj == idx("Floor_Slab")
     if f.any():
@@ -173,7 +196,7 @@ def texture(g):
     return np.clip(mul, 0, 2), bump
 
 # ----------------------------------------------------------------- gloss
-GLOSS = {"Floor_Slab": (0.055, 90.0), "Meeting_Table": (0.035, 70.0),
+GLOSS = {"Floor_Slab": (0.055, 90.0), "Floor_Tile": (0.075, 110.0), "Meeting_Table": (0.035, 70.0),
          "Work_Desks": (0.028, 60.0), "Monitor_55": (0.10, 160.0),
          "Kitchen": (0.05, 70.0), "Toilet": (0.05, 80.0),
          "Powder_Room_Fixtures": (0.06, 90.0), "Shower": (0.07, 100.0),

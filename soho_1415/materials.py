@@ -12,7 +12,14 @@ to medium oak / meeting table medium oak or walnut / matte black metal, sparing
 """
 PALETTE = {
  # --- shell -------------------------------------------------------------
- "Floor_Slab":                 (198, 174, 144),   # light oak, photo-matched
+ "Floor_Slab":                 (198, 174, 144),   # light oak plank, photo-matched
+ "Floor_Carpet":               (138, 137, 137),   # LD carpet, neutral grey.  Solved
+                                                  # so the rendered carpet/wall luma
+                                                  # ratio matches the photo (0.971)
+ "Floor_Tile":                 (104,  98,  90),   # hall / kitchen / wet areas: a warm
+                                                  # grey stone-look tile.  In the photos
+                                                  # it sits at 0.70 of the LD carpet, with
+                                                  # both frames at the same ceiling luma
  "Ceiling_Slab":               (246, 245, 242),   # flat white plaster
  "Ceiling_Coffer":             (243, 242, 239),   # dropped perimeter band
  "Downlights":                 (255, 250, 238),   # warm white aperture
@@ -66,6 +73,8 @@ PALETTE = {
 }
 CLAY = {k: (206, 203, 197) for k in PALETTE}
 CLAY["Ceiling_Slab"] = (214, 212, 208)
+CLAY["Floor_Carpet"] = (150, 149, 148)
+CLAY["Floor_Tile"] = (140, 138, 134)
 CLAY["Ceiling_Coffer"] = (208, 206, 202)
 CLAY["Downlights"] = (250, 246, 236)
 for _k in ("Laptops","Laptop_Screens","Desk_Kit","Paper","Books",

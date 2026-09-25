@@ -26,7 +26,7 @@ COLORS = {
  "Balcony_Glass":(215,195,150),"Balcony_Partitions":(60,40,95),"Downpipe":(190,200,205),"Balcony_Floor":(255,200,150),
  "Balcony_Railing":(255,110,0),"Work_Desks":(20,110,190),"Work_Chairs":(70,70,70),
  "Printer_Unit":(120,100,60),"Meeting_Table":(15,85,160),"Meeting_Chairs":(80,80,80),
- "Monitor_55":(0,0,220),"Floor_Slab":(248,248,248),
+ "Monitor_55":(0,0,220),"Floor_Slab":(248,248,248),"Floor_Carpet":(242,244,246),"Floor_Tile":(238,238,236),
  "Table_Frame":(90,120,170),"Table_Wirebox":(40,40,60),
  "Work_Chair_Bases":(120,120,130),"Meeting_Chair_Bases":(120,120,130),
 }

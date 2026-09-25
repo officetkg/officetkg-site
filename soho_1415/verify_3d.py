@@ -60,6 +60,13 @@ CONTAINED = {
  # the polished frame and the wiring box of the E-CAD sit under / inside the top
  "Table_Frame":   (rb(F.FURNITURE["MEETING_TABLE"]["box"]), None),
  "Table_Wirebox": (rb(F.FURNITURE["MEETING_TABLE"]["box"]), None),
+ # the LD carpet is a finish laid inside the Living Dining room polygon
+ "Floor_Carpet": ((min(p[0] for p in G.ROOMS["LIVING_DINING"]),
+                   min(p[1] for p in G.ROOMS["LIVING_DINING"]),
+                   max(p[0] for p in G.ROOMS["LIVING_DINING"]),
+                   max(p[1] for p in G.ROOMS["LIVING_DINING"])), None),
+ # the hall / wet-area tile is a finish inside the building outline
+ "Floor_Tile": ((ow["west"]["outer_x"], 0, ow["east"]["outer_x"], ow["south"]["outer_y"]), None),
 }
 print(f'{"3D object":30s} {"dx0":>6s} {"dy0":>6s} {"dx1":>6s} {"dy1":>6s}   max|d| px / mm')
 print('-'*78)

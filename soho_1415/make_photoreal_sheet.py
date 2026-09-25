@@ -31,7 +31,7 @@ H = HDR + len(rows)*(h + 30 + G)
 sheet = np.full((H, 3*W + 4*G, 3), 250, np.uint8)
 label(sheet, 'OIMACHI TRACKS RESIDENCE 1415  /  SOHO OFFICE  -  PHASE 10 PHOTOREAL',
       G, 36, .62, (25, 25, 25))
-label(sheet, 'geometry unchanged from the approved 2D MASTER  ·  E-CAD-2190KW walnut table, Aeron x2, Setu x6  ·  decoration = permitted items only',
+label(sheet, 'geometry unchanged from the approved 2D MASTER  ·  finishes and lighting read from the listing photos  ·  E-CAD-2190KW walnut table, Aeron x2, Setu x6',
       G, 62, .44, (110, 110, 110))
 y = HDR
 for r in rows:
@@ -68,10 +68,14 @@ def before_after(src, out_path, title, subtitle):
     cv2.imwrite(out_path, ba)
     print(out_path, ba.shape)
 
-before_after('out/_preproducts', 'out/PHOTOREAL_BEFORE_AFTER.png',
+before_after('out/_preproducts', 'out/PHOTOREAL_BEFORE_AFTER_products.png',
              'SPECIFIED PRODUCTS  -  BEFORE / AFTER',
              'E-CAD-2190KW walnut table (1800 -> 2100), Aeron x2, Setu x6; '
              'architecture untouched, all circulation still PASS')
+before_after('out/_prefloor', 'out/PHOTOREAL_BEFORE_AFTER.png',
+             'FLOOR FINISH  -  BEFORE / AFTER',
+             'the photos show TWO finishes: light oak plank in the Master Bedroom, hall and '
+             'kitchen, and a neutral carpet in the Living Dining')
 before_after('out/_preao', 'out/PHOTOREAL_BEFORE_AFTER_shading.png',
              'SHADING FIX  -  BEFORE / AFTER',
              'ambient occlusion applied once with an interreflection correction, and the '

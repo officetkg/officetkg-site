@@ -177,6 +177,45 @@ purely additive layer read into `build_3d.py` after everything else is built.
 `out/PHOTOREAL_BEFORE_AFTER.png` is the same five cameras rendered before and
 after the layer, so the difference is decoration alone.
 
+## Floor finish — three materials, not one
+
+The listing photos show **three** floor finishes, and the model had oak plank
+everywhere:
+
+* **Master Bedroom — light oak plank.** `MB1` looks from the bedroom, over its
+  plank floor, through the two parked oak panels.
+* **Living Dining, including the north band in front of the Book Shelf —
+  neutral carpet.** The same photo shows carpet beyond the panels; `LD1` and
+  `LD2` show it from inside the Living Dining.
+* **Hall, entrance, kitchen, powder room, toilet — a warm grey stone-look
+  tile.** The corridor photo and both kitchen photos show it clearly. It is
+  only visible in the aerial view and in slivers of cameras A and B, and its
+  albedo rests on a weaker anchor than the carpet's: it sits at **0.70** of
+  the LD carpet in the photos, which is a fair comparison only because both
+  frames happen to read the same ceiling luma (172). Treat (104, 98, 90) as
+  approximate.
+
+`build_3d.py` now lays a `Floor_Carpet` finish over the rectilinear
+decomposition of `ROOMS["LIVING_DINING"]`, 3 mm proud of the plank — the real
+transition, and it avoids coplanar faces. The only thing dropped is the 5 px
+chamfer at (154, 495).
+
+The carpet albedo was **solved, not picked**. In the photo the carpet reads at
+**0.971** of the lit wall beside it; the rendered ratio is now **0.982** at
+(138, 137, 137), an albedo of about 0.54 — a normal light-grey carpet tile.
+At the first guess of (206, 205, 204) the render came out at 1.25, i.e. the
+floor was brighter than the walls, which the photo plainly is not. The carpet
+is matte, so it is excluded from the planar floor reflection, and its texture
+is a fine even speckle rather than plank lines (the photo measures a standard
+deviation of only about 7/255 across the pile).
+
+## Book Shelf height — resolved
+
+`BOOKSHELF_HEIGHT` stays at **2400 mm**. `LD1` and `LD3` show the existing
+shelf running floor to ceiling. The brief forbids *expanding* the Book Shelf
+into a floor-to-ceiling unit; it does not ask for an existing floor-to-ceiling
+shelf to be cut down. Modelling what the photos show is the rule that wins.
+
 ## Ambient occlusion — calibrated against the photos
 
 An earlier pass drew a near-black hairline at every internal corner, along

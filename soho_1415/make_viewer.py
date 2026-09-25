@@ -201,13 +201,13 @@ const COLORS={
  Balcony_Partitions:0x7A3040, Downpipe:0xD8D4CC, Work_Desks:0x5E8FC0, Work_Chairs:0x4A5158,
  Printer_Unit:0x9AA0A6, Meeting_Table:0x6A4C38, Table_Frame:0xBCBEC1,
  Table_Wirebox:0x3A3A3C, Work_Chair_Bases:0xB0B2B5, Meeting_Chair_Bases:0xB0B2B5, Meeting_Chairs:0x525960,
- Monitor_55:0x23282E, Floor_Slab:0xD9D6D2,
+ Monitor_55:0x23282E, Floor_Slab:0xD9D6D2, Floor_Carpet:0xCED0D2, Floor_Tile:0xB6B2AC,
  Ceiling_Slab:0xE6E4E1, Ceiling_Coffer:0xDCD9D5, Downlights:0xF2E6C8,
  Laptops:0xA8AAAD, Laptop_Screens:0x222226, Desk_Kit:0xDEDDDA, Paper:0xF8F6F0,
  Books:0xB0A08C, Plant_Pots:0xD6D0C6, Plant_Foliage:0x586A4A
 };
 const GROUPS=[
- ["躯体・仕上げ",["Exterior_Walls","Interior_Walls","Columns","PS","Floor_Slab"],0xD3D9DD],
+ ["躯体・仕上げ",["Exterior_Walls","Interior_Walls","Columns","PS","Floor_Slab","Floor_Carpet","Floor_Tile"],0xD3D9DD],
  ["建具・開口",["Windows","Window_Glass","Entrance"],0x7C9CBE],
  ["収納壁 (OPEN)",["Storage_Wall_Pocket","Storage_Wall_Parked_Panels","Storage_Wall_Rail"],0x2FBE85],
  ["設備・造作",["Shower","WD","Powder_Room_Fixtures","Toilet","Kitchen","Refrigerator","Closets","Book_Shelf"],0x9FB6C6],
@@ -231,7 +231,7 @@ const JP={Exterior_Walls:"外壁",Interior_Walls:"内壁",Columns:"柱",PS:"PS",
  Meeting_Table:"E-CAD-2190KW 天板",Table_Frame:"E-CAD 脚（ポリッシュ）",
  Table_Wirebox:"配線ボックス",
  Meeting_Chairs:"セトゥーチェア",Meeting_Chair_Bases:"セトゥー脚",Monitor_55:"55型モニター",
- Floor_Slab:"床スラブ",
+ Floor_Slab:"フローリング",Floor_Carpet:"カーペット（LD）",Floor_Tile:"石目調タイル（廊下・水回り）",
  Ceiling_Slab:"天井スラブ",Ceiling_Coffer:"折上げ天井",Downlights:"ダウンライト",
  Laptops:"ノートPC",Laptop_Screens:"PC画面",Desk_Kit:"キーボード・マウス",
  Paper:"ノート・書類",Books:"書籍",Plant_Pots:"鉢",Plant_Foliage:"植栽"};

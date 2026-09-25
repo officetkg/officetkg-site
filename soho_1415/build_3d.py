@@ -293,6 +293,22 @@ add("Monitor_55", _box(mo["x0"], mo["y0"], mo["x1"], mo["y1"],
 # ======================================================================
 add("Floor_Slab", _box(M(403,0)[0], M(0,150)[1], M(768,0)[0], M(0,822)[1],
                        -H.SLAB_THICKNESS, 0))
+# Floor finish: the listing photos show TWO finishes.  The Master Bedroom,
+# the hall, the entrance and the kitchen are light oak plank; the LIVING
+# DINING -- including the north band in front of the Book Shelf -- is a light
+# neutral CARPET.  The carpet is laid over the slab, 3 mm proud of the plank,
+# which is the real transition and avoids coplanar faces.
+# The rectangles below are the rectilinear decomposition of G.ROOMS
+# ["LIVING_DINING"]; the only thing dropped is the 5 px chamfer at (154,495).
+for _cr in ((159, 258, 355, 623), (15, 495, 159, 666), (159, 623, 325, 666)):
+    add("Floor_Carpet", _box(_cr[0], _cr[1], _cr[2], _cr[3], H.P(-4), H.P(3)))
+# The hall, entrance, kitchen, powder room and toilet are a grey stone-look
+# tile, not plank -- see the HALL and KITCHEN photos.  Rectilinear cover of
+# ROOMS ENTRANCE_HALL / POWDER_ROOM / SHOWER / TOILET / KITCHEN.
+for _tr in ((229, 8, 318, 48), (229, 48, 350, 80), (15, 80, 224, 172),
+            (81, 172, 224, 187), (114, 192, 224, 253), (229, 80, 350, 251)):
+    add("Floor_Tile", _box(_tr[0], _tr[1], _tr[2], _tr[3], H.P(-4), H.P(1)))
+
 # ceiling slab: same footprint as the floor, at WALL_HEIGHT.  Needed for any
 # interior view; adds no new XY.
 add("Ceiling_Slab", _box(M(403,0)[0], M(0,150)[1], M(768,0)[0], M(0,822)[1],
