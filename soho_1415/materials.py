@@ -14,6 +14,8 @@ PALETTE = {
  # --- shell -------------------------------------------------------------
  "Floor_Slab":                 (198, 174, 144),   # light oak, photo-matched
  "Ceiling_Slab":               (246, 245, 242),   # flat white plaster
+ "Ceiling_Coffer":             (243, 242, 239),   # dropped perimeter band
+ "Downlights":                 (255, 250, 238),   # warm white aperture
  "Exterior_Walls":             (238, 236, 231),   # warm white
  "Interior_Walls":             (240, 238, 233),
  "Columns":                    (236, 234, 229),
@@ -51,6 +53,8 @@ PALETTE = {
 }
 CLAY = {k: (206, 203, 197) for k in PALETTE}
 CLAY["Ceiling_Slab"] = (214, 212, 208)
+CLAY["Ceiling_Coffer"] = (208, 206, 202)
+CLAY["Downlights"] = (250, 246, 236)
 CLAY.update({"Window_Glass": (198, 210, 216), "Balcony_Glass": (200, 212, 210),
              "Windows": (92, 92, 94), "Balcony_Railing": (96, 96, 98),
              "Monitor_55": (70, 70, 72), "Storage_Wall_Rail": (110,110,112),

@@ -12,6 +12,8 @@ see through to the balustrade and the sky, then the panes are composited back
 at low opacity for the sheen.
 """
 import numpy as np, cv2
+import lighting as LT
+from heights import WALL_HEIGHT as _WH
 
 WINDOW_N  = 666.0                       # MASTER y of the sash plane (north is +y)
 SKY_COOL  = np.array([0.97, 0.99, 1.05])
@@ -41,6 +43,22 @@ def ssao(pos, nrm, obj, radius=24.0, samples=14, strength=1.0):
     ao = np.clip(1.0 - strength*np.clip(occ/max(cnt, 1), 0, 1)*1.70, 0.22, 1.0)
     return np.where(valid, cv2.GaussianBlur(ao, (0, 0), 3.0), 1.0)
 
+_R0 = LT.P(1600)                       # downlight falloff reference
+def downlights(pos, n):
+    """The building's own recessed downlights, as read from the photos.
+    Secondary to daylight - the brief keeps natural light primary."""
+    tot = np.zeros(pos.shape[:2], np.float32)
+    for lx, ly, kind in LT.luminaires():
+        lz = _WH - LT.COFFER_DROP if kind == "living" else _WH
+        lp = np.array([-lx, ly, lz], np.float32)        # MASTER -> ENU
+        v = lp[None, None, :] - pos
+        d = np.linalg.norm(v, axis=2) + 1e-6
+        l = v/d[..., None]
+        ndl = np.clip((n*l).sum(2), 0, 1)
+        cone = np.clip((l[..., 2] - LT.DL_CONE)/(1.0 - LT.DL_CONE), 0, 1)**1.4
+        tot += ndl*cone/(1.0 + (d/_R0)**2)
+    return tot*LT.DL_LUMENS*0.42
+
 def _linear(g, ao_strength=1.0):
     """Linear-light RGB for one G-buffer, plus the hit mask."""
     alb, nrm, pos, obj = g["albedo"], g["normal"], g["pos"], g["obj"]
@@ -59,8 +77,8 @@ def _linear(g, ao_strength=1.0):
 
     sky    = np.clip(0.5 + 0.5*up, 0, 1)*0.28
     bounce = np.clip(-up, 0, 1)*0.20 + np.clip(1.0-np.abs(up), 0, 1)*0.12
-    lamps  = np.clip(-up, 0, 1)*0.15 + 0.03
     amb    = 0.24
+    lamps  = downlights(pos, n) + 0.02
 
     ao = ssao(pos, n, obj, strength=ao_strength)
     a2 = ao**1.2
@@ -70,6 +88,10 @@ def _linear(g, ao_strength=1.0):
                + lamps[..., None]*LAMP_TINT*a2[..., None]
                + amb*a2[..., None])
     col *= ao[..., None]**0.50
+    names = g.get("names") or []
+    if "Downlights" in names:
+        m = obj == names.index("Downlights")
+        col[m] = np.array([1.35, 1.30, 1.18], np.float32)      # lit aperture
     return col, hit
 
 def _tone(lin):

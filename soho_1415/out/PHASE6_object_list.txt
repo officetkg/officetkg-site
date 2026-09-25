@@ -30,5 +30,7 @@ Meeting_Chairs                  18    216     160.0   456.0    0.0    294.0   61
 Monitor_55                       1     12     351.0   487.0   68.5    355.0   580.0  120.9
 Floor_Slab                       1     12       0.0     0.0  -15.2    365.0   672.0    0.0
 Ceiling_Slab                     2     24       0.0     0.0  170.5    365.0   780.0  200.8
+Ceiling_Coffer                   4     48      15.0   252.0  176.5    355.0   666.0  185.6
+Downlights                      30   1680      28.3    56.3  175.8    341.7   652.6  185.6
 
-31 objects exported -> out/model_3d.glb
+33 objects exported -> out/model_3d.glb

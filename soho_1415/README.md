@@ -69,6 +69,18 @@ The MASTER tuple (right, down, up) is left-handed, so any right-handed renderer
 must reflect it. `orientation.to_enu` and the viewer's `scale.x = -1` do exactly
 that; without it a 3D view comes out mirrored.
 
+## Architectural lighting
+
+`lighting.py` carries the coffered ceiling and the downlights, read from the
+listing photos: a dropped 450 mm perimeter band round the living zone, recessed
+downlights in PAIRS set into that band, plus downlights in the kitchen and inner
+hall. **The sheet has no reflected ceiling plan**, so every position there is
+photo-derived and provisional. It is deliberately kept out of
+`geometry_master.py` — the approved architectural XY is untouched.
+
+Daylight stays primary: the balcony faces north, so the north window carries the
+rooms and the downlights are a secondary layer.
+
 ## Coordinate system
 
 * `work  = source_pixel - (240, 120)`

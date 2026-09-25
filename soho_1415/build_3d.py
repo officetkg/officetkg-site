@@ -314,6 +314,25 @@ add("Ceiling_Slab", _box(M(403,0)[0], M(0,822)[1], M(768,0)[0], M(0,930)[1],
                          -H.BALCONY_SLAB_DROP + H.BALCONY_SOFFIT,
                          -H.BALCONY_SLAB_DROP + H.BALCONY_SOFFIT + H.SLAB_THICKNESS))
 
+# ======================================================================
+# PHASE 9 addendum -- ARCHITECTURAL LIGHTING, read from the photos only.
+# The sheet has no reflected ceiling plan, so this layer is PROVISIONAL and
+# lives in lighting.py, deliberately outside the approved geometry master.
+# ======================================================================
+import lighting as LT
+Z = LT.ZONE; bw = LT.COFFER_BAND
+cz0, cz1 = WH - LT.COFFER_DROP, WH
+add("Ceiling_Coffer",                                   # dropped perimeter band
+    _box(Z["x0"], Z["y0"], Z["x0"]+bw, Z["y1"], cz0, cz1),
+    _box(Z["x1"]-bw, Z["y0"], Z["x1"], Z["y1"], cz0, cz1),
+    _box(Z["x0"]+bw, Z["y0"], Z["x1"]-bw, Z["y0"]+bw, cz0, cz1),
+    _box(Z["x0"]+bw, Z["y1"]-bw, Z["x1"]-bw, Z["y1"], cz0, cz1))
+for lx, ly, kind in LT.luminaires():
+    z = cz0 if kind == "living" else WH
+    _dl = trimesh.creation.cylinder(radius=LT.DL_DIA/2, height=0.7, sections=14)
+    _dl.apply_translation((lx, ly, z-0.35))
+    add("Downlights", _dl)
+
 if __name__ == "__main__":
     scene = trimesh.Scene()
     rows = []
