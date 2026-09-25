@@ -56,6 +56,8 @@ FL            = 0               # 床仕上面
 CH_MAIN       = 2450            # 居室天井高
 CH_WET        = 2200            # 水回り・玄関・廊下天井高
 SLAB_TOP      = 2650            # スラブ上端 (天井懐 200)
+CH_COVE       = 2600            # 折上げ天井 中央部 (竣工写真より)
+COVE_BAND     = 600.0           # 折上げ周囲の下がり天井バンド幅
 DOOR_H        = 2000            # 建具開口高
 WIN_HEAD      = 2100            # 掃き出し窓 上端
 BAL_FL        = -150            # バルコニー床レベル (室内 FL からの段差)
@@ -134,6 +136,60 @@ OPEN_WC_DOOR       = (5470.0, 6180.0)   # 便所ドア (X_WALL_WET_E)
 OPEN_PWD_DOOR      = (6900.0, 7620.0)   # 洗面室ドア (X_WALL_WET_E)
 OPEN_SHOWER_DOOR   = (6860.0, 7560.0)   # シャワードア (X_WALL_SHOWER_E)
 OPEN_WINDOW        = (1740.0, 4080.0)   # 掃き出し窓 (南外壁)     px x 778-960
+
+# =====================================================================
+#  1b. 折上げ天井 / 照明器具   (3D GEOMETRY APPROVED 後、明示指示で追加)
+# =====================================================================
+#  竣工写真 (居室 3 枚) より:
+#    ・居室天井は 下がり天井バンド + 折上げ中央 の構成
+#    ・ダウンライトは **ペア** でバンドに多数配置
+#    ・熱感知器が 1 個
+#  高さは写真から実測できないため Z のみの設定値 (バンド CH_MAIN 2450 /
+#  折上げ CH_COVE 2600)。XY は承認済みマスターから一切動かしていない。
+#
+#  COVE_RAISED : 折上げ (高い) 部分の矩形。周囲 COVE_BAND がバンドになる。
+COVE_RAISED = [
+    dict(x0=2710.0, x1=3895.0, y0=795.0, y1=4745.0),   # Living Dining 主ベイ
+    dict(x0=695.0,  x1=1475.0, y0=795.0, y1=4780.0),   # 西ベイ + ワークスペース
+]
+CEIL_BAY = [
+    dict(x0=2110.0, x1=4495.0, y0=195.0, y1=5370.0),   # 主ベイ
+    dict(x0=195.0,  x1=2110.0, y0=195.0, y1=5370.0),   # 西ベイ + MBR
+]
+CEIL_WET = dict(x0=195.0, x1=4495.0, y0=5370.0, y1=8495.0, z=2200.0)
+
+# ダウンライト : 写真どおり下がり天井バンドにペア配置
+DL_TRIM_R = 55.0                 # 器具枠 半径
+DL_WARM = (1.00, 0.91, 0.79)     # 電球色 3000K 相当
+
+
+def _dl_pair(x, y, axis="x", z=CH_MAIN, gap=260.0, inten=1.9):
+    o = gap / 2.0
+    pts = [(x - o, y), (x + o, y)] if axis == "x" else [(x, y - o), (x, y + o)]
+    return [dict(pos=(px, py, z), color=DL_WARM, intensity=inten) for px, py in pts]
+
+
+DOWNLIGHTS = (
+    # Living Dining 主ベイ : 西バンド (X2110-2710) / 東バンド (X3895-4495)
+    _dl_pair(2410, 1150, "y") + _dl_pair(2410, 2450, "y") + _dl_pair(2410, 3750, "y")
+    + _dl_pair(4195, 1150, "y") + _dl_pair(4195, 2450, "y") + _dl_pair(4195, 3750, "y")
+    # 主ベイ 南バンド / 北バンド
+    + _dl_pair(3150, 495) + _dl_pair(3150, 5050)
+    # 西ベイ + ワークスペース : 西バンド (X195-695) / 東バンド (X1475-2110)
+    + _dl_pair(445, 1300, "y") + _dl_pair(445, 3300, "y") + _dl_pair(445, 4450, "y")
+    + _dl_pair(1790, 1300, "y") + _dl_pair(1790, 3900, "y")
+    # 廊下・キッチン・水回り・玄関 (CH 2200)
+    + _dl_pair(3350, 5900, "x", CH_WET) + _dl_pair(4100, 6850, "x", CH_WET)
+    + _dl_pair(3350, 7850, "x", CH_WET)
+    + [dict(pos=(1900, 6900, CH_WET), color=DL_WARM, intensity=2.0),
+       dict(pos=(2100, 5750, CH_WET), color=DL_WARM, intensity=1.4),
+       dict(pos=(580, 7000, 2000.0), color=DL_WARM, intensity=1.6),
+       dict(pos=(3500, 8100, CH_WET), color=DL_WARM, intensity=2.0)]
+)
+
+# 熱感知器 (写真で 1 個確認)
+SMOKE_DETECTOR = dict(x=3150.0, y=4400.0, z=CH_MAIN, r=60.0)
+
 
 # =====================================================================
 #  2.  FURNITURE  XY  LOCK   ( 添付「FURNITURE CONTACT & CLEARANCE REVIEW」より )
@@ -531,8 +587,34 @@ def parts():
          _b(4170, X_OUT_E, 7655, Y_OUT_N, FL - 200, FL),
          _b(2950, 4170, Y_IN_N, Y_OUT_N, FL - 200, FL),
          _b(2950, 4170, 7655, Y_IN_N, FL - 200, GENKAN_FL)])   # 土間をくり抜く
-    add("CEILING", "床・天井",
-        [_b(X_IN_W, X_IN_E, Y_IN_S, Y_IN_N, CH_MAIN, SLAB_TOP)])
+    # 天井 : 居室は 下がり天井バンド + 折上げ中央、水回り・廊下は CH_WET
+    cb = []
+    for bay, rz in zip(CEIL_BAY, COVE_RAISED):
+        cb.append(_b(bay["x0"], bay["x1"], bay["y0"], rz["y0"], CH_MAIN, SLAB_TOP))
+        cb.append(_b(bay["x0"], bay["x1"], rz["y1"], bay["y1"], CH_MAIN, SLAB_TOP))
+        cb.append(_b(bay["x0"], rz["x0"], rz["y0"], rz["y1"], CH_MAIN, SLAB_TOP))
+        cb.append(_b(rz["x1"], bay["x1"], rz["y0"], rz["y1"], CH_MAIN, SLAB_TOP))
+    cb.append(_b(CEIL_WET["x0"], CEIL_WET["x1"], CEIL_WET["y0"], CEIL_WET["y1"],
+                 CEIL_WET["z"], CEIL_WET["z"] + 200))
+    add("CEILING", "床・天井", cb)
+    add("CEILING_COVE", "床・天井",
+        [_b(r["x0"], r["x1"], r["y0"], r["y1"], CH_COVE, CH_COVE + 200)
+         for r in COVE_RAISED])
+
+    # -----------------------------------------------------------------
+    # 照明器具  (ダウンライト枠 + 発光面 / 熱感知器)
+    # -----------------------------------------------------------------
+    trim, lens = [], []
+    for d in DOWNLIGHTS:
+        x, y, z = d["pos"]
+        trim.append(dict(r=DL_TRIM_R, z0=z - 14, z1=z, cx=x, cy=y))
+        lens.append(dict(r=DL_TRIM_R - 14, z0=z - 26, z1=z - 14, cx=x, cy=y))
+    add("DOWNLIGHT_TRIM", "照明器具", [], trim, color=(238, 238, 236))
+    add("DOWNLIGHT_LENS", "照明器具", [], lens, color=(255, 248, 232))
+    sd = SMOKE_DETECTOR
+    add("SMOKE_DETECTOR", "照明器具", [],
+        [dict(r=sd["r"], z0=sd["z"] - 30, z1=sd["z"], cx=sd["x"], cy=sd["y"])],
+        color=(242, 242, 240))
 
     # =================================================================
     #  FURNITURE   ( XY = FURNITURE_XY_LOCK )

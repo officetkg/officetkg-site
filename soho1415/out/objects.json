@@ -462,14 +462,74 @@
       "bbox_min": [
         195.0,
         195.0,
-        2450.0
+        2200.0
       ],
       "bbox_max": [
         4495.0,
         8495.0,
         2650.0
       ],
-      "triangles": 12
+      "triangles": 108
+    },
+    {
+      "object": "CEILING_COVE",
+      "group": "床・天井",
+      "bbox_min": [
+        695.0,
+        795.0,
+        2600.0
+      ],
+      "bbox_max": [
+        3895.0,
+        4780.0,
+        2800.0
+      ],
+      "triangles": 24
+    },
+    {
+      "object": "DOWNLIGHT_TRIM",
+      "group": "照明器具",
+      "bbox_min": [
+        390.0,
+        440.0,
+        1986.0
+      ],
+      "bbox_max": [
+        4285.0,
+        8155.0,
+        2450.0
+      ],
+      "triangles": 3456
+    },
+    {
+      "object": "DOWNLIGHT_LENS",
+      "group": "照明器具",
+      "bbox_min": [
+        404.0,
+        454.0,
+        1974.0
+      ],
+      "bbox_max": [
+        4271.0,
+        8141.0,
+        2436.0
+      ],
+      "triangles": 3456
+    },
+    {
+      "object": "SMOKE_DETECTOR",
+      "group": "照明器具",
+      "bbox_min": [
+        3090.0,
+        4340.0,
+        2420.0
+      ],
+      "bbox_max": [
+        3210.0,
+        4460.0,
+        2450.0
+      ],
+      "triangles": 96
     },
     {
       "object": "DESK_2P",

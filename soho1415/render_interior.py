@@ -6,10 +6,14 @@
 組み立てる **同一の 3D シーン** を読み込み、カメラだけを移動して
 通常の透視投影レンダリングを行う。画像生成 AI は使用しない。
 
-そのため構造上、
+そのため構造上、カメラ間で
   壁が増える / Book Shelf が変わる / ベッドが出現する /
   家具が移動する / 部屋が広くなる
-ことは起こり得ない (ジオメトリは A/B 承認時と同一バイト列)。
+ことは起こり得ない (4 枚とも同一シーンの読み込み)。
+
+※ ジオメトリは 3D GEOMETRY APPROVED 時点 (42 オブジェクト) に対し、
+   その後の明示指示で 折上げ天井 + 照明器具 を追加した 46 オブジェクト。
+   XY LOCK・外形・家具・可動壁は一切変更していない。
 
 カメラ高   1550 mm        (指定 1500-1600)
 レンズ     フルサイズ換算 30-32 mm  (指定 28-35 / 超広角禁止)
@@ -36,44 +40,11 @@ TGT_H = 1300.0          # 注視点高 (わずかに見下ろし)
 ALPHA = {"WINDOW_GLASS": 0.20, "BALCONY_GLASS": 0.26}
 
 # ---------------------------------------------------------------------
-# 照明 (工程 "光" -- ジオメトリは変更しない)
-#
-# 竣工写真の天井を実測すると、LD は折上げ天井でダウンライトが
-# **ペア** で周囲のバンドに多数入っている。熱感知器も 1 個見える。
-# 照明「器具」の造形はジオメトリ変更にあたるため作っていない。
-# ここで与えているのは光源位置と配光だけである。
-# 電気図が入手できれば下の座標を差し替えればよい。
+# 照明
+# 光源位置は geometry_master.DOWNLIGHTS (= 照明器具の実体) と同一。
+# 器具の造形と折上げ天井は 3D GEOMETRY APPROVED 後に明示指示で追加済み。
 # ---------------------------------------------------------------------
-DL_Z = 2430.0
-DL_WARM = (1.00, 0.91, 0.79)     # 電球色 3000K 相当
-
-
-def _pair(x, y, axis="x", gap=260.0, inten=1.9):
-    o = gap / 2.0
-    if axis == "x":
-        pts = [(x - o, y), (x + o, y)]
-    else:
-        pts = [(x, y - o), (x, y + o)]
-    return [dict(pos=(px, py, DL_Z), color=DL_WARM, intensity=inten) for px, py in pts]
-
-
-DOWNLIGHTS = (
-    # Living Dining : 周囲バンドにペア配置
-    _pair(2700, 1000) + _pair(3900, 1000)
-    + _pair(2600, 2300) + _pair(3900, 2300)
-    + _pair(2700, 4300) + _pair(3900, 4300)
-    # 西ベイ (Book Shelf 側)
-    + _pair(800, 900, "y") + _pair(800, 1900, "y")
-    # ワークスペース (Master Bedroom 側)
-    + _pair(750, 3150, "y") + _pair(750, 4450, "y")
-    # 廊下・キッチン
-    + _pair(3350, 5900) + _pair(4100, 6850) + _pair(3350, 7850)
-    # 水回り・玄関
-    + [dict(pos=(1900, 6900, 2180.0), color=DL_WARM, intensity=2.0),
-       dict(pos=(2100, 5750, 2180.0), color=DL_WARM, intensity=1.4),
-       dict(pos=(580, 7000, 1980.0), color=DL_WARM, intensity=1.6),
-       dict(pos=(3500, 8100, 2180.0), color=DL_WARM, intensity=2.0)]
-)
+DOWNLIGHTS = GM.DOWNLIGHTS
 
 # 掃き出し窓を面光源として扱う (室内の主光源)
 WINDOW_PORTAL = dict(
@@ -81,7 +52,7 @@ WINDOW_PORTAL = dict(
             GM.WIN_HEAD / 2.0),
     normal=(0.0, -1.0, 0.0),
     size=(GM.OPEN_WINDOW[1] - GM.OPEN_WINDOW[0]) * GM.WIN_HEAD / 1.0e6,  # m2
-    color=(1.00, 1.00, 1.04),     # 昼光 (北向きの空 = ニュートラル)
+    color=(1.00, 1.00, 1.04),
     intensity=13.0)
 
 CAMERAS = [
@@ -118,11 +89,15 @@ def main():
     tris, rgb, alpha, meta = collect()
     n_src = len(tris)
     tris, rgb, alpha = softrender.tessellate(tris, rgb, alpha, max_edge=380.0)
-    print("scene: %d objects / %d triangles  (A/B 承認時と同一)" % (len(meta), n_src))
+    print("scene: %d objects / %d triangles  (承認済みマスター + 折上げ天井/照明器具)"
+          % (len(meta), n_src))
     print("照明用に %d 面へ細分 (形状は不変) / 光源 %d 灯 + 窓 %.1f m2"
           % (len(tris), len(DOWNLIGHTS), WINDOW_PORTAL["size"]))
     lit = softrender.light_vertices(tris, rgb, WINDOW_PORTAL, DOWNLIGHTS,
                                     exposure=1.0)
+    # ダウンライトの発光面は自己発光
+    emis = (np.abs(rgb.astype(int) - np.array([255, 248, 232])).sum(1) < 6)
+    lit[emis] = np.array([255, 250, 238], np.float32)
     print("方位: 平面 +Y = N%.0fE / バルコニー = S%.0fW\n"
           % (GM.PLAN_UP_BEARING_DEG, GM.PLAN_UP_BEARING_DEG))
 
