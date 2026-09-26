@@ -40,12 +40,22 @@ for fk,fb in FUR.items():
             print(f"  CLASH  {fk} x {sk}   overlap {o[0]}x{o[1]} px = {o[0]*MM:.0f}x{o[1]*MM:.0f} mm"); bad+=1
 print("  none" if bad==0 else "")
 print("=== 2. furniture vs furniture ===")
+# Pairs allowed to overlap in PLAN because they are separated in HEIGHT.  This
+# file carries no Z, so the separation is stated here and must be checked by
+# hand when either item moves.
+#   MEETING_TABLE top   720 mm
+#   MONITOR_55 screen   904 mm (bottom edge) .. 1596 mm
+#   -> 184 mm of clear wall between them; the table butts the wall under it.
+STACKED = {frozenset(("MEETING_TABLE", "MONITOR_55"))}
 b2=0
 for (ak,ab),(bk,bb) in itertools.combinations(FUR.items(),2):
     o=ov(ab,bb)
     if o:
         touching = o[0]<=1 or o[1]<=1
-        if not touching:
+        if frozenset((ak,bk)) in STACKED:
+            print(f"  stacked (height-separated)  {ak} x {bk}  "
+                  f"plan overlap {o[0]}x{o[1]} px = {o[0]*MM:.0f}x{o[1]*MM:.0f} mm")
+        elif not touching:
             print(f"  CLASH  {ak} x {bk}  overlap {o[0]}x{o[1]} px"); b2+=1
 print("  none" if b2==0 else "")
 print("=== 3. inside the dwelling ===")

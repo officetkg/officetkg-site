@@ -60,29 +60,29 @@ FURNITURE = {
                              "storage-wall pocket stub"},
 
     # ------------------------------------------------ Living Dining zone
-    "MEETING_TABLE":   {"box": rect(539, 645, 698, 713), "size_mm": (2100, 900),
+    "MEETING_TABLE":   {"box": rect(599, 645, 758, 713), "size_mm": (2100, 900),
                         "product": "NISHIKI E-CAD-2190KW",
                         "product_mm": (2100, 900, 720),
-                        "note": "long axis runs EAST-WEST; its plan-right (WEST) end "
-                                "faces the monitor wall; sits in the widest part of "
-                                "the opened-up volume, straddling the south "
-                                "storage-wall line, in the daylight from the balcony. "
-                                "Grew 1800 -> 2100 with the specified product: the "
-                                "WEST end stays put so the viewing distance to the "
-                                "55 inch screen and the west aisle are unchanged, and "
-                                "the extra 300 mm is taken on the EAST end, where "
-                                "1300 mm of the Book Shelf route still remains."},
-    "MEETING_CHAIR_1": {"box": rect(540, 595, 590, 645), "size_mm": (660, 660),
+                        "note": "long axis runs EAST-WEST, FLUSH AGAINST THE MONITOR "
+                                "WALL: its WEST end sits on the inner face at x=355, "
+                                "directly under the 55 inch screen.  The screen's "
+                                "bottom edge is at 904 mm and the table top at 720 mm, "
+                                "so 184 mm of wall shows between them and the screen "
+                                "is never fouled.  The LD bay is 2587 mm between the "
+                                "partition line and that wall and the table is 2100 mm, "
+                                "so the 488 mm that is left now sits at the EAST end "
+                                "instead of as a 792 mm aisle at the west."},
+    "MEETING_CHAIR_1": {"box": rect(599, 595, 649, 645), "size_mm": (660, 660),
                         "product": "Herman Miller Setu, 5-star base"},
-    "MEETING_CHAIR_2": {"box": rect(593, 595, 643, 645), "size_mm": (660, 660),
+    "MEETING_CHAIR_2": {"box": rect(652, 595, 702, 645), "size_mm": (660, 660),
                         "product": "Herman Miller Setu, 5-star base"},
-    "MEETING_CHAIR_3": {"box": rect(646, 595, 696, 645), "size_mm": (660, 660),
+    "MEETING_CHAIR_3": {"box": rect(704, 595, 754, 645), "size_mm": (660, 660),
                         "product": "Herman Miller Setu, 5-star base"},
-    "MEETING_CHAIR_4": {"box": rect(540, 713, 590, 763), "size_mm": (660, 660),
+    "MEETING_CHAIR_4": {"box": rect(599, 713, 649, 763), "size_mm": (660, 660),
                         "product": "Herman Miller Setu, 5-star base"},
-    "MEETING_CHAIR_5": {"box": rect(593, 713, 643, 763), "size_mm": (660, 660),
+    "MEETING_CHAIR_5": {"box": rect(652, 713, 702, 763), "size_mm": (660, 660),
                         "product": "Herman Miller Setu, 5-star base"},
-    "MEETING_CHAIR_6": {"box": rect(646, 713, 696, 763), "size_mm": (660, 660),
+    "MEETING_CHAIR_6": {"box": rect(704, 713, 754, 763), "size_mm": (660, 660),
                         "product": "Herman Miller Setu, 5-star base"},
 
     "MONITOR_55":   {"box": rect(754, 637, 758, 730), "size_mm": (1230, 55),
@@ -99,18 +99,21 @@ SEAT_ROWS = {"south": ["MEETING_CHAIR_1","MEETING_CHAIR_2","MEETING_CHAIR_3"],
 # ----------------------------------------------------------------------
 CLEARANCES = {
     "entrance (SOUTH) -> LD":          {"zone": rect(632, 408, 758, 500), "min_mm": 800},
-    "LD south open area (plan top)":   {"zone": rect(539, 408, 758, 595), "min_mm": 1200},
-    "west aisle, LD -> north zone":    {"zone": rect(698, 408, 758, 764), "min_mm": 750},
+    "LD south open area (plan top)":   {"zone": rect(562, 408, 758, 595), "min_mm": 1200},
+    # The west aisle no longer exists: the table is flush against that wall.
+    # What is left is the 488 mm gap at the EAST end of the table, and the
+    # indirect route through the two permanently open storage-wall openings.
+    "east of meeting table -> north": {"zone": rect(562, 595, 599, 763), "min_mm": 450},
     "MB <-> LD, west partition gap":   {"zone": rect(556, 485, 572, 605), "min_mm": 600},
     "MB <-> north zone, north gap":    {"zone": rect(466, 636, 557, 660), "min_mm": 900},
     "work chair 1 pull-out":           {"zone": rect(471, 446, 700, 496), "min_mm": 900},
     "work chair 2 pull-out":           {"zone": rect(471, 545, 700, 595), "min_mm": 900},
-    "meeting chair pull-out, south":   {"zone": rect(539, 545, 698, 595), "min_mm": 550},
-    "meeting chair pull-out, north":   {"zone": rect(539, 763, 698, 816), "min_mm": 550},
+    "meeting chair pull-out, south":   {"zone": rect(599, 545, 754, 595), "min_mm": 550},
+    "meeting chair pull-out, north":   {"zone": rect(599, 763, 754, 816), "min_mm": 550},
     "Clo. bi-fold door swing":         {"zone": rect(420, 387, 509, 405), "min_mm": 200},
     "Book Shelf access":               {"zone": rect(440, 651, 500, 790), "min_mm": 650},
     "balcony sash access":             {"zone": rect(534, 763, 721, 816), "min_mm": 700},
-    "north zone, east of meeting":     {"zone": rect(440, 652, 539, 816), "min_mm": 900},
+    "north zone, east of meeting":     {"zone": rect(440, 652, 599, 816), "min_mm": 900},
     "kitchen / toilet / powder":       {"zone": rect(632, 230, 753, 401), "min_mm": 750},
 }
 

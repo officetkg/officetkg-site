@@ -72,7 +72,11 @@ before_after('out/_preproducts', 'out/PHOTOREAL_BEFORE_AFTER_products.png',
              'SPECIFIED PRODUCTS  -  BEFORE / AFTER',
              'E-CAD-2190KW walnut table (1800 -> 2100), Aeron x2, Setu x6; '
              'architecture untouched, all circulation still PASS')
-before_after('out/_preexpo', 'out/PHOTOREAL_BEFORE_AFTER.png',
+before_after('out/_pretable', 'out/PHOTOREAL_BEFORE_AFTER.png',
+             'MEETING TABLE FLUSH TO THE MONITOR WALL  -  BEFORE / AFTER',
+             'the E-CAD now butts the wall under the 55 inch screen; the 488 mm the bay has '
+             'left over moves from the west aisle to the east end of the table')
+before_after('out/_preexpo', 'out/PHOTOREAL_BEFORE_AFTER_highlights.png',
              'HIGHLIGHT / EXPOSURE FIX  -  BEFORE / AFTER',
              'camera A no longer shoots through the closed sash, the window light falls off '
              'with distance, the tone curve has a shoulder, and the shadow penumbra is sized '

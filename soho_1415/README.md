@@ -125,6 +125,32 @@ envelope: with one arm pointing straight back a 658 mm base measures
 595 × 626 mm on the floor. The Aeron reaches its published 658 mm width at the
 arm pads. Both are therefore verified by **containment**, not by outline match.
 
+### Flush against the monitor wall
+
+The table now butts the monitor wall: its west end sits on the inner face at
+x = 355, directly under the 55″ screen. The screen's bottom edge is at 904 mm
+and the table top at 720 mm, so **184 mm** of wall shows between them and the
+screen is never fouled. `check_layout.py` carries that pair in a `STACKED` set
+— they overlap in plan by 53 × 898 mm and are separated only in height, which
+this file has no way to know on its own.
+
+The arithmetic that follows is unavoidable: the LD bay is **2587 mm** between
+the partition line and that wall and the table is **2100 mm**, so the
+**488 mm** left over now sits at the **east end** instead of as the 792 mm
+aisle that used to be at the west. Routes to the north (window) zone are the
+488 mm gap past the table's east end and, indirectly, the two permanently open
+storage-wall openings; the checker measures 2218 mm clear on that route once
+past the chair rows, and every other route still passes.
+
+Two knock-on moves:
+
+* the **west pair of Setu chairs** was pulled 2 px east so their backs (965 mm)
+  clear the screen's front face — at the centred spacing they fouled it by
+  26 mm;
+* **camera C** used to stand at (322, 545), on the monitor wall. There is no
+  floor there any more, so it now stands behind the north chair row and looks
+  diagonally across to the workstations.
+
 ### What the longer table forced
 
 The table grew 1800 → 2100 mm. The LD bay is only 2587 mm wide between the

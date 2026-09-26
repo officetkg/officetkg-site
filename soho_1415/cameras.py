@@ -32,9 +32,13 @@ CAMERAS = {
            focal=32, shift=-0.085, level=True,
            note="just inside the living-dining door, looks NORTH to the window"),
  "C": dict(name="CAMERA C  meeting table -> workstations",
-           eye=(322, 545, EYE_Z), target=(35, 395, EYE_Z),
+           eye=(300, 635, EYE_Z), target=(60, 400, EYE_Z),
            focal=28, shift=-0.075, level=True,
-           note="from the monitor wall across the table into the bedroom zone"),
+           note="stands behind the north row of meeting chairs and looks "
+                "diagonally across to the workstations.  It used to stand at "
+                "(322, 545) on the monitor wall, which is now under the table: "
+                "with the E-CAD butted flush to that wall there is no floor "
+                "there to stand on."),
  "D": dict(name="CAMERA D  workstations -> meeting area",
            eye=(133, 320, EYE_Z), target=(250, 560, EYE_Z),
            focal=28, shift=-0.075, level=True,
