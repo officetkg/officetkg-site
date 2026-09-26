@@ -216,6 +216,64 @@ shelf running floor to ceiling. The brief forbids *expanding* the Book Shelf
 into a floor-to-ceiling unit; it does not ask for an existing floor-to-ceiling
 shelf to be cut down. Modelling what the photos show is the rule that wins.
 
+## Highlights — why the entrance end blew out
+
+Camera A came back with the whole entrance end of the room as flat white:
+**7.04 %** of the frame was pinned at pure white, against **0.00–0.53 %** in
+the listing photos. Four separate causes, all measured rather than guessed.
+
+1. **Camera A was shooting through the closed sash.** It stood out on the
+   balcony at y = 716, so the window glass covered **100 %** of the frame and
+   the glass pass laid a bright 17 % veil over the entire image. It now stands
+   in the west aisle just inside the sash: glass covers **0 %**.
+2. **The window light had no distance falloff.** `shade_pr()` used only the
+   shadow map, which says *whether* a surface can see the window, never *how
+   much* of it — so a wall eight metres in was lit exactly as hard as the
+   sill. A window is a finite patch of sky; `WIN_FALL_R` / `WIN_FALL_K`
+   restore the falloff that the non-photoreal path always had.
+3. **The tone curve had no shoulder.** `o/(o+0.9)*1.9` reaches 1.0 at a linear
+   luma of exactly 1.0 and is then clipped, so everything past that point
+   became the same flat white. Raising the white point of the whole curve
+   would lift the blacks and turn the graphite chairs grey, so the fix is
+   surgical: below `TONE_KNEE` the curve is untouched and above it the
+   remaining headroom is approached asymptotically and never reached.
+4. **The shadow penumbra was the wrong width.** A fixed-radius filter made
+   every surface either fully lit or fully shadowed, and that bimodal split is
+   what forced the choice between a dark image and a blown-out one. Keying the
+   radius to the receiver's depth fixed the room but softened the 25 mm gap
+   inside a Book Shelf cubby, which must stay crisp. The blocker-search (PCSS)
+   form gets both right from one rule, with the tap ring rotated per pixel so
+   a wide penumbra turns into noise rather than ring-shaped blotches.
+
+5. **Bloom was clipping what the tone curve no longer did.** With the shoulder
+   in place, the last thing in the pipeline that could still pin a pixel to
+   white was the bloom, whose threshold of 0.93 let it add up to 0.11 on top
+   of a 0.95 carpet. Bloom models scatter from a genuinely luminous source —
+   the window aperture, the downlight apertures — not from a bright wall, so
+   the threshold is now 0.972.
+
+`EXPOSURE` is then set so the render's wall-and-ceiling median (0.70) matches
+the photos' (0.696). The same soft knee is applied to `shading._tone`, so the
+plain shaded `CAM_*` views stop blowing out in the same places.
+
+| | photo | before | after |
+|---|---|---|---|
+| clipped interior pixels | 0.00–0.53 % | 7.04 % | **0.00 %** |
+| p99 of interior luma | 0.91–0.97 | 1.000 | 0.81–0.93 |
+| wall + ceiling median | 0.696 | — | 0.70 |
+
+The two earlier calibrations were re-solved on the new curve and both land on
+the photo: the Book Shelf p10/p90 at **0.680** against 0.679, and the
+carpet-to-wall ratio at **0.970** against 0.971.
+
+### The Book Shelf cubbies are a different material
+
+Chasing the shelf's contrast with occlusion alone was wrong. In the photo the
+cubby backs are not merely darker than the board faces, they are **more
+saturated** (0.40 against 0.23) and **warmer** (R/B 1.66 against 1.29). A hue
+shift cannot come from shading, so the back panel is its own group with its
+own deeper oak, and the AO term was left where the corners wanted it.
+
 ## Ambient occlusion — calibrated against the photos
 
 An earlier pass drew a near-black hairline at every internal corner, along

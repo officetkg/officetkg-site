@@ -8,7 +8,7 @@ was hooked into build_3d.py, so the pair differs by decoration alone.
 import cv2, numpy as np, os
 
 KEYS = "ABCDE"
-CAP = {'A': 'CAMERA A   balcony -> entrance',
+CAP = {'A': 'CAMERA A   balcony end -> entrance',
        'B': 'CAMERA B   entrance -> balcony',
        'C': 'CAMERA C   meeting table -> workstations',
        'D': 'CAMERA D   workstations -> meeting area',
@@ -72,7 +72,12 @@ before_after('out/_preproducts', 'out/PHOTOREAL_BEFORE_AFTER_products.png',
              'SPECIFIED PRODUCTS  -  BEFORE / AFTER',
              'E-CAD-2190KW walnut table (1800 -> 2100), Aeron x2, Setu x6; '
              'architecture untouched, all circulation still PASS')
-before_after('out/_prefloor', 'out/PHOTOREAL_BEFORE_AFTER.png',
+before_after('out/_preexpo', 'out/PHOTOREAL_BEFORE_AFTER.png',
+             'HIGHLIGHT / EXPOSURE FIX  -  BEFORE / AFTER',
+             'camera A no longer shoots through the closed sash, the window light falls off '
+             'with distance, the tone curve has a shoulder, and the shadow penumbra is sized '
+             'by the blocker gap')
+before_after('out/_prefloor', 'out/PHOTOREAL_BEFORE_AFTER_floor.png',
              'FLOOR FINISH  -  BEFORE / AFTER',
              'the photos show TWO finishes: light oak plank in the Master Bedroom, hall and '
              'kitchen, and a neutral carpet in the Living Dining')

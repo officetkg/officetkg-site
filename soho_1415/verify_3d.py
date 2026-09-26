@@ -67,6 +67,7 @@ CONTAINED = {
                    max(p[1] for p in G.ROOMS["LIVING_DINING"])), None),
  # the hall / wet-area tile is a finish inside the building outline
  "Floor_Tile": ((ow["west"]["outer_x"], 0, ow["east"]["outer_x"], ow["south"]["outer_y"]), None),
+ "Book_Shelf_Back": (rb(G.BOOK_SHELF["body"]), None),
 }
 print(f'{"3D object":30s} {"dx0":>6s} {"dy0":>6s} {"dx1":>6s} {"dy1":>6s}   max|d| px / mm')
 print('-'*78)

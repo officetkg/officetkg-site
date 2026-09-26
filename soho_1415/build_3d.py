@@ -134,8 +134,13 @@ for k, r in G.CLOSETS.items():
 # open grid carcase, as the photos show: back, top, bottom, ends, 4 shelves,
 # and uprights on the drawn shelf lines.  Footprint identical to the 2D master.
 bs = G.BOOK_SHELF["body"]; BT = 1.4
+# The back panel is a SEPARATE group.  In the photo the cubby backs are not
+# just darker than the board faces, they are more saturated (0.40 against
+# 0.23) and warmer (R/B 1.66 against 1.29) -- a hue shift, which shading alone
+# cannot produce.  The interiors are a deeper oak than the pale board edges.
+add("Book_Shelf_Back",
+    _box(bs["x0"], bs["y0"], bs["x0"]+BT, bs["y1"], 0, H.BOOKSHELF_HEIGHT))   # back
 add("Book_Shelf",
-    _box(bs["x0"], bs["y0"], bs["x0"]+BT, bs["y1"], 0, H.BOOKSHELF_HEIGHT),   # back
     _box(bs["x0"], bs["y0"], bs["x1"], bs["y0"]+BT, 0, H.BOOKSHELF_HEIGHT),   # end
     _box(bs["x0"], bs["y1"]-BT, bs["x1"], bs["y1"], 0, H.BOOKSHELF_HEIGHT),   # end
     _box(bs["x0"], bs["y0"], bs["x1"], bs["y1"], 0, BT),                      # base

@@ -20,7 +20,7 @@ COLORS = {
  "Exterior_Walls":(40,40,40),"Interior_Walls":(105,105,105),"Columns":(160,0,200),
  "PS":(150,150,150),"Entrance":(0,120,200),"Shower":(190,190,120),"WD":(190,190,120),
  "Powder_Room_Fixtures":(190,190,120),"Toilet":(190,190,120),"Kitchen":(180,150,90),
- "Refrigerator":(180,150,90),"Closets":(0,140,190),"Book_Shelf":(0,140,190),
+ "Refrigerator":(180,150,90),"Closets":(0,140,190),"Book_Shelf":(0,140,190),"Book_Shelf_Back":(0,110,150),
  "Storage_Wall_Pocket":(0,150,0),"Storage_Wall_Parked_Panels":(0,210,0),
  "Storage_Wall_Rail":(0,110,0),"Windows":(60,60,70),"Window_Glass":(210,180,120),
  "Balcony_Glass":(215,195,150),"Balcony_Partitions":(60,40,95),"Downpipe":(190,200,205),"Balcony_Floor":(255,200,150),

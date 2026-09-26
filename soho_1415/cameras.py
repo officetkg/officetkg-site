@@ -18,10 +18,15 @@ EYE_Z = P(1550)
 
 CAMERAS = {
  "A": dict(name="CAMERA A  balcony side -> entrance",
-           eye=(240, 716, EYE_Z), target=(240, 250, EYE_Z),
+           eye=(312, 646, EYE_Z), target=(245, 255, EYE_Z),
            focal=32, shift=-0.070, level=True,
-           note="stands on the balcony, looks SOUTH in through the sash and down "
-                "the full depth to the entrance wall"),
+           note="stands at the BALCONY END OF THE ROOM, in the west aisle just "
+                "inside the sash, and looks SOUTH past the meeting table to the "
+                "entrance wall.  It used to stand out on the balcony at y=716, "
+                "which put the closed sash between the lens and everything in "
+                "the frame: the glass pass then laid a bright 17 % veil over "
+                "100 % of the image and washed the entrance end out.  Glass now "
+                "covers 0 % of this frame."),
  "B": dict(name="CAMERA B  entrance side -> balcony",
            eye=(296, 272, EYE_Z), target=(238, 672, EYE_Z),
            focal=32, shift=-0.085, level=True,

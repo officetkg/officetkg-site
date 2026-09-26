@@ -13,7 +13,7 @@ to medium oak / meeting table medium oak or walnut / matte black metal, sparing
 PALETTE = {
  # --- shell -------------------------------------------------------------
  "Floor_Slab":                 (198, 174, 144),   # light oak plank, photo-matched
- "Floor_Carpet":               (138, 137, 137),   # LD carpet, neutral grey.  Solved
+  "Floor_Carpet":              (130, 129, 129),   # LD carpet, neutral grey.  Solved
                                                   # so the rendered carpet/wall luma
                                                   # ratio matches the photo (0.971)
  "Floor_Tile":                 (104,  98,  90),   # hall / kitchen / wet areas: a warm
@@ -40,7 +40,10 @@ PALETTE = {
  "Refrigerator":               (224, 224, 224),
  "Closets":                    (236, 232, 226),
  # --- joinery -----------------------------------------------------------
- "Book_Shelf":                 (214, 194, 166),   # pale oak, open grid
+ "Book_Shelf":                 (214, 194, 166),   # pale oak boards, open grid
+ "Book_Shelf_Back":            (180, 147, 118),   # deeper, warmer oak back panel.
+                                                  # Solved so the shelf p10/p90 matches
+                                                  # the photo (0.679)
  "Storage_Wall_Pocket":        (234, 230, 224),
  "Storage_Wall_Parked_Panels": (205, 180, 152),   # photo: light oak sliding panel
  "Storage_Wall_Rail":          (230, 228, 223),   # photo: light head, 1.2x the
@@ -75,6 +78,7 @@ CLAY = {k: (206, 203, 197) for k in PALETTE}
 CLAY["Ceiling_Slab"] = (214, 212, 208)
 CLAY["Floor_Carpet"] = (150, 149, 148)
 CLAY["Floor_Tile"] = (140, 138, 134)
+CLAY["Book_Shelf_Back"] = (186, 182, 176)
 CLAY["Ceiling_Coffer"] = (208, 206, 202)
 CLAY["Downlights"] = (250, 246, 236)
 for _k in ("Laptops","Laptop_Screens","Desk_Kit","Paper","Books",

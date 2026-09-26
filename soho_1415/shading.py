@@ -40,6 +40,8 @@ AO_RADIUS_MM   = 340.0     # world radius the occlusion test looks over
 AO_SCREEN_PX   = (7, 15, 29)   # screen radii sampled, so near and far both work
 AO_FLOOR       = 0.30      # raw occlusion never closes completely
 INTERREFLECT   = 0.96      # how much of the lost ambient a bright surface wins back
+INTERREFLECT_G = 1.0       # exponent on albedo: >1 widens the gap between a white
+                           # wall, which barely darkens, and a deeper recess
 
 def ssao(pos, nrm, obj, radius_mm=None, samples=10, strength=1.0):
     """Raw geometric openness in 0..1 (1 = fully open).
@@ -76,7 +78,7 @@ def ao_apply(ao, alb, interreflect=None):
     terms only -- never into the window term, which the shadow map already
     handles."""
     if interreflect is None: interreflect = INTERREFLECT   # read at call time
-    k = np.clip(1.0 - interreflect*_luma(alb), 0.0, 1.0)
+    k = np.clip(1.0 - interreflect*_luma(alb)**INTERREFLECT_G, 0.0, 1.0)
     return np.clip(1.0 - k*(1.0 - ao), 0.0, 1.0)
 
 _R0 = LT.P(1600)                       # downlight falloff reference
@@ -128,10 +130,17 @@ def _linear(g, ao_strength=1.0):
         col[m] = np.array([1.35, 1.30, 1.18], np.float32)      # lit aperture
     return col, hit
 
+# Same soft knee as photoreal._tone: the base curve reaches 1.0 at a linear
+# luma of exactly 1.0 and was then clipped, so the plain shaded views blew out
+# in the same places the photoreal ones did.  Below the knee nothing changes.
+TONE_KNEE = 0.75
+
 def _tone(lin):
-    out = np.clip(lin, 0, None)
-    out = out/(out + 0.90)*1.90                 # gentle shoulder, no HDR look
-    return np.clip(out, 0, 1)**(1/1.06)
+    x = np.clip(lin, 0, None)
+    y = x/(x + 0.90)*1.90
+    k = TONE_KNEE
+    y = np.where(y <= k, y, k + (1.0-k)*(1.0 - np.exp(-(y-k)/(1.0-k))))
+    return np.clip(y, 0, 1)**(1/1.06)
 
 def compose(g_scene, g_glass=None, glass_opacity=0.16, exposure=1.0):
     """scene without glass, then the panes blended back at low opacity."""

@@ -78,22 +78,71 @@ def build_shadow_map():
     return zb
 
 _SM = None
-def window_visibility(pos, nrm, softness=7.0, bias=2.2):
+
+# The balcony sash is a large area source, roughly 2.5 m wide, so its shadow
+# has no single edge width: the penumbra grows with the gap between the
+# BLOCKER and the receiver, not with the receiver's distance from the window.
+# A fixed radius made every surface either fully lit or fully shadowed, and
+# that bimodal split is what forced the choice between a dark image and a
+# blown-out one.  Keying the radius to the receiver's depth instead fixed the
+# room but also softened the 25 mm gap inside a Book Shelf cubby, which must
+# stay crisp.  This is the standard blocker-search (PCSS) form, which gets
+# both right from one rule.
+SM_PX_PER_MASTER = SM_RES[0]/(SM_E[1]-SM_E[0])   # shadow-map texels per MASTER px
+LIGHT_HALF_W = 95.0      # MASTER px: half the balcony sash width
+SEARCH_R     = 14.0      # texels: blocker search radius
+PEN_MIN, PEN_MAX = 1.2, 70.0
+_RING = [(np.cos(a), np.sin(a)) for a in np.arange(0, 2*np.pi, np.pi/4)]
+_SEARCH = [(0.0, 0.0)] + _RING + [(x*0.5, y*0.5) for x, y in _RING]
+_TAPS   = [(0.0, 0.0)] + [(x*r, y*r) for r in (0.45, 0.85, 1.4) for x, y in _RING]
+
+def window_visibility(pos, nrm, bias=2.2):
     global _SM
     if _SM is None: _SM = build_shadow_map()
     W, Hh = SM_RES
     se = (pos[..., 0]-SM_E[0])/(SM_E[1]-SM_E[0])*W
     su = (SM_U[1]-pos[..., 2])/(SM_U[1]-SM_U[0])*Hh
     dep = SM_N0 - pos[..., 1]
-    acc = np.zeros(pos.shape[:2], np.float32); n = 0
-    for dx, dy in [(0,0),(-1,0),(1,0),(0,-1),(0,1),(-1,-1),(1,1),(-1,1),(1,-1),
-                   (-2,0),(2,0),(0,-2),(0,2)]:
-        xi = np.clip((se + dx*softness).astype(np.int32), 0, W-1)
-        yi = np.clip((su + dy*softness).astype(np.int32), 0, Hh-1)
+
+    # 1. blocker search -- average depth of whatever is between here and the sash
+    bsum = np.zeros(dep.shape, np.float32)
+    bcnt = np.zeros(dep.shape, np.float32)
+    for dx, dy in _SEARCH:
+        xi = np.clip((se + dx*SEARCH_R).astype(np.int32), 0, W-1)
+        yi = np.clip((su + dy*SEARCH_R).astype(np.int32), 0, Hh-1)
+        z = _SM[yi, xi]
+        m = z < dep - bias
+        bsum += np.where(m, z, 0.0); bcnt += m
+    lit = bcnt == 0                                   # nothing in the way at all
+    zb = bsum/np.maximum(bcnt, 1.0)
+
+    # 2. penumbra width from the blocker gap
+    pen = LIGHT_HALF_W*SM_PX_PER_MASTER*np.clip(dep-zb, 0, None)/np.maximum(zb, 1.0)
+    soft = np.clip(pen, PEN_MIN, PEN_MAX)
+
+    # 3. PCF at that radius.  The tap ring is rotated by a different angle at
+    # every pixel, so a wide penumbra turns into noise rather than into the
+    # ring-shaped blotches a fixed pattern leaves on a distant wall.
+    h_, w_ = dep.shape
+    yy, xx = np.meshgrid(np.arange(h_), np.arange(w_), indexing="ij")
+    th = ((xx*73856093) ^ (yy*19349663)).astype(np.uint32)
+    th = (th % 9973).astype(np.float32)/9973.0*(2*np.pi)
+    ct, st = np.cos(th), np.sin(th)
+    acc = np.zeros(dep.shape, np.float32); n = 0
+    for tx, ty in _TAPS:
+        dx = tx*ct - ty*st
+        dy = tx*st + ty*ct
+        xi = np.clip((se + dx*soft).astype(np.int32), 0, W-1)
+        yi = np.clip((su + dy*soft).astype(np.int32), 0, Hh-1)
         acc += (dep <= _SM[yi, xi] + bias).astype(np.float32); n += 1
-    v = acc/n
+    v = np.where(lit, 1.0, acc/n)
+
+    # a wide penumbra also needs a wide screen-space filter, or the noise the
+    # rotation just introduced stays visible
+    t = np.clip((soft-PEN_MIN)/(PEN_MAX-PEN_MIN), 0, 1)
+    v = cv2.GaussianBlur(v, (0, 0), 1.6)*(1.0-t) + cv2.GaussianBlur(v, (0, 0), 11.0)*t
     facing = np.clip(nrm[..., 1], 0, 1)*0.5 + 0.5      # back faces never lit
-    return cv2.GaussianBlur(v, (0, 0), 1.6)*facing
+    return v*facing
 
 # ----------------------------------------------------------------- texture
 def texture(g):
@@ -238,7 +287,28 @@ def _normals(g):
 
 AO_STRENGTH = 0.70          # calibrated below; see the AO block in shading.py
 
-def shade_pr(g, exposure=0.80, bump_k=0.055):
+# ----------------------------------------------------------------------
+# WINDOW FALLOFF
+# ----------------------------------------------------------------------
+# The shadow map says WHETHER a surface can see the window; it says nothing
+# about HOW MUCH of it the surface sees.  A window is a finite patch of sky,
+# so the solid angle it subtends -- and with it the irradiance -- falls away
+# as you walk into the room.  Without this term a wall eight metres from the
+# sash is lit exactly as hard as the sill, which blew the whole entrance end
+# of camera A to pure white.  shading.py's non-photoreal path always had this
+# falloff; shade_pr() had dropped it when it gained the shadow map.
+WIN_FALL_R  = 270.0    # MASTER px (3564 mm) -- reference distance
+WIN_FALL_K  = 1.6      # falloff exponent
+WIN_AMBIENT = 0.18     # the share of the window term that survives at depth
+WIN_GAIN    = 1.45     # peak, unchanged at the sill
+
+# Exposure and TONE_WHITE are solved together so that, over cameras A-C,
+# interior surfaces clip on 0.03 % of the frame (the photos clip on 0.00-0.53 %
+# outside the window aperture), the 99th percentile lands at 0.90 (photos
+# 0.91-0.97) and the median at 0.70 (photos 0.71-0.73).
+EXPOSURE = 0.98        # matches the photos: wall+ceiling median 0.70 against 0.696
+
+def shade_pr(g, exposure=EXPOSURE, bump_k=0.055):
     alb, obj, pos, names = g["albedo"], g["obj"], g["pos"], g["names"]
     hit = obj >= 0
     n = _normals(g)
@@ -254,7 +324,9 @@ def shade_pr(g, exposure=0.80, bump_k=0.055):
     Lv = np.asarray(WIN_L, np.float32); Lv /= np.linalg.norm(Lv)
     ndl = np.clip((n*Lv).sum(2)*0.62 + 0.38, 0, 1)**1.5
     vis = window_visibility(pos, n)
-    win = ndl*(0.22 + 0.78*vis)*1.45
+    dist_n = np.clip(S.WINDOW_N - pos[..., 1], 0, None)
+    fall = 1.0/(1.0 + (dist_n/WIN_FALL_R)**WIN_FALL_K)
+    win = ndl*(WIN_AMBIENT + (1.0 - WIN_AMBIENT)*vis*fall)*WIN_GAIN
 
     sky    = np.clip(0.5 + 0.5*up, 0, 1)*0.26
     bounce = np.clip(-up, 0, 1)*0.20 + np.clip(1.0-np.abs(up), 0, 1)*0.12
@@ -275,15 +347,32 @@ def shade_pr(g, exposure=0.80, bump_k=0.055):
         col[obj == names.index("Downlights")] = np.array([1.5, 1.44, 1.30], np.float32)
     return col*exposure, hit
 
-def bloom(img, thr=0.93, amt=0.11):
+# Bloom models scatter in the lens from a GENUINELY luminous source -- the
+# window aperture and the downlight apertures -- not from a bright wall.  With
+# the threshold at 0.93 it was adding up to 0.11 on top of a 0.95 carpet and
+# pushing it to pure white: after the tone curve gained its shoulder, bloom was
+# the only thing left in the pipeline that could still clip a surface.
+def bloom(img, thr=0.972, amt=0.10):
     b = np.clip(img-thr, 0, None)/(1-thr+1e-6)
     b = cv2.GaussianBlur(b, (0, 0), 14.0)*0.7 + cv2.GaussianBlur(b, (0, 0), 46.0)*0.5
     return np.clip(img + b*amt, 0, 1)
 
+# The base curve, o/(o+0.9)*1.9, is well behaved up to about 0.75 but reaches
+# 1.0 at a linear luma of exactly 1.0 and is then CLIPPED: above that point
+# there is no shoulder at all, so every surface past it became the same flat
+# white.  Raising the white point of the whole curve instead would lift the
+# blacks and turn the graphite chairs grey, so the fix is surgical: below the
+# knee the curve is untouched, above it the remaining headroom is approached
+# asymptotically and never reached.  This leaves the carpet, Book Shelf and
+# ambient-occlusion calibrations, which all live below the knee, undisturbed.
+TONE_KNEE = 0.75
+
 def _tone(lin):
-    o = np.clip(lin, 0, None)
-    o = o/(o+0.90)*1.90
-    return np.clip(o, 0, 1)**(1/1.06)
+    x = np.clip(lin, 0, None)
+    y = x/(x + 0.90)*1.90
+    k = TONE_KNEE
+    y = np.where(y <= k, y, k + (1.0-k)*(1.0 - np.exp(-(y-k)/(1.0-k))))
+    return np.clip(y, 0, 1)**(1/1.06)
 
 # ----------------------------------------------------------------- driver
 GLASS = ("Window_Glass", "Balcony_Glass")
@@ -296,14 +385,14 @@ def render_pr(key, W=1920, Hh=1280, ss=2, reflect=True, tag=""):
     kw = dict(focal_mm=c["focal"], W=w, Hh=h, shift=c["shift"],
               level=c["level"], palette=M.PALETTE, z_cut=c.get("z_cut"))
     gs = RP.render(c["eye"], c["target"], skip=GLASS, **kw)
-    lin, hit = shade_pr(gs, exposure=c.get("exposure", 0.80))
+    lin, hit = shade_pr(gs, exposure=c.get("exposure", EXPOSURE))
 
     # planar reflection in the timber floor
     if reflect and c["level"]:
         me = (c["eye"][0], c["eye"][1], -c["eye"][2])
         mt = (c["target"][0], c["target"][1], -c["target"][2])
         gm = RP.render(me, mt, skip=GLASS, mirror_y=True, **kw)
-        rl, rh = shade_pr(gm, exposure=c.get("exposure", 0.80)*0.92)
+        rl, rh = shade_pr(gm, exposure=c.get("exposure", EXPOSURE)*0.92)
         rl = cv2.GaussianBlur(np.where(rh[..., None], rl, 0.0), (0, 0), 3.0*ss)
         fl = (gs["obj"] == gs["names"].index("Floor_Slab"))
         v = gs["eye"][None, None, :] - gs["pos"]
@@ -316,7 +405,7 @@ def render_pr(key, W=1920, Hh=1280, ss=2, reflect=True, tag=""):
 
     # glass panes back at low opacity
     gg = RP.render(c["eye"], c["target"], **kw)          # full scene, so glass is occluded
-    gl, _ = shade_pr(gg, exposure=c.get("exposure", 0.80)*1.1)
+    gl, _ = shade_pr(gg, exposure=c.get("exposure", EXPOSURE)*1.1)
     gidx = [gg["names"].index(k) for k in GLASS if k in gg["names"]]
     gmask = np.isin(gg["obj"], gidx)
     m = gmask[..., None].astype(np.float32)*0.17
